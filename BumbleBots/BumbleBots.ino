@@ -34,7 +34,7 @@ protected:
   /* Returns the palette to use for drawing the Bot.
    * The "flipped" argument specifies if the front and rear lights should be switched.
    */
-  Color* getBotPalette(bool flipped);
+  virtual Color* getBotPalette(bool flipped);
 
 public:
   Bot();
@@ -46,11 +46,13 @@ public:
 class Player : public Bot {
   int8_t nextRotationDir;
 
-protected:
-  Color* getBotPalette(bool flipped);
-
 public:
   void update();
+};
+
+class Enemy : public Bot {
+protected:
+  Color* getBotPalette(bool flipped);
 };
 
 
@@ -119,7 +121,12 @@ void Player::update() {
   Bot::update();
 }
 
+Color* Enemy::getBotPalette(bool flipped) {
+  return flipped ? flippedEnemyPalette : enemyPalette;
+}
+
 Player player = Player();
+Enemy enemy = Enemy();
 
 void setup() {
   gb.begin();
@@ -134,4 +141,5 @@ void loop() {
 
   player.update();
   player.draw(36, 37);
+  enemy.draw(50, 37);
 }
