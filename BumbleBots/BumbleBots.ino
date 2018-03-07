@@ -1,5 +1,7 @@
 #include <Gamebuino-Meta.h>
+
 #include "ImageData.h"
+#include "Palettes.h"
 
 class Mover {
 
@@ -29,6 +31,11 @@ protected:
   // Returns true iff Bot can initiate a new move or turn during update
   bool canStartMove();
 
+  /* Returns the palette to use for drawing the Bot.
+   * The "flipped" argument specifies if the front and rear lights should be switched.
+   */
+  Color* getBotPalette(bool flipped);
+
 public:
   Bot();
 
@@ -38,6 +45,9 @@ public:
 
 class Player : public Bot {
   int8_t nextRotationDir;
+
+protected:
+  Color* getBotPalette(bool flipped);
 
 public:
   void update();
@@ -67,6 +77,10 @@ bool Bot::canStartMove() {
   return !isTurning();
 }
 
+Color* Bot::getBotPalette(bool flipped) {
+  return (flipped) ? flippedBotPalette : defaultPalette;
+}
+
 void Bot::update() {
   if (isTurning()) {
     turnStep();
@@ -75,14 +89,16 @@ void Bot::update() {
 
 void Bot::draw(uint8_t x, uint8_t y) {
   uint8_t r = floor(rotation / rotationDelay);
-  if (r > 9) {
-    // Invert rear/front lights
-    // TODO
-  }
+
 
   botImage.setFrame(r % 10);
+  gb.display.colorIndex = getBotPalette(r > 9);
+
   gb.display.drawImage(x, y, botImage);
+
+  gb.display.colorIndex = defaultPalette;
 }
+
 
 
 void Player::update() {
@@ -107,6 +123,8 @@ Player player = Player();
 
 void setup() {
   gb.begin();
+
+  initPalettes();
 }
 
 void loop() {
