@@ -1,6 +1,11 @@
 #include <Gamebuino-Meta.h>
 
+class MapUnit;
+
 class Mover {
+  friend class MapUnit;
+
+  MapUnit *drawUnit;
 
 public:
   virtual void update() = 0;
