@@ -2,8 +2,16 @@
 
 #include <assert.h>
 
-MapUnit::MapUnit(MapModel* mapModel, uint8_t col, uint8_t row, float height0) {
-  _mapModel = mapModel;
+// Empty constructor to enable usage in array.
+// Entries should be initialized using init() method before usage.
+MapUnit::MapUnit() {
+  _map = 0;
+}
+
+void MapUnit::init(Map* map, uint8_t col, uint8_t row, float height0) {
+  assert(!_map);
+
+  _map = map;
   _col = col;
   _row = row;
 
@@ -39,19 +47,19 @@ MapUnit* const MapUnit::neighbour(Heading heading) {
   uint8_t c = _col + colDelta[(int)heading];
   uint8_t r = _row + rowDelta[(int)heading];
 
-  if (c < _mapModel->numCols() && r < _mapModel->numRows()) {
-    return _mapModel->unitAt(c, r);
+  if (c < _map->numCols() && r < _map->numRows()) {
+    return _map->unitAt(c, r);
   }
   else {
     return 0;
   }
 }
 
-MapModel::MapModel(uint8_t numCols, uint8_t numRows) {
+Map::Map(uint8_t numCols, uint8_t numRows) {
   _numCols = numCols + 2;
   _numRows = numRows + 2;
 
-  _units = (MapUnit**) malloc(_numCols * _numRows * sizeof(MapUnit*));
+  _units = (MapUnit*) malloc(_numCols * _numRows * sizeof(MapUnit));
   for (uint8_t c = 0; c < _numCols; c++) {
     for (uint8_t r = 0; r < _numRows; r++) {
       float height0 = 0;
@@ -61,9 +69,13 @@ MapModel::MapModel(uint8_t numCols, uint8_t numRows) {
       ) {
         height0 = -10;
       }
-      _units[c * _numRows + r] = new MapUnit(this, c, r, height0);
+      _units[c * _numRows + r].init(this, c, r, height0);
     }
   }
+}
+
+Map::~Map() {
+  free(_units);
 }
 
 

@@ -1,11 +1,13 @@
 #include "Movers.h"
 #include "Utils.h"
 
-class MapModel;
+class Map;
 
 class MapUnit {
+  Map* _map;
+
+  // The mover at this unit, if any
   Mover* _mover;
-  MapModel* _mapModel;
 
   uint8_t _col;
   uint8_t _row;
@@ -22,7 +24,8 @@ class MapUnit {
   float _waveFlexibility;
 
 public:
-  MapUnit(MapModel* model, uint8_t col, uint8_t row, float height0);
+  MapUnit();
+  void init(Map* map, uint8_t col, uint8_t row, float height0);
 
   void setWave(float waveHeight);
 
@@ -33,19 +36,23 @@ public:
 };
 
 
-class MapModel {
+class Map {
   uint8_t _numCols;
   uint8_t _numRows;
 
-  // 1D-array of MapUnit pointers, representing 2D map
-  MapUnit** _units;
+  // 1D-array of MapUnits, representing a 2D map
+  MapUnit* _units;
 
 public:
-  MapModel(uint8_t numCols, uint8_t numRows);
+  Map(uint8_t numCols, uint8_t numRows);
+  ~Map();
 
   uint8_t const numCols() { return _numCols; }
   uint8_t const numRows() { return _numRows; }
 
-  MapUnit* const unitAt(uint8_t col, uint8_t row) { return _units[col * _numRows + row]; }
+  MapUnit* const unitAt(uint8_t col, uint8_t row) { return &_units[col * _numRows + row]; }
+
+  void update();
+  void draw(int16_t cameraX, int16_t cameraY);
 };
 
