@@ -8,7 +8,9 @@ enum Heading {
 };
 
 // column Delta for heading
-extern int8_t colDelta[];
+extern const int8_t colDelta[];
 
 // row Delta for heading
-extern int8_t rowDelta[];
+extern const int8_t rowDelta[];
+
+extern uint16_t clockCount;
