@@ -1,6 +1,11 @@
 #include "Movers.h"
 #include "Utils.h"
 
+struct MapPos {
+  uint8_t col;
+  uint8_t row;
+};
+
 class Map;
 
 class MapUnit {
@@ -9,8 +14,7 @@ class MapUnit {
   // The mover at this unit, if any
   Mover* _mover;
 
-  uint8_t _col;
-  uint8_t _row;
+  MapPos _pos;
 
   // Intrinsic height
   float _height0;
@@ -25,7 +29,7 @@ class MapUnit {
 
 public:
   MapUnit();
-  void init(Map* map, uint8_t col, uint8_t row, float height0);
+  void init(Map* map, MapPos pos, float height0);
 
   void setWave(float waveHeight);
 
@@ -50,7 +54,7 @@ public:
   uint8_t const numCols() { return _numCols; }
   uint8_t const numRows() { return _numRows; }
 
-  MapUnit* const unitAt(uint8_t col, uint8_t row) { return &_units[col * _numRows + row]; }
+  MapUnit* const unitAt(MapPos pos) { return &_units[pos.col * _numRows + pos.row]; }
 
   void update();
   void draw(int16_t cameraX, int16_t cameraY);

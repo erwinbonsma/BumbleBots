@@ -8,12 +8,11 @@ MapUnit::MapUnit() {
   _map = 0;
 }
 
-void MapUnit::init(Map* map, uint8_t col, uint8_t row, float height0) {
+void MapUnit::init(Map* map, MapPos pos, float height0) {
   assert(!_map);
 
   _map = map;
-  _col = col;
-  _row = row;
+  _pos = pos;
 
   _height0 = height0;
   _height = 0;
@@ -44,11 +43,12 @@ void MapUnit::removeMover(Mover* mover) {
 }
 
 MapUnit* const MapUnit::neighbour(Heading heading) {
-  uint8_t c = _col + colDelta[(int)heading];
-  uint8_t r = _row + rowDelta[(int)heading];
+  MapPos pos;
+  pos.col = _pos.col + colDelta[(int)heading];
+  pos.row = _pos.row + rowDelta[(int)heading];
 
-  if (c < _map->numCols() && r < _map->numRows()) {
-    return _map->unitAt(c, r);
+  if (pos.col < _map->numCols() && pos.row < _map->numRows()) {
+    return _map->unitAt(pos);
   }
   else {
     return 0;
@@ -60,16 +60,17 @@ Map::Map(uint8_t numCols, uint8_t numRows) {
   _numRows = numRows + 2;
 
   _units = (MapUnit*) malloc(_numCols * _numRows * sizeof(MapUnit));
-  for (uint8_t c = 0; c < _numCols; c++) {
-    for (uint8_t r = 0; r < _numRows; r++) {
+  MapPos pos;
+  for (pos.col = 0; pos.col < _numCols; pos.col++) {
+    for (pos.row = 0; pos.row < _numRows; pos.row++) {
       float height0 = 0;
       if (
-        c == 0 || c == _numCols - 1 ||
-        r == 0 || r == _numRows - 1
+        pos.col == 0 || pos.col == _numCols - 1 ||
+        pos.row == 0 || pos.row == _numRows - 1
       ) {
         height0 = -10;
       }
-      _units[c * _numRows + r].init(this, c, r, height0);
+      _units[pos.col * _numRows + pos.row].init(this, pos, height0);
     }
   }
 }
