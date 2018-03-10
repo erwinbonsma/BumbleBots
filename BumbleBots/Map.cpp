@@ -2,6 +2,8 @@
 
 #include "Waves.h"
 #include "Movers.h"
+#include "ImageData.h"
+#include "TileTypes.h"
 
 #include <assert.h>
 
@@ -77,6 +79,7 @@ IsoLineElement* makeIsoLineTree(const IsoLine* isoLine, uint8_t indexLo, uint8_t
   }
 }
 
+/*
 //-----------------------------------------------------------------------------
 // IsoLine implementation
 
@@ -144,9 +147,8 @@ void IsoLineLeaf::draw() const {
 //-----------------------------------------------------------------------------
 // MapUnit implementation
 
-/* Empty constructor to enable usage in array.
- * Entries should be initialized using init() method before usage.
- */
+// Empty constructor to enable usage in array.
+// Entries should be initialized using init() method before usage.
 MapUnit::MapUnit() {
   _map = 0;
 }
@@ -197,18 +199,24 @@ MapUnit* const MapUnit::neighbour(Heading heading) {
     return 0;
   }
 }
+*/
 
 //-----------------------------------------------------------------------------
 // Map implementation
 
+void Map::init(const LevelDef* levelDef) {
+  _levelDef = levelDef;
+}
+
+/*
 Map::Map(uint8_t numCols, uint8_t numRows) :
   _numCols(numCols + 2),
   _numRows(numRows + 2),
   _numIsoLines(numCols + numRows + 3) {
 
+  // Create map units
   MapPos pos;
 
-  // Create map units
   _units = (MapUnit*) malloc(_numCols * _numRows * sizeof(MapUnit));
   for (pos.col = 0; pos.col < _numCols; pos.col++) {
     for (pos.row = 0; pos.row < _numRows; pos.row++) {
@@ -241,18 +249,9 @@ Map::Map(uint8_t numCols, uint8_t numRows) :
   _waveStrength = 0;
   _waveStrengthDelta = 0.5;
 }
+*/
 
-Map::~Map() {
-  free(_units);
-
-  for (uint8_t i = 0; i < _numIsoLines; i++) {
-    delete _isoLines[i];
-  }
-  free(_isoLines);
-
-  delete _wave;
-}
-
+/*
 void Map::update() {
   _waveStrength = max(0.5, min(1, _waveStrength + _waveStrengthDelta));
 
@@ -265,10 +264,25 @@ void Map::update() {
     }
   }
 }
+*/
 
 void Map::draw() {
-  for (uint8_t i = 0; i < _numIsoLines; i++) {
-    _isoLines[i]->draw();
+  MapPos pos;
+  for (pos.col = 0; pos.col < numCols(); pos.col++) {
+    for (pos.row = 0; pos.row < numRows(); pos.row++) {
+      uint8_t tile = _levelDef->mapDef.tiles[pos.col + pos.row * maxCols];
+      TileType tileType = tileTypes[tile & 0x1f];
+      uint8_t height0 = 2 * (tile & 0xe0) >> 5 + tileType.height0;
+      int8_t x = (pos.col - pos.row) * 8 + 32;
+      int8_t y = (pos.col + pos.row) * 4 - height0;
+
+      uint8_t frame = tileType.spriteIndex;
+      for (uint8_t i = 0; i < tileType.spriteHeight; i++) {
+        mapTilesImage.setFrame(frame++);
+        gb.display.drawImage(x, y, mapTilesImage);
+        y += 8;
+      }
+    }
   }
 }
 

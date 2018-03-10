@@ -3,6 +3,9 @@
 #ifndef UTILS_INCLUDED
 #define UTILS_INCLUDED
 
+const uint8_t maxCols = 8;
+const uint8_t maxRows = 8;
+
 enum Heading {
   NORTH_EAST = 0,
   SOUTH_EAST = 1,

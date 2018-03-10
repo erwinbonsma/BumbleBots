@@ -1,7 +1,7 @@
 #include <Gamebuino-Meta.h>
 
-const uint8_t TILE_SPRITE_REPEAT = 0x01;
-const uint8_t TILE_CHECKERED = 0x02;
+const uint8_t TILEFLAG_SPRITE_REPEAT = 0x01;
+const uint8_t TILEFLAG_CHECKERED = 0x02;
 
 struct TileType {
   const uint8_t spriteIndex;
@@ -15,4 +15,3 @@ struct TileType {
 
 const uint8_t numTileTypes = 2;
 extern TileType tileTypes[numTileTypes];
-
