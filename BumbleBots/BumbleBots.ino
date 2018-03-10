@@ -15,7 +15,7 @@ void setup() {
 
   initPalettes();
 
-  tiles.init(&levelDefs[0]);
+  tiles.init(&levelDefs[1]);
   mapTilesImage.setTransparentColor(INDEX_LIGHTBLUE);
   botImage.setTransparentColor(INDEX_BLACK);
 }
@@ -25,10 +25,13 @@ void loop() {
 
   gb.display.clear();
 
-  //tiles.update();
+  clockCount++;
+  tiles.update();
   player.update();
 
   tiles.draw();
   player.draw(36, 37);
   //enemy.draw(50, 37);
+
+  gb.display.print(gb.frameCount);
 }

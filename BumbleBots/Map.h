@@ -1,65 +1,52 @@
 #include "Utils.h"
 
 #include "Levels.h"
+#include "Waves.h"
 
 class Map;
-class Wave;
 class Mover;
 class IsoLineElement;
+struct TileType;
 
-/*
 class MapUnit {
-    Map* _map;
+  // The mover at this unit, if any
+  //Mover* _mover;
 
-    // The mover at this unit, if any
-    Mover* _mover;
+  int8_t _height0;
 
-    MapPos _pos;
-
-    // Intrinsic height
-    float _height0;
-
-    // Height after applying wave
-    float _height;
-
-    // Previous height value
-    float _prevHeight;
-
-    float _waveFlexibility;
-
-  public:
-    MapUnit();
-    void init(Map* map, MapPos pos, float height0);
-
-    void setWave(float waveHeight);
-    float height() const {
-      return _height;
-    }
-
-    void addMover(Mover* mover);
-    void removeMover(Mover* mover);
-
-    MapUnit* const neighbour(Heading heading);
-
-    void draw() const;
-};
-*/
-
-class Map {
-    const LevelDef* _levelDef;
-
-    // 1D-array of MapUnits, representing a 2D map
-    //MapUnit _units[maxCols * maxRows];
-
-    // 1D-array of IsoLineElement pointers
-    //const uint8_t _numIsoLines;
-    //IsoLineElement** _isoLines;
-
-    //Wave* _wave;
-    //float _waveStrength;
-    //float _waveStrengthDelta;
+  // Height after applying wave
+  int8_t _height;
 
 public:
+  MapUnit();
+
+  void init(int8_t _height0);
+
+  void setWave(int8_t waveHeight);
+  int8_t height() const { return _height; }
+
+  //void addMover(Mover* mover);
+  //void removeMover(Mover* mover);
+
+  void draw(MapPos pos, TileType* tileType) const;
+};
+
+
+class Map {
+  const LevelDef* _levelDef;
+
+  // 1D-array of MapUnits, representing a 2D map
+  MapUnit _units[maxCols * maxRows];
+
+  // 1D-array of IsoLineElement pointers
+  //const uint8_t _numIsoLines;
+  //IsoLineElement** _isoLines;
+
+  DirectionalWave _wave;
+  float _waveStrength;
+  float _waveStrengthDelta;
+public:
+  Map();
   void init(const LevelDef* levelDef);
 
   uint8_t numCols() const {

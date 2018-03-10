@@ -143,33 +143,37 @@ float IsoLineLeaf::height(IsoLineSide side) const {
 void IsoLineLeaf::draw() const {
   _mapUnit->draw();
 }
+*/
 
 //-----------------------------------------------------------------------------
 // MapUnit implementation
 
 // Empty constructor to enable usage in array.
 // Entries should be initialized using init() method before usage.
-MapUnit::MapUnit() {
-  _map = 0;
-}
+MapUnit::MapUnit() {}
 
-void MapUnit::init(Map* map, MapPos pos, float height0) {
-  assert(!_map);
-
-  _map = map;
-  _pos = pos;
-
+void MapUnit::init(int8_t height0) {
   _height0 = height0;
-  _height = 0;
-  _mover = 0;
-  _waveFlexibility = 1;
+  _height = height0;
 }
 
-void MapUnit::setWave(float waveHeight) {
-  _prevHeight = _height;
-  _height = _height0 + _waveFlexibility * waveHeight;
+void MapUnit::setWave(int8_t waveHeight) {
+  _height = _height0 + waveHeight;
 }
 
+void MapUnit::draw(MapPos pos, TileType* tileType) const {
+  int8_t x = (pos.col - pos.row) * 8 + 32;
+  int8_t y = (pos.col + pos.row) * 4 - _height;
+
+  uint8_t frame = tileType->spriteIndex;
+  for (uint8_t i = 0; i < tileType->spriteHeight; i++) {
+    mapTilesImage.setFrame(frame++);
+    gb.display.drawImage(x, y, mapTilesImage);
+    y += 8;
+  }
+}
+
+/*
 void MapUnit::addMover(Mover* mover) {
   if (mover->drawUnit) {
     mover->drawUnit->removeMover(mover);
@@ -204,8 +208,29 @@ MapUnit* const MapUnit::neighbour(Heading heading) {
 //-----------------------------------------------------------------------------
 // Map implementation
 
+Map::Map() :
+  _wave(0.10 * 2 * PI) {
+
+  _wave.setAmplitude(1);
+}
+
 void Map::init(const LevelDef* levelDef) {
   _levelDef = levelDef;
+
+  MapPos pos;
+  for (pos.row = numRows(); --pos.row >= 0; ) {
+    uint8_t rowIndex = pos.row * maxCols;
+    for (pos.col = numCols(); --pos.col >= 0; ) {
+      uint8_t tile = _levelDef->mapDef.tiles[rowIndex + pos.col];
+      TileType tileType = tileTypes[tile & 0x1f];
+
+      int8_t height0 = tileType.height0 + 2 * (tile & 0xe0) >> 5;
+      _units[rowIndex + pos.col].init(height0);
+    }
+  }
+
+  _waveStrength = 0;
+  _waveStrengthDelta = 0.5;
 }
 
 /*
@@ -243,45 +268,37 @@ Map::Map(uint8_t numCols, uint8_t numRows) :
     }
     _isoLines[i] = makeIsoLineTree(&isoLine, 0, isoLine.length() - 1);
   }
-
-  _wave = new DirectionalWave(0.10);
-  _wave->setAmplitude(1);
-  _waveStrength = 0;
-  _waveStrengthDelta = 0.5;
 }
 */
 
-/*
 void Map::update() {
   _waveStrength = max(0.5, min(1, _waveStrength + _waveStrengthDelta));
 
   MapPos pos;
-  for (pos.col = 0; pos.col < _numCols; pos.col++) {
-    for (pos.row = 0; pos.row < _numRows; pos.row++) {
-      float waveHeight = smoothClamp( _wave->eval(pos) );
+  for (pos.row = numRows(); --pos.row >= 0; ) {
+    uint8_t rowIndex = pos.row * maxCols;
+    for (pos.col = numCols(); --pos.col >= 0; ) {
+      uint8_t tile = _levelDef->mapDef.tiles[rowIndex + pos.col];
+      TileType tileType = tileTypes[tile & 0x1f];
 
-      unitAt(pos)->setWave(waveHeight);
+      //float waveHeight = smoothClamp( _wave.eval(pos) );
+      float waveHeight = 0;
+      int8_t actualHeight = round(waveHeight * tileType.flexibility);
+
+      _units[rowIndex + pos.col].setWave(actualHeight);
     }
   }
 }
-*/
 
 void Map::draw() {
   MapPos pos;
-  for (pos.col = 0; pos.col < numCols(); pos.col++) {
-    for (pos.row = 0; pos.row < numRows(); pos.row++) {
-      uint8_t tile = _levelDef->mapDef.tiles[pos.col + pos.row * maxCols];
+  for (pos.row = 0; pos.row < numRows(); pos.row++) {
+    uint8_t rowIndex = pos.row * maxCols;
+    for (pos.col = 0; pos.col < numCols(); pos.col++) {
+      uint8_t tile = _levelDef->mapDef.tiles[rowIndex + pos.col];
       TileType tileType = tileTypes[tile & 0x1f];
-      uint8_t height0 = 2 * (tile & 0xe0) >> 5 + tileType.height0;
-      int8_t x = (pos.col - pos.row) * 8 + 32;
-      int8_t y = (pos.col + pos.row) * 4 - height0;
 
-      uint8_t frame = tileType.spriteIndex;
-      for (uint8_t i = 0; i < tileType.spriteHeight; i++) {
-        mapTilesImage.setFrame(frame++);
-        gb.display.drawImage(x, y, mapTilesImage);
-        y += 8;
-      }
+      _units[rowIndex + pos.col].draw(pos, &tileType);
     }
   }
 }

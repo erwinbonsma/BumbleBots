@@ -1,5 +1,8 @@
 #include "Utils.h"
 
+#ifndef __WAVES_INCLUDED
+#define __WAVES_INCLUDED
+
 class Wave {
 protected:
   float _amplitude;
@@ -34,4 +37,6 @@ public:
 
   float const eval(MapPos pos);
 };
+
+#endif
 

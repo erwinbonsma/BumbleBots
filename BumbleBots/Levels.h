@@ -19,6 +19,6 @@ struct LevelDef {
   const MapDef mapDef;
 };
 
-const uint8_t numLevels = 1;
+const uint8_t numLevels = 2;
 extern const LevelDef levelDefs[numLevels];
 

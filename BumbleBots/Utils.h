@@ -1,7 +1,7 @@
 #include <Gamebuino-Meta.h>
 
-#ifndef UTILS_INCLUDED
-#define UTILS_INCLUDED
+#ifndef __UTILS_INCLUDED
+#define __UTILS_INCLUDED
 
 const uint8_t maxCols = 8;
 const uint8_t maxRows = 8;
@@ -13,9 +13,12 @@ enum Heading {
   NORTH_WEST = 3
 };
 
+/* Although col and row are never negative, using signed values to enable more
+ * efficient iteration (where a negative value acts as guard).
+ */
 struct MapPos {
-  uint8_t col;
-  uint8_t row;
+  int8_t col;
+  int8_t row;
 };
 
 // column Delta for heading
