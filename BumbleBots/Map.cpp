@@ -162,8 +162,10 @@ void MapUnit::setWave(int8_t waveHeight) {
 }
 
 void MapUnit::draw(MapPos pos, TileType* tileType) const {
-  int8_t x = (pos.col - pos.row) * 8 + 32;
-  int8_t y = (pos.col + pos.row) * 4 - _height;
+  int8_t col = colOfPos(pos);
+  int8_t row = rowOfPos(pos);
+  int8_t x = (col - row) * 8 + 32;
+  int8_t y = (col + row) * 4 - _height;
 
   uint8_t frame = tileType->spriteIndex;
   for (uint8_t i = 0; i < tileType->spriteHeight; i++) {
@@ -217,16 +219,12 @@ Map::Map() :
 void Map::init(const LevelDef* levelDef) {
   _levelDef = levelDef;
 
-  MapPos pos;
-  for (pos.row = numRows(); --pos.row >= 0; ) {
-    uint8_t rowIndex = pos.row * maxCols;
-    for (pos.col = numCols(); --pos.col >= 0; ) {
-      uint8_t tile = _levelDef->mapDef.tiles[rowIndex + pos.col];
-      TileType tileType = tileTypes[tile & 0x1f];
+  for (MapPos pos = maxMapPos; --pos >= 0; ) {
+    uint8_t tile = _levelDef->mapDef.tiles[pos];
+    TileType tileType = tileTypes[tile & 0x1f];
 
-      int8_t height0 = tileType.height0 + 2 * (tile & 0xe0) >> 5;
-      _units[rowIndex + pos.col].init(height0);
-    }
+    int8_t height0 = tileType.height0 + 2 * (tile & 0xe0) >> 5;
+    _units[pos].init(height0);
   }
 
   _waveStrength = 0;
@@ -274,32 +272,23 @@ Map::Map(uint8_t numCols, uint8_t numRows) :
 void Map::update() {
   _waveStrength = max(0.5, min(1, _waveStrength + _waveStrengthDelta));
 
-  MapPos pos;
-  for (pos.row = numRows(); --pos.row >= 0; ) {
-    uint8_t rowIndex = pos.row * maxCols;
-    for (pos.col = numCols(); --pos.col >= 0; ) {
-      uint8_t tile = _levelDef->mapDef.tiles[rowIndex + pos.col];
-      TileType tileType = tileTypes[tile & 0x1f];
+  for (MapPos pos = maxMapPos; --pos >= 0; ) {
+    uint8_t tile = _levelDef->mapDef.tiles[pos];
+    TileType tileType = tileTypes[tile & 0x1f];
 
-      //float waveHeight = smoothClamp( _wave.eval(pos) );
-      float waveHeight = 0;
-      int8_t actualHeight = round(waveHeight * tileType.flexibility);
+    //float waveHeight = smoothStep( _wave.eval(pos) );
+    float waveHeight = 0;
+    int8_t actualHeight = round(waveHeight * tileType.flexibility);
 
-      _units[rowIndex + pos.col].setWave(actualHeight);
-    }
+    _units[pos].setWave(actualHeight);
   }
 }
 
 void Map::draw() {
-  MapPos pos;
-  for (pos.row = 0; pos.row < numRows(); pos.row++) {
-    uint8_t rowIndex = pos.row * maxCols;
-    for (pos.col = 0; pos.col < numCols(); pos.col++) {
-      uint8_t tile = _levelDef->mapDef.tiles[rowIndex + pos.col];
-      TileType tileType = tileTypes[tile & 0x1f];
-
-      _units[rowIndex + pos.col].draw(pos, &tileType);
-    }
+  for (MapPos pos = 0; pos < maxMapPos; pos++) {
+    uint8_t tile = _levelDef->mapDef.tiles[pos];
+    TileType tileType = tileTypes[tile & 0x1f];
+    _units[pos].draw(pos, &tileType);
   }
 }
 

@@ -13,13 +13,19 @@ enum Heading {
   NORTH_WEST = 3
 };
 
-/* Although col and row are never negative, using signed values to enable more
- * efficient iteration (where a negative value acts as guard).
- */
-struct MapPos {
-  int8_t col;
-  int8_t row;
-};
+/* Valid values: 0..maxCols * maxRows - 1
+   Using signed to enable more efficient iteration
+*/
+typedef int8_t MapPos;
+inline uint8_t colOfPos(MapPos pos) {
+  return pos & 0x07;
+}
+inline uint8_t rowOfPos(MapPos pos) {
+  return (pos >> 3) & 0x07;
+}
+
+// Exclusive
+const MapPos maxMapPos = maxCols * maxRows;
 
 // column Delta for heading
 extern const int8_t colDelta[];
@@ -30,5 +36,6 @@ extern const int8_t rowDelta[];
 extern uint16_t clockCount;
 
 float smoothClamp(float value);
+float smoothStep(float value);
 
 #endif

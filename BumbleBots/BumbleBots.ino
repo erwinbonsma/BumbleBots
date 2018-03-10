@@ -22,7 +22,6 @@ void setup() {
 
 void loop() {
   while(!gb.update());
-
   gb.display.clear();
 
   clockCount++;
