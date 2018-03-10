@@ -1,4 +1,4 @@
-#include "Map.h"
+#include "Utils.h"
 
 class Wave {
 protected:
@@ -7,6 +7,8 @@ protected:
   float _waveLength;
 
 public:
+  Wave();
+
   void setAmplitude(float amplitude) { _amplitude = amplitude; }
   void setPeriod(float period) { _period = period; }
   void setWaveLength(float waveLength) { _waveLength = waveLength; }
@@ -14,7 +16,7 @@ public:
   virtual float const eval(MapPos pos) = 0;
 };
 
-class DirectionalWave : Wave {
+class DirectionalWave : public Wave {
   float _dcol;
   float _drow;
 public:
@@ -23,7 +25,7 @@ public:
   float const eval(MapPos pos);
 };
 
-class ShockWave : Wave {
+class ShockWave : public Wave {
   MapPos _origin;
   uint16_t _clock0;
 
