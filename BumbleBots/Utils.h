@@ -38,4 +38,6 @@ extern uint16_t clockCount;
 float smoothClamp(float value);
 float smoothStep(float value);
 
+float fastCos(float value);
+
 #endif

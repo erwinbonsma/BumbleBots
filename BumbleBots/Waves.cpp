@@ -2,7 +2,7 @@
 
 Wave::Wave() {
   _amplitude = 1;
-  _period = 25 * 3; // 3 seconds
+  _period = 10 * 3; // ~3 seconds
   _waveLength = 4;
 }
 
@@ -13,7 +13,7 @@ DirectionalWave::DirectionalWave(float angle) : Wave() {
 
 float const DirectionalWave::eval(MapPos pos) {
   float d = colOfPos(pos) * _dcol + rowOfPos(pos) * _drow;
-  return sin(2 * PI * (d/_waveLength - clockCount/_period)) * _amplitude;
+  return fastCos(d/_waveLength - clockCount/_period) * _amplitude;
 }
 
 ShockWave::ShockWave(MapPos origin) : Wave() {
@@ -26,5 +26,5 @@ float const ShockWave::eval(MapPos pos) {
   int8_t drow = rowOfPos(pos) - rowOfPos(_origin);
   float sqrDist = dcol*dcol + drow*drow;
   float t = (clockCount - _clock0) / _period - sqrDist / (_waveLength * _waveLength);
-  return sin(2 * PI * max(0, min(1, t))) * _amplitude;
+  return fastCos(max(0, min(1, t)) - 0.25f) * _amplitude;
 }
