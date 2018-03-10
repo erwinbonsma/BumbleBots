@@ -276,11 +276,13 @@ void Map::update() {
     uint8_t tile = _levelDef->mapDef.tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
 
-    //float waveHeight = smoothStep( _wave.eval(pos) );
-    float waveHeight = 0;
-    int8_t actualHeight = round(waveHeight * tileType.flexibility);
+    if (tileType.flexibility) {
+      //float waveHeight = smoothStep( _wave.eval(pos) );
+      float waveHeight = _wave.eval(pos);
+      int8_t actualHeight = round(waveHeight * tileType.flexibility);
 
-    _units[pos].setWave(actualHeight);
+      _units[pos].setWave(actualHeight);
+    }
   }
 }
 
