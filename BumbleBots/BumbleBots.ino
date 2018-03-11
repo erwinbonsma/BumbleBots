@@ -13,7 +13,7 @@ Map tiles = Map();
 void setup() {
   gb.begin();
 
-  tiles.init(&levelDefs[0]);
+  tiles.init(&levelDefs[1]);
   mapTilesImage.setTransparentColor(INDEX_LIGHTBLUE);
   botImage.setTransparentColor(INDEX_BLACK);
 }

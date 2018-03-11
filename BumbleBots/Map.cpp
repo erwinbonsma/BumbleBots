@@ -4,6 +4,7 @@
 #include "Movers.h"
 #include "ImageData.h"
 #include "TileTypes.h"
+#include "Palettes.h"
 
 #include <assert.h>
 
@@ -167,12 +168,18 @@ void MapUnit::draw(MapPos pos, TileType* tileType) const {
   int8_t x = (col - row) * 8 + 32;
   int8_t y = (col + row) * 4 - _height;
 
+  if (!(tileType->flags & TILEFLAG_CHECKERED) || (col + row) % 2) {
+    gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
+  }
+
   uint8_t frame = tileType->spriteIndex;
   for (uint8_t i = 0; i < tileType->spriteHeight; i++) {
     mapTilesImage.setFrame(frame++);
     gb.display.drawImage(x, y, mapTilesImage);
     y += 8;
   }
+
+  gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 }
 
 /*

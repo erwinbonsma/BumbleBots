@@ -4,12 +4,13 @@ TileType tileTypes[numTileTypes] = {
   // 0: Basic, fixed, light
   TileType {
     .spriteIndex = 2,
-    .spriteHeight = 3,
+    // Actual height is 3, but seeing if 2 suffices for now (for faster drawing)
+    .spriteHeight = 2,
     .spriteYDelta = 0,
     .paletteIndex = 0,
     .height0 = 0,
     .flexibility = 0,
-    .flags = TILEFLAG_SPRITE_REPEAT
+    .flags = 0 // TILEFLAG_SPRITE_REPEAT
   },
 
   // 1: Basic, normal flexibilty
@@ -17,9 +18,9 @@ TileType tileTypes[numTileTypes] = {
     .spriteIndex = 0,
     .spriteHeight = 2,
     .spriteYDelta = 0,
-    .paletteIndex = 0,
+    .paletteIndex = 4,
     .height0 = 0,
-    .flexibility = 3,
+    .flexibility = 2,
     .flags = TILEFLAG_SPRITE_REPEAT | TILEFLAG_CHECKERED
   }
 };
