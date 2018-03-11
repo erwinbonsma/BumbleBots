@@ -2,7 +2,7 @@
 
 #include "Utils.h"
 
-struct MapDef {
+struct TilesSpec {
   const uint8_t numCols;
   const uint8_t numRows;
 
@@ -15,10 +15,10 @@ struct MapDef {
   const uint8_t tiles[maxCols * maxRows];
 };
 
-struct LevelDef {
-  const MapDef mapDef;
+struct LevelSpec {
+  const TilesSpec tilesSpec;
 };
 
 const uint8_t numLevels = 2;
-extern const LevelDef levelDefs[numLevels];
+extern const LevelSpec levelSpecs[numLevels];
 

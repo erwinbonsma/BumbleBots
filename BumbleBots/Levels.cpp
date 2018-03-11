@@ -9,9 +9,9 @@ const uint8_t H5 = 0xa0;
 const uint8_t H6 = 0xc0;
 const uint8_t H7 = 0xe0;
 
-const LevelDef levelDefs[numLevels] = {
-  LevelDef {
-    .mapDef = MapDef {
+const LevelSpec levelSpecs[numLevels] = {
+  LevelSpec {
+    .tilesSpec = TilesSpec {
       .numCols = 8,
       .numRows = 8,
       .tiles = {
@@ -26,8 +26,8 @@ const LevelDef levelDefs[numLevels] = {
       }
     }
   },
-  LevelDef {
-    .mapDef = MapDef {
+  LevelSpec {
+    .tilesSpec = TilesSpec {
       .numCols = 8,
       .numRows = 8,
       .tiles = {

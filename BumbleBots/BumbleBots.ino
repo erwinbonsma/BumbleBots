@@ -2,35 +2,43 @@
 
 #include "Palettes.h"
 #include "Movers.h"
-#include "Map.h"
+#include "Tiles.h"
 #include "TileTypes.h"
 #include "ImageData.h"
+#include "Globals.h"
 
 Player player = Player();
 Enemy enemy = Enemy();
-Map tiles = Map();
 
 void setup() {
   gb.begin();
 
-  initPalettes();
-
-  tiles.init(&levelDefs[1]);
+  tiles->init(&levelSpecs[1]);
   mapTilesImage.setTransparentColor(INDEX_LIGHTBLUE);
   botImage.setTransparentColor(INDEX_BLACK);
+  dazedImage.setTransparentColor(INDEX_BLACK);
+
+  numMovers = 0;
+  player.setIndex(numMovers++);
+  movers[player.index()] = &player;
+  tiles->addMover(28, player.index());
+
+  //enemy.setIndex(numMovers++);
+  //movers[enemy.index()] = &enemy;
+  //tiles->addMover(9, enemy.index());
+
+  gb.setFrameRate(15);
 }
 
 void loop() {
   while(!gb.update());
   gb.display.clear();
 
-  clockCount++;
-  tiles.update();
-  player.update();
+  tiles->update();
+  for (int8_t i = numMovers; --i >= 0; ) {
+    movers[i]->update();
+  }
+  tiles->draw();
 
-  tiles.draw();
-  player.draw(36, 37);
-  //enemy.draw(50, 37);
-
-  gb.display.print(gb.frameCount);
+  gb.display.printf("%d/%d", gb.frameCount, gb.getCpuLoad());
 }

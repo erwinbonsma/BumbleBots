@@ -16,7 +16,7 @@ public:
   void setPeriod(float period) { _period = period; }
   void setWaveLength(float waveLength) { _waveLength = waveLength; }
 
-  virtual float const eval(MapPos pos) = 0;
+  virtual float const eval(TilePos pos) = 0;
 };
 
 class DirectionalWave : public Wave {
@@ -25,17 +25,17 @@ class DirectionalWave : public Wave {
 public:
   DirectionalWave(float angle);
 
-  float const eval(MapPos pos);
+  float const eval(TilePos pos);
 };
 
 class ShockWave : public Wave {
-  MapPos _origin;
-  uint16_t _clock0;
+  TilePos _origin;
+  uint16_t _startTime;
 
 public:
-  ShockWave(MapPos origin);
+  ShockWave(TilePos origin);
 
-  float const eval(MapPos pos);
+  float const eval(TilePos pos);
 };
 
 #endif

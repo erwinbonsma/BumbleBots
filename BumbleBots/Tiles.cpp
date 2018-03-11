@@ -1,11 +1,18 @@
-#include "Map.h"
+#include "Tiles.h"
 
-#include "Waves.h"
-#include "Movers.h"
+#include "Globals.h"
 #include "ImageData.h"
+#include "Movers.h"
 #include "TileTypes.h"
+#include "Waves.h"
+#include "Palettes.h"
 
 #include <assert.h>
+
+Tiles _tiles = Tiles();
+
+// Exposed in Globals.h
+Tiles* tiles = &_tiles;
 
 enum IsoLineSide {
   LEFT_SIDE = 0,
@@ -16,15 +23,15 @@ enum IsoLineSide {
 // IsoLine declaration
 
 class IsoLine {
-  const Map* _map;
-  const MapPos _startPos;
+  const Tiles* _map;
+  const TilePos _startPos;
   const uint8_t _length;
 
 public:
-  IsoLine(Map* map, MapPos start);
+  IsoLine(Tiles* map, TilePos start);
 
   uint8_t length() { return _length; }
-  MapUnit* unitAt(uint8_t index) const;
+  Tile* unitAt(uint8_t index) const;
 };
 
 //------------------------------------------------------------------------------
@@ -53,9 +60,9 @@ public:
 // IsoLineLeaf declaration
 
 class IsoLineLeaf : public IsoLineElement {
-  const MapUnit* _mapUnit;
+  const Tile* _mapUnit;
 public:
-  IsoLineLeaf(const MapUnit* mapUnit);
+  IsoLineLeaf(const Tile* mapUnit);
   ~IsoLineLeaf();
 
   float height(IsoLineSide side) const;
@@ -83,7 +90,7 @@ IsoLineElement* makeIsoLineTree(const IsoLine* isoLine, uint8_t indexLo, uint8_t
 //-----------------------------------------------------------------------------
 // IsoLine implementation
 
-IsoLine::IsoLine(Map* map, MapPos startPos) :
+IsoLine::IsoLine(Tiles* map, TilePos startPos) :
   _map(map),
   _startPos(startPos),
   _length(min(
@@ -91,8 +98,8 @@ IsoLine::IsoLine(Map* map, MapPos startPos) :
     map->numCols() - startPos.col
   )) {}
 
-MapUnit* IsoLine::unitAt(uint8_t index) const {
-  MapPos pos = _startPos;
+Tile* IsoLine::unitAt(uint8_t index) const {
+  TilePos pos = _startPos;
   pos.col += index;
   pos.row -= index;
   return _map->unitAt(pos);
@@ -129,7 +136,7 @@ void IsoLinePair::draw() const {
 //-----------------------------------------------------------------------------
 // IsoLineLeaf implementation
 
-IsoLineLeaf::IsoLineLeaf(const MapUnit* mapUnit) :
+IsoLineLeaf::IsoLineLeaf(const Tile* mapUnit) :
   _mapUnit(mapUnit) {}
 
 IsoLineLeaf::~IsoLineLeaf() {
@@ -146,81 +153,66 @@ void IsoLineLeaf::draw() const {
 */
 
 //-----------------------------------------------------------------------------
-// MapUnit implementation
+// Tile implementation
 
 // Empty constructor to enable usage in array.
 // Entries should be initialized using init() method before usage.
-MapUnit::MapUnit() {}
+Tile::Tile() {}
 
-void MapUnit::init(int8_t height0) {
+void Tile::init(int8_t height0) {
   _height0 = height0;
   _height = height0;
+
+  _moverIndex = -1;
 }
 
-void MapUnit::setWave(int8_t waveHeight) {
+void Tile::setWave(int8_t waveHeight) {
   _height = _height0 + waveHeight;
 }
 
-void MapUnit::draw(MapPos pos, TileType* tileType) const {
+void Tile::draw(TilePos pos, TileType* tileType) const {
   int8_t col = colOfPos(pos);
   int8_t row = rowOfPos(pos);
   int8_t x = (col - row) * 8 + 32;
   int8_t y = (col + row) * 4 - _height;
 
+  if (x <= -16 || x >= 80) {
+    return;
+  }
+
+  if (!(tileType->flags & TILEFLAG_CHECKERED) || (col + row) % 2) {
+    gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
+  }
+
   uint8_t frame = tileType->spriteIndex;
+  uint8_t dy = tileType->spriteYDelta;
   for (uint8_t i = 0; i < tileType->spriteHeight; i++) {
     mapTilesImage.setFrame(frame++);
-    gb.display.drawImage(x, y, mapTilesImage);
-    y += 8;
+    gb.display.drawImage(x, y + dy, mapTilesImage);
+    dy += 8;
+  }
+
+  gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
+
+  if (_moverIndex >= 0) {
+    movers[_moverIndex]->draw(x + 4, y - 2);
   }
 }
-
-/*
-void MapUnit::addMover(Mover* mover) {
-  if (mover->drawUnit) {
-    mover->drawUnit->removeMover(mover);
-  }
-  mover->drawUnit = this;
-  // TODO: Update when supporting multiple movers on one tile
-  _mover = mover;
-}
-
-void MapUnit::removeMover(Mover* mover) {
-  assert(_mover == mover);
-  assert(mover->drawUnit == this);
-  mover->drawUnit = 0;
-  // TODO: Update when supporting multiple movers on one tile
-  _mover = 0;
-}
-
-MapUnit* const MapUnit::neighbour(Heading heading) {
-  MapPos pos;
-  pos.col = _pos.col + colDelta[(int)heading];
-  pos.row = _pos.row + rowDelta[(int)heading];
-
-  if (pos.col < _map->numCols() && pos.row < _map->numRows()) {
-    return _map->unitAt(pos);
-  }
-  else {
-    return 0;
-  }
-}
-*/
 
 //-----------------------------------------------------------------------------
-// Map implementation
+// Tiles implementation
 
-Map::Map() :
-  _wave(0.10 * 2 * PI) {
+Tiles::Tiles() :
+  _wave(-0.1 * 2 * PI) {
 
   _wave.setAmplitude(1);
 }
 
-void Map::init(const LevelDef* levelDef) {
-  _levelDef = levelDef;
+void Tiles::init(const LevelSpec* levelSpec) {
+  _levelSpec = levelSpec;
 
-  for (MapPos pos = maxMapPos; --pos >= 0; ) {
-    uint8_t tile = _levelDef->mapDef.tiles[pos];
+  for (TilePos pos = maxTilePos; --pos >= 0; ) {
+    uint8_t tile = _levelSpec->tilesSpec.tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
 
     int8_t height0 = tileType.height0 + 2 * (tile & 0xe0) >> 5;
@@ -232,15 +224,15 @@ void Map::init(const LevelDef* levelDef) {
 }
 
 /*
-Map::Map(uint8_t numCols, uint8_t numRows) :
+Tiles::Tiles(uint8_t numCols, uint8_t numRows) :
   _numCols(numCols + 2),
   _numRows(numRows + 2),
   _numIsoLines(numCols + numRows + 3) {
 
   // Create map units
-  MapPos pos;
+  TilePos pos;
 
-  _units = (MapUnit*) malloc(_numCols * _numRows * sizeof(MapUnit));
+  _units = (Tile*) malloc(_numCols * _numRows * sizeof(Tile));
   for (pos.col = 0; pos.col < _numCols; pos.col++) {
     for (pos.row = 0; pos.row < _numRows; pos.row++) {
       float height0 = 0;
@@ -255,7 +247,7 @@ Map::Map(uint8_t numCols, uint8_t numRows) :
   }
 
   // Create iso-lines needed to correctly draw map
-  pos = (MapPos){ .col = 0, .row = 0};
+  pos = (TilePos){ .col = 0, .row = 0};
   _isoLines = (IsoLineElement**) malloc(_numIsoLines * sizeof(IsoLineElement*));
   for (uint8_t i = 0; i < _numIsoLines; i++) {
     IsoLine isoLine = IsoLine(this, pos);
@@ -269,11 +261,39 @@ Map::Map(uint8_t numCols, uint8_t numRows) :
 }
 */
 
-void Map::update() {
+int8_t Tiles::neighbour(int8_t tileIndex, Heading heading) {
+  TilePos tilePos = (TilePos)tileIndex;
+  int8_t col = colOfPos(tilePos) + colDelta[heading];
+  int8_t row = rowOfPos(tilePos) + rowDelta[heading];
+  if (col < 0 || col >= numCols() || row < 0 || row >= numRows()) {
+    return -1;
+  }
+  return makeTilePos(col, row);
+}
+
+void Tiles::addMover(int8_t tileIndex, int8_t moverIndex) {
+  Mover* mover = movers[moverIndex];
+
+  if (mover->_drawTileIndex >= 0) {
+    // Remove from current tile
+    assert(_units[mover->_drawTileIndex]._moverIndex == moverIndex);
+
+    // TODO: Update when supporting multiple movers on one tile
+    _units[mover->_drawTileIndex]._moverIndex = -1;
+  } else {
+    mover->_tileIndex = tileIndex;
+  }
+
+  mover->_drawTileIndex = tileIndex;
+  // TODO: Update when supporting multiple movers on one tile
+  _units[mover->_drawTileIndex]._moverIndex = moverIndex;
+}
+
+void Tiles::update() {
   _waveStrength = max(0.5, min(1, _waveStrength + _waveStrengthDelta));
 
-  for (MapPos pos = maxMapPos; --pos >= 0; ) {
-    uint8_t tile = _levelDef->mapDef.tiles[pos];
+  for (TilePos pos = maxTilePos; --pos >= 0; ) {
+    uint8_t tile = _levelSpec->tilesSpec.tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
 
     if (tileType.flexibility) {
@@ -286,9 +306,9 @@ void Map::update() {
   }
 }
 
-void Map::draw() {
-  for (MapPos pos = 0; pos < maxMapPos; pos++) {
-    uint8_t tile = _levelDef->mapDef.tiles[pos];
+void Tiles::draw() {
+  for (TilePos pos = 0; pos < maxTilePos; pos++) {
+    uint8_t tile = _levelSpec->tilesSpec.tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
     _units[pos].draw(pos, &tileType);
   }
