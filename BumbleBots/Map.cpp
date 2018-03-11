@@ -218,7 +218,7 @@ MapUnit* const MapUnit::neighbour(Heading heading) {
 // Map implementation
 
 Map::Map() :
-  _wave(0.10 * 2 * PI) {
+  _wave(-0.1 * 2 * PI) {
 
   _wave.setAmplitude(1);
 }
