@@ -13,7 +13,7 @@ Enemy enemy = Enemy();
 void setup() {
   gb.begin();
 
-  tiles->init(&levelSpecs[0]);
+  tiles->init(&levelSpecs[1]);
   mapTilesImage.setTransparentColor(INDEX_LIGHTBLUE);
   botImage.setTransparentColor(INDEX_BLACK);
 
@@ -25,6 +25,8 @@ void setup() {
   //enemy.setIndex(numMovers++);
   //movers[enemy.index()] = &enemy;
   //tiles->addMover(9, enemy.index());
+
+  //gb.setFrameRate(5);
 }
 
 void loop() {

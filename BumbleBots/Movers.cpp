@@ -23,7 +23,7 @@ Mover::Mover() {
   _movement = 0;
   _movementDir = 0;
   _movementInc = 1;
-  _movementDelay = 10; // 2
+  _movementDelay = 2;
   _movementMax = _movementDelay * 8;
 
   _height = 40;
@@ -60,7 +60,7 @@ void Mover::updateHeight() {
 
 void Mover::updateDxDy() {
   if (isMoving()) {
-    int8_t h = (int8_t)heading();
+    Heading h = heading();
     _dx = floor((colDelta[h] - rowDelta[h]) * _movement / (float)_movementDelay + 0.5) * _movementDir;
     _dy = floor((colDelta[h] + rowDelta[h]) * _movement / (float)_movementDelay / 2 + 0.5) * _movementDir;
   } else {
@@ -73,7 +73,7 @@ void Mover::moveStep() {
   _movement += _movementInc;
 
   int8_t relMov = (_movement * _movementInc + _movementMax) % _movementMax;
-  gb.display.printf("relMov=%d, hd=%d\n", relMov, moveHeading());
+  //gb.display.printf("relMov=%d, hd=%d\n", relMov, moveHeading());
   if (relMov == 2 * _movementDelay) {
     // About to enter next tile
     int8_t destTile = tiles->neighbour(_tileIndex, moveHeading());
@@ -120,7 +120,7 @@ void Mover::enteringTile(int8_t tileIndex) {
   TilePos fromPos = tiles->posOfTile(_tileIndex);
   TilePos toPos = tiles->posOfTile(_tileIndex2);
 
-  if ( colOfPos(toPos) + rowOfPos(toPos) > colOfPos(fromPos) + rowOfPos(toPos) ) {
+  if ( colOfPos(toPos) + rowOfPos(toPos) > colOfPos(fromPos) + rowOfPos(fromPos) ) {
     // Next tile is in front of current one.
     // Add mover there, to ensure it is drawn on top of both tiles.
     tiles->addMover(toPos, _moverIndex);
@@ -211,8 +211,7 @@ void Bot::draw(int8_t x, int8_t y) {
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
-  // TODO: Check why offset is necessary
-  gb.display.drawImage(x + _dx + 1, y + _dy - 0 * _heightDelta - 1, botImage);
+  gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, botImage);
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 }
@@ -251,7 +250,6 @@ void Player::update() {
     }
   }
   else if (
-    0 && // TODO: enable
     isMoving() &&
     desiredMovementDir != 0 &&
     // TODO: Dazed
@@ -274,7 +272,7 @@ void Player::update() {
   //  // TODO: Sound effect
   //}
 
-  gb.display.printf("t1=%d, t2=%d, dt=%d\n", _tileIndex, _tileIndex2, _drawTileIndex);
+  //gb.display.printf("t1=%d, t2=%d, dt=%d\n", _tileIndex, _tileIndex2, _drawTileIndex);
 }
 
 //-----------------------------------------------------------------------------
