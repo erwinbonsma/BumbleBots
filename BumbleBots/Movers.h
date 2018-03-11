@@ -1,9 +1,9 @@
 #include <Gamebuino-Meta.h>
 
-class MapUnit;
+class Tile;
 
 class Mover {
-  friend class Map;
+  friend class Tiles;
 
   uint8_t drawTileIndex;
 

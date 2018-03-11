@@ -16,16 +16,16 @@ enum Heading {
 /* Valid values: 0..maxCols * maxRows - 1
    Using signed to enable more efficient iteration
 */
-typedef int8_t MapPos;
-inline uint8_t colOfPos(MapPos pos) {
+typedef int8_t TilePos;
+inline uint8_t colOfPos(TilePos pos) {
   return pos & 0x07;
 }
-inline uint8_t rowOfPos(MapPos pos) {
+inline uint8_t rowOfPos(TilePos pos) {
   return (pos >> 3) & 0x07;
 }
 
 // Exclusive
-const MapPos maxMapPos = maxCols * maxRows;
+const TilePos maxTilePos = maxCols * maxRows;
 
 // column Delta for heading
 extern const int8_t colDelta[];

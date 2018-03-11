@@ -2,7 +2,7 @@
 
 #include "Palettes.h"
 #include "Movers.h"
-#include "Map.h"
+#include "Tiles.h"
 #include "TileTypes.h"
 #include "ImageData.h"
 #include "Globals.h"
@@ -13,7 +13,7 @@ Enemy enemy = Enemy();
 void setup() {
   gb.begin();
 
-  tiles->init(&levelDefs[1]);
+  tiles->init(&levelSpecs[1]);
   mapTilesImage.setTransparentColor(INDEX_LIGHTBLUE);
   botImage.setTransparentColor(INDEX_BLACK);
 

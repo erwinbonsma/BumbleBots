@@ -3,13 +3,13 @@
 #include "Levels.h"
 #include "Waves.h"
 
-class Map;
+class Tiles;
 class Mover;
 class IsoLineElement;
 struct TileType;
 
-class MapUnit {
-  friend class Map;
+class Tile {
+  friend class Tiles;
 
   // The mover at this unit, if any
   uint8_t _moverIndex;
@@ -20,22 +20,22 @@ class MapUnit {
   int8_t _height;
 
 public:
-  MapUnit();
+  Tile();
 
   void init(int8_t _height0);
 
   void setWave(int8_t waveHeight);
   int8_t height() const { return _height; }
 
-  void draw(MapPos pos, TileType* tileType) const;
+  void draw(TilePos pos, TileType* tileType) const;
 };
 
 
-class Map {
-  const LevelDef* _levelDef;
+class Tiles {
+  const LevelSpec* _levelSpec;
 
-  // 1D-array of MapUnits, representing a 2D map
-  MapUnit _units[maxCols * maxRows];
+  // 1D-array of Tiles, representing a 2D map
+  Tile _units[maxCols * maxRows];
 
   // 1D-array of IsoLineElement pointers
   //const uint8_t _numIsoLines;
@@ -45,15 +45,15 @@ class Map {
   float _waveStrength;
   float _waveStrengthDelta;
 public:
-  Map();
-  void init(const LevelDef* levelDef);
+  Tiles();
+  void init(const LevelSpec* levelSpec);
 
   uint8_t numCols() const {
-    return _levelDef->mapDef.numCols;
+    return _levelSpec->tilesSpec.numCols;
   }
 
   uint8_t numRows() const {
-    return _levelDef->mapDef.numRows;
+    return _levelSpec->tilesSpec.numRows;
   }
 
   /* Adds mover to specified tile for drawing purposes.

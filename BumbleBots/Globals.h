@@ -6,6 +6,6 @@ class Mover;
 extern uint8_t numMovers;
 extern Mover* movers[maxNumMovers];
 
-// Implemented in Map.h
-class Map;
-extern Map* tiles;
+// Implemented in Tiles.h
+class Tiles;
+extern Tiles* tiles;
