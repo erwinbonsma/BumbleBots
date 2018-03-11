@@ -2,7 +2,7 @@
 
 Wave::Wave() {
   _amplitude = 1;
-  _period = 10 * 3; // ~3 seconds
+  _period = 60; // ~3 seconds
   _waveLength = 4;
 }
 
