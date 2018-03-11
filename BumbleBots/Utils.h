@@ -33,8 +33,6 @@ extern const int8_t colDelta[];
 // row Delta for heading
 extern const int8_t rowDelta[];
 
-extern uint16_t clockCount;
-
 float smoothClamp(float value);
 float smoothStep(float value);
 

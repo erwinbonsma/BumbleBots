@@ -29,7 +29,6 @@ void loop() {
   while(!gb.update());
   gb.display.clear();
 
-  clockCount++;
   tiles->update();
   for (int8_t i = numMovers; --i >= 0; ) {
     movers[i]->update();

@@ -30,7 +30,7 @@ public:
 
 class ShockWave : public Wave {
   MapPos _origin;
-  uint16_t _clock0;
+  uint16_t _startTime;
 
 public:
   ShockWave(MapPos origin);
