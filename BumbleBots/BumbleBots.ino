@@ -13,7 +13,7 @@ Enemy enemy = Enemy();
 void setup() {
   gb.begin();
 
-  tiles->init(&levelSpecs[1]);
+  tiles->init(&levelSpecs[0]);
   mapTilesImage.setTransparentColor(INDEX_LIGHTBLUE);
   botImage.setTransparentColor(INDEX_BLACK);
 
@@ -22,9 +22,9 @@ void setup() {
   movers[player.index()] = &player;
   tiles->addMover(28, player.index());
 
-  enemy.setIndex(numMovers++);
-  movers[enemy.index()] = &enemy;
-  tiles->addMover(9, enemy.index());
+  //enemy.setIndex(numMovers++);
+  //movers[enemy.index()] = &enemy;
+  //tiles->addMover(9, enemy.index());
 }
 
 void loop() {
@@ -35,7 +35,6 @@ void loop() {
   for (int8_t i = numMovers; --i >= 0; ) {
     movers[i]->update();
   }
-
   tiles->draw();
 
   gb.display.print(gb.frameCount);

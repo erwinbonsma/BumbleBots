@@ -23,7 +23,7 @@ Mover::Mover() {
   _movement = 0;
   _movementDir = 0;
   _movementInc = 1;
-  _movementDelay = 2;
+  _movementDelay = 10; // 2
   _movementMax = _movementDelay * 8;
 
   _height = 40;
@@ -62,7 +62,7 @@ void Mover::updateDxDy() {
   if (isMoving()) {
     int8_t h = (int8_t)heading();
     _dx = floor((colDelta[h] - rowDelta[h]) * _movement / (float)_movementDelay + 0.5) * _movementDir;
-    _dy = floor((colDelta[h] + rowDelta[h]) * _movement / (float)_movementDelay + 0.5) * _movementDir;
+    _dy = floor((colDelta[h] + rowDelta[h]) * _movement / (float)_movementDelay / 2 + 0.5) * _movementDir;
   } else {
     _dx = 0;
     _dy = 0;
@@ -73,7 +73,7 @@ void Mover::moveStep() {
   _movement += _movementInc;
 
   int8_t relMov = (_movement * _movementInc + _movementMax) % _movementMax;
-  gb.display.printf("r=%d,h=%d", relMov, moveHeading());
+  gb.display.printf("relMov=%d, hd=%d\n", relMov, moveHeading());
   if (relMov == 2 * _movementDelay) {
     // About to enter next tile
     int8_t destTile = tiles->neighbour(_tileIndex, moveHeading());
@@ -98,7 +98,7 @@ void Mover::moveStep() {
   else if (relMov == 0) {
     // Done
     _movementDir = 0;
-    _movementInc = 0;
+    _movementInc = 1;
   }
 }
 
@@ -106,7 +106,7 @@ bool Mover::canEnterTile(int8_t tileIndex) {
   return (
     tileIndex >= 0 &&
     (
-      tiles->tileAtIndex(tileIndex)->height() >=
+      tiles->tileAtIndex(tileIndex)->height() <=
       tiles->tileAtIndex(_tileIndex)->height()
     )
   );
@@ -141,6 +141,7 @@ void Mover::exitedTile() {
     tiles->addMover(_tileIndex, _moverIndex);
     _movement -= _movementMax * sign(_movement);
   }
+  _tileIndex2 = -1;
 }
 
 void Mover::setIndex(int8_t moverIndex) {
@@ -165,7 +166,7 @@ void Mover::update() {
 //-----------------------------------------------------------------------------
 // Bot implementation
 
-Bot::Bot() {
+Bot::Bot() : Mover() {
   rotation = 0;
   rotationDir = 0;
 
@@ -211,7 +212,7 @@ void Bot::draw(int8_t x, int8_t y) {
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
   // TODO: Check why offset is necessary
-  gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, botImage);
+  gb.display.drawImage(x + _dx + 1, y + _dy - 0 * _heightDelta - 1, botImage);
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 }
@@ -226,7 +227,7 @@ void Player::swapTiles() {
 
 void Player::update() {
   int8_t desiredMovementDir = 0;
-  
+
   if (gb.buttons.held(BUTTON_LEFT, 0)) {
     _nextRotationDir = -1;
   }
@@ -238,7 +239,7 @@ void Player::update() {
   }
   else if (gb.buttons.held(BUTTON_DOWN, 0)) {
     desiredMovementDir = -1;
-  }  
+  }
 
   if (canStartMove()) {
     if (_nextRotationDir != 0) {
@@ -272,6 +273,8 @@ void Player::update() {
   //if (_swappedTiles) {
   //  // TODO: Sound effect
   //}
+
+  gb.display.printf("t1=%d, t2=%d, dt=%d\n", _tileIndex, _tileIndex2, _drawTileIndex);
 }
 
 //-----------------------------------------------------------------------------

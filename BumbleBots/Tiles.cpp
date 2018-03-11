@@ -290,7 +290,9 @@ void Tiles::addMover(int8_t tileIndex, int8_t moverIndex) {
     assert(_units[mover->_drawTileIndex]._moverIndex == moverIndex);
 
     // TODO: Update when supporting multiple movers on one tile
-    _units[mover->_drawTileIndex]._moverIndex = 0;
+    _units[mover->_drawTileIndex]._moverIndex = -1;
+  } else {
+    mover->_tileIndex = tileIndex;
   }
 
   mover->_drawTileIndex = tileIndex;

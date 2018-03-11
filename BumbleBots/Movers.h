@@ -9,6 +9,7 @@ class Tile;
 
 class Mover {
   friend class Tiles;
+  friend class Player; // TMP
 
   int8_t _moverIndex;
   int8_t _drawTileIndex;

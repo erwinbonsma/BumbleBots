@@ -25,9 +25,9 @@ inline int8_t rowOfPos(TilePos pos) {
   return (pos >> 3) & 0x07;
 }
 inline TilePos makeTilePos(int8_t col, int8_t row) {
-  assert(col & 0xf8 == 0);
-  assert(row & 0xf8 == 0);
-  (row << 3) + col;
+  //assert(col & 0xf8 == 0);
+  //assert(row & 0xf8 == 0);
+  return (row << 3) + col;
 }
 
 // Exclusive
