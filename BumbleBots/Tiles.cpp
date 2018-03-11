@@ -162,6 +162,8 @@ Tile::Tile() {}
 void Tile::init(int8_t height0) {
   _height0 = height0;
   _height = height0;
+
+  _moverIndex = -1;
 }
 
 void Tile::setWave(int8_t waveHeight) {
@@ -188,8 +190,8 @@ void Tile::draw(TilePos pos, TileType* tileType) const {
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 
-  if (_moverIndex) {
-    movers[_moverIndex - 1]->draw(x + 4, y - 2);
+  if (_moverIndex >= 0) {
+    movers[_moverIndex]->draw(x + 4, y - 2);
   }
 }
 
@@ -270,20 +272,30 @@ Tiles::Tiles(uint8_t numCols, uint8_t numRows) :
 }
 */
 
-void Tiles::addMover(uint8_t tileIndex, uint8_t moverIndex) {
-  Mover* mover = movers[moverIndex - 1];
+int8_t Tiles::neighbour(int8_t tileIndex, Heading heading) {
+  TilePos tilePos = (TilePos)tileIndex;
+  int8_t col = colOfPos(tilePos) + colDelta[heading];
+  int8_t row = rowOfPos(tilePos) + rowDelta[heading];
+  if (col < 0 || col >= numCols() || row < 0 || row >= numRows()) {
+    return -1;
+  }
+  return makeTilePos(col, row);
+}
 
-  if (mover->drawTileIndex) {
+void Tiles::addMover(int8_t tileIndex, int8_t moverIndex) {
+  Mover* mover = movers[moverIndex];
+
+  if (mover->_drawTileIndex >= 0) {
     // Remove from current tile
-    assert(_units[mover->drawTileIndex]._moverIndex == moverIndex);
+    assert(_units[mover->_drawTileIndex]._moverIndex == moverIndex);
 
     // TODO: Update when supporting multiple movers on one tile
-    _units[mover->drawTileIndex]._moverIndex = 0;
+    _units[mover->_drawTileIndex]._moverIndex = 0;
   }
 
-  mover->drawTileIndex = tileIndex;
+  mover->_drawTileIndex = tileIndex;
   // TODO: Update when supporting multiple movers on one tile
-  _units[mover->drawTileIndex]._moverIndex = moverIndex;
+  _units[mover->_drawTileIndex]._moverIndex = moverIndex;
 }
 
 void Tiles::update() {

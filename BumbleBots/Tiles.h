@@ -12,7 +12,7 @@ class Tile {
   friend class Tiles;
 
   // The mover at this unit, if any
-  uint8_t _moverIndex;
+  int8_t _moverIndex;
 
   int8_t _height0;
 
@@ -56,10 +56,15 @@ public:
     return _levelSpec->tilesSpec.numRows;
   }
 
+  Tile* tileAtIndex(int8_t tileIndex) { return &_units[tileIndex]; }
+  TilePos posOfTile(int8_t tileIndex) { return (TilePos)tileIndex; }
+
+  int8_t neighbour(int8_t tileIndex, Heading heading);
+
   /* Adds mover to specified tile for drawing purposes.
    * This implicitly removes it from current tile, if any
    */
-  void addMover(uint8_t tileIndex, uint8_t moverIndex);
+  void addMover(int8_t tileIndex, int8_t moverIndex);
 
   void update();
   void draw();

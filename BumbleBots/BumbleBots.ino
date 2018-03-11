@@ -18,11 +18,13 @@ void setup() {
   botImage.setTransparentColor(INDEX_BLACK);
 
   numMovers = 0;
-  movers[numMovers++] = &player;
-  tiles->addMover(28, numMovers);
+  player.setIndex(numMovers++);
+  movers[player.index()] = &player;
+  tiles->addMover(28, player.index());
 
-  movers[numMovers++] = &enemy;
-  tiles->addMover(9, numMovers);
+  enemy.setIndex(numMovers++);
+  movers[enemy.index()] = &enemy;
+  tiles->addMover(9, enemy.index());
 }
 
 void loop() {
