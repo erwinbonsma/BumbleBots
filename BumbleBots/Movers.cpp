@@ -1,7 +1,12 @@
 #include "Movers.h"
 
-#include "Palettes.h"
+#include "Globals.h"
 #include "ImageData.h"
+#include "Palettes.h"
+
+// Exposed in Globals.h
+uint8_t numMovers = 0;
+Mover* movers[maxNumMovers];
 
 Bot::Bot() {
   rotation = 0;
@@ -39,11 +44,11 @@ void Bot::update() {
 void Bot::draw(uint8_t x, uint8_t y) {
   uint8_t r = floor(rotation / rotationDelay);
 
-
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
-  gb.display.drawImage(x, y, botImage);
+  // TODO: Check why offset is necessary
+  gb.display.drawImage(x + 1, y - 1, botImage);
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 }

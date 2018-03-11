@@ -1,12 +1,18 @@
 #include "Map.h"
 
-#include "Waves.h"
-#include "Movers.h"
+#include "Globals.h"
 #include "ImageData.h"
+#include "Movers.h"
 #include "TileTypes.h"
+#include "Waves.h"
 #include "Palettes.h"
 
 #include <assert.h>
+
+Map _tiles = Map();
+
+// Exposed in Globals.h
+Map* tiles = &_tiles;
 
 enum IsoLineSide {
   LEFT_SIDE = 0,
@@ -173,33 +179,22 @@ void MapUnit::draw(MapPos pos, TileType* tileType) const {
   }
 
   uint8_t frame = tileType->spriteIndex;
+  uint8_t dy = tileType->spriteYDelta;
   for (uint8_t i = 0; i < tileType->spriteHeight; i++) {
     mapTilesImage.setFrame(frame++);
-    gb.display.drawImage(x, y, mapTilesImage);
-    y += 8;
+    gb.display.drawImage(x, y + dy, mapTilesImage);
+    dy += 8;
   }
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
+
+  if (_moverIndex) {
+    gb.display.printf("mover at %d,%d", col, row);
+    movers[_moverIndex - 1]->draw(x + 4, y - 2);
+  }
 }
 
 /*
-void MapUnit::addMover(Mover* mover) {
-  if (mover->drawUnit) {
-    mover->drawUnit->removeMover(mover);
-  }
-  mover->drawUnit = this;
-  // TODO: Update when supporting multiple movers on one tile
-  _mover = mover;
-}
-
-void MapUnit::removeMover(Mover* mover) {
-  assert(_mover == mover);
-  assert(mover->drawUnit == this);
-  mover->drawUnit = 0;
-  // TODO: Update when supporting multiple movers on one tile
-  _mover = 0;
-}
-
 MapUnit* const MapUnit::neighbour(Heading heading) {
   MapPos pos;
   pos.col = _pos.col + colDelta[(int)heading];
@@ -275,6 +270,22 @@ Map::Map(uint8_t numCols, uint8_t numRows) :
   }
 }
 */
+
+void Map::addMover(uint8_t tileIndex, uint8_t moverIndex) {
+  Mover* mover = movers[moverIndex - 1];
+
+  if (mover->drawTileIndex) {
+    // Remove from current tile
+    assert(_units[mover->drawTileIndex]._moverIndex == moverIndex);
+
+    // TODO: Update when supporting multiple movers on one tile
+    _units[mover->drawTileIndex]._moverIndex = 0;
+  }
+
+  mover->drawTileIndex = tileIndex;
+  // TODO: Update when supporting multiple movers on one tile
+  _units[mover->drawTileIndex]._moverIndex = moverIndex;
+}
 
 void Map::update() {
   _waveStrength = max(0.5, min(1, _waveStrength + _waveStrengthDelta));

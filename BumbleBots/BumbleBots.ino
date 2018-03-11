@@ -5,17 +5,20 @@
 #include "Map.h"
 #include "TileTypes.h"
 #include "ImageData.h"
+#include "Globals.h"
 
 Player player = Player();
-Enemy enemy = Enemy();
-Map tiles = Map();
 
 void setup() {
   gb.begin();
 
-  tiles.init(&levelDefs[1]);
+  tiles->init(&levelDefs[1]);
   mapTilesImage.setTransparentColor(INDEX_LIGHTBLUE);
   botImage.setTransparentColor(INDEX_BLACK);
+
+  numMovers = 0;
+  movers[numMovers++] = &player;
+  tiles->addMover(28, numMovers);
 }
 
 void loop() {
@@ -23,12 +26,12 @@ void loop() {
   gb.display.clear();
 
   clockCount++;
-  tiles.update();
-  player.update();
+  tiles->update();
+  for (int8_t i = numMovers; --i >= 0; ) {
+    movers[i]->update();
+  }
 
-  tiles.draw();
-  player.draw(36, 37);
-  //enemy.draw(50, 37);
+  tiles->draw();
 
   gb.display.print(gb.frameCount);
 }

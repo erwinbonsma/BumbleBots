@@ -9,8 +9,10 @@ class IsoLineElement;
 struct TileType;
 
 class MapUnit {
+  friend class Map;
+
   // The mover at this unit, if any
-  //Mover* _mover;
+  uint8_t _moverIndex;
 
   int8_t _height0;
 
@@ -24,9 +26,6 @@ public:
 
   void setWave(int8_t waveHeight);
   int8_t height() const { return _height; }
-
-  //void addMover(Mover* mover);
-  //void removeMover(Mover* mover);
 
   void draw(MapPos pos, TileType* tileType) const;
 };
@@ -57,9 +56,10 @@ public:
     return _levelDef->mapDef.numRows;
   }
 
-  //MapUnit const* unitAt(MapPos pos) const {
-  //  return &_units[pos.col + pos.row * maxCols];
-  //}
+  /* Adds mover to specified tile for drawing purposes.
+   * This implicitly removes it from current tile, if any
+   */
+  void addMover(uint8_t tileIndex, uint8_t moverIndex);
 
   void update();
   void draw();

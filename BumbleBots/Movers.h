@@ -3,9 +3,9 @@
 class MapUnit;
 
 class Mover {
-  friend class MapUnit;
+  friend class Map;
 
-  MapUnit *drawUnit;
+  uint8_t drawTileIndex;
 
 public:
   virtual void update() = 0;
