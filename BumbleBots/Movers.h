@@ -33,10 +33,13 @@ protected:
   // Delta wrt to drawTile
   int8_t _heightDelta;
 
-  bool canMove() { return true; }
+  virtual bool canMove() { return true; }
   bool isMoving() { return _movementDir; }
+  // Returns true iff Bot can initiate a new move or turn during update
   virtual bool canStartMove();
   void moveStep();
+
+  virtual void bump() {};
 
   /* The direction that the mover is facing.
    */
@@ -83,12 +86,17 @@ protected:
   // Maximum rotation value (derived from rotationTurn)
   uint8_t rotationMax;
 
+  int8_t _dazed;
+
+  void bump();
+  bool isDazed() { return _dazed > 0; }
+
   Heading heading();
 
   bool isTurning() { return rotationDir != 0; }
   void turnStep();
 
-  // Returns true iff Bot can initiate a new move or turn during update
+  bool canMove();
   bool canStartMove();
 
   /* Returns the palette to use for drawing the Bot.

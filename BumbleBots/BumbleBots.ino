@@ -16,6 +16,7 @@ void setup() {
   tiles->init(&levelSpecs[1]);
   mapTilesImage.setTransparentColor(INDEX_LIGHTBLUE);
   botImage.setTransparentColor(INDEX_BLACK);
+  dazedImage.setTransparentColor(INDEX_BLACK);
 
   numMovers = 0;
   player.setIndex(numMovers++);
@@ -26,7 +27,7 @@ void setup() {
   //movers[enemy.index()] = &enemy;
   //tiles->addMover(9, enemy.index());
 
-  //gb.setFrameRate(5);
+  gb.setFrameRate(15);
 }
 
 void loop() {
@@ -39,5 +40,5 @@ void loop() {
   }
   tiles->draw();
 
-  gb.display.print(gb.frameCount);
+  gb.display.printf("%d/%d", gb.frameCount, gb.getCpuLoad());
 }

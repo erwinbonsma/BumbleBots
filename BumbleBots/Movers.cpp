@@ -23,7 +23,7 @@ Mover::Mover() {
   _movement = 0;
   _movementDir = 0;
   _movementInc = 1;
-  _movementDelay = 2;
+  _movementDelay = 1; //2;
   _movementMax = _movementDelay * 8;
 
   _height = 40;
@@ -85,7 +85,7 @@ void Mover::moveStep() {
       // Cannot move, retreat
       _movementInc = - _movementInc;
       _movement += _movementInc;
-      // TODO: Bump + dazed
+      bump();
     }
   }
   else if (relMov == 4 * _movementDelay) {
@@ -189,6 +189,14 @@ void Bot::turnStep() {
   }
 }
 
+void Bot::bump() {
+  _dazed = 20;
+}
+
+bool Bot::canMove() {
+  return !isDazed() && Mover::canMove();
+}
+
 bool Bot::canStartMove() {
   return !isTurning() && Mover::canStartMove();
 }
@@ -198,6 +206,10 @@ const Color* Bot::getBotPalette(bool flipped) {
 }
 
 void Bot::update() {
+  if (_dazed > 0) {
+    _dazed--;
+  }
+
   if (isTurning()) {
     turnStep();
   }
@@ -212,6 +224,9 @@ void Bot::draw(int8_t x, int8_t y) {
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
   gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, botImage);
+  if (isDazed()) {
+    gb.display.drawImage(x + _dx + 2, y + _dy - _heightDelta - 6, dazedImage);
+  }
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 }
@@ -233,10 +248,10 @@ void Player::update() {
   else if (gb.buttons.held(BUTTON_RIGHT, 0)) {
     _nextRotationDir = 1;
   }
-  else if (gb.buttons.held(BUTTON_UP, 0)) {
+  else if (gb.buttons.repeat(BUTTON_UP, 0)) {
     desiredMovementDir = 1;
   }
-  else if (gb.buttons.held(BUTTON_DOWN, 0)) {
+  else if (gb.buttons.repeat(BUTTON_DOWN, 0)) {
     desiredMovementDir = -1;
   }
 
@@ -252,7 +267,7 @@ void Player::update() {
   else if (
     isMoving() &&
     desiredMovementDir != 0 &&
-    // TODO: Dazed
+    !isDazed() &&
     _movementDir * _movementInc != desiredMovementDir
   ) {
     // Reverse while moving
