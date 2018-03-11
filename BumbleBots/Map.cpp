@@ -189,7 +189,6 @@ void MapUnit::draw(MapPos pos, TileType* tileType) const {
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 
   if (_moverIndex) {
-    gb.display.printf("mover at %d,%d", col, row);
     movers[_moverIndex - 1]->draw(x + 4, y - 2);
   }
 }

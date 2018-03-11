@@ -8,6 +8,7 @@
 #include "Globals.h"
 
 Player player = Player();
+Enemy enemy = Enemy();
 
 void setup() {
   gb.begin();
@@ -19,6 +20,9 @@ void setup() {
   numMovers = 0;
   movers[numMovers++] = &player;
   tiles->addMover(28, numMovers);
+
+  movers[numMovers++] = &enemy;
+  tiles->addMover(9, numMovers);
 }
 
 void loop() {
