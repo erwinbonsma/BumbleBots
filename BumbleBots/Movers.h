@@ -37,7 +37,7 @@ protected:
   /* Returns the palette to use for drawing the Bot.
    * The "flipped" argument specifies if the front and rear lights should be switched.
    */
-  virtual Color* getBotPalette(bool flipped);
+  virtual const Color* getBotPalette(bool flipped);
 
 public:
   Bot();
@@ -57,5 +57,5 @@ public:
 
 class Enemy : public Bot {
 protected:
-  Color* getBotPalette(bool flipped);
+  const Color* getBotPalette(bool flipped);
 };

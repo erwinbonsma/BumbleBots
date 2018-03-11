@@ -26,8 +26,8 @@ bool Bot::canStartMove() {
   return !isTurning();
 }
 
-Color* Bot::getBotPalette(bool flipped) {
-  return (flipped) ? flippedBotPalette : defaultPalette;
+const Color* Bot::getBotPalette(bool flipped) {
+  return (flipped) ? palettes[PALETTE_FLIPPED_BOT] : palettes[PALETTE_DEFAULT];
 }
 
 void Bot::update() {
@@ -41,11 +41,11 @@ void Bot::draw(uint8_t x, uint8_t y) {
 
 
   botImage.setFrame(r % 10);
-  gb.display.colorIndex = getBotPalette(r > 9);
+  gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
   gb.display.drawImage(x, y, botImage);
 
-  gb.display.colorIndex = defaultPalette;
+  gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 }
 
 
@@ -68,6 +68,6 @@ void Player::update() {
   Bot::update();
 }
 
-Color* Enemy::getBotPalette(bool flipped) {
-  return flipped ? flippedEnemyPalette : enemyPalette;
+const Color* Enemy::getBotPalette(bool flipped) {
+  return flipped ? palettes[PALETTE_FLIPPED_ENEMY] : palettes[PALETTE_ENEMY];
 }

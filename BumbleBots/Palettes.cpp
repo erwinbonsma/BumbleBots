@@ -1,30 +1,17 @@
 #include "Palettes.h"
 
-Color* defaultPalette;
-Color* flippedBotPalette;
-Color* enemyPalette;
-Color* flippedEnemyPalette;
+const Color LBLUE = LIGHTBLUE;
+const Color LGREEN = LIGHTGREEN;
+const Color DGRAY = DARKGRAY;
+const Color DBLUE = DARKBLUE;
 
-Color* copyPalette(Color* srcPalette) {
-  Color* dstPalette = new Color[16];
-  memcpy(dstPalette, srcPalette, sizeof(Color) * 16);
-  return dstPalette;
-}
-
-void initPalettes() {
-  defaultPalette = gb.display.colorIndex;
-
-  // Flip front- and rear-light
-  flippedBotPalette = copyPalette(defaultPalette);
-  flippedBotPalette[(int)INDEX_RED] = YELLOW;
-  flippedBotPalette[(int)INDEX_YELLOW] = RED;
-
-  enemyPalette = copyPalette(defaultPalette);
-  enemyPalette[(int)INDEX_LIGHTBLUE] = BEIGE;
-  enemyPalette[(int)INDEX_BLUE] = BROWN;
-  enemyPalette[(int)INDEX_DARKBLUE] = DARKGRAY;
-
-  flippedEnemyPalette = copyPalette(enemyPalette);
-  flippedEnemyPalette[(int)INDEX_RED] = YELLOW;
-  flippedEnemyPalette[(int)INDEX_YELLOW] = RED;
-}
+const Color palettes[numPalettes][16] = {
+  // Default
+  { BLACK,  DBLUE,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,   BEIGE },
+  // Flipped bot
+  { BLACK,  DBLUE,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  YELLOW, ORANGE, RED,    LGREEN, LBLUE,  BLUE,   PINK,   BEIGE },
+  // Enemy
+  { BLACK,  DGRAY,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  RED,    ORANGE, YELLOW, LGREEN, BEIGE,  BROWN,  PINK,   BEIGE },
+  // Flipped enemy
+  { BLACK,  DGRAY,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  YELLOW, ORANGE, RED,    LGREEN, BEIGE,  BROWN,  PINK,   BEIGE }
+};
