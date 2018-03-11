@@ -176,6 +176,10 @@ void Tile::draw(TilePos pos, TileType* tileType) const {
   int8_t x = (col - row) * 8 + 32;
   int8_t y = (col + row) * 4 - _height;
 
+  if (x <= -16 || x >= 80) {
+    return;
+  }
+
   if (!(tileType->flags & TILEFLAG_CHECKERED) || (col + row) % 2) {
     gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
   }
@@ -194,21 +198,6 @@ void Tile::draw(TilePos pos, TileType* tileType) const {
     movers[_moverIndex]->draw(x + 4, y - 2);
   }
 }
-
-/*
-Tile* const Tile::neighbour(Heading heading) {
-  TilePos pos;
-  pos.col = _pos.col + colDelta[(int)heading];
-  pos.row = _pos.row + rowDelta[(int)heading];
-
-  if (pos.col < _map->numCols() && pos.row < _map->numRows()) {
-    return _map->unitAt(pos);
-  }
-  else {
-    return 0;
-  }
-}
-*/
 
 //-----------------------------------------------------------------------------
 // Tiles implementation
