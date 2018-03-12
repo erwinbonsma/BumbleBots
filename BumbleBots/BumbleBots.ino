@@ -45,6 +45,7 @@ void loop() {
   }
   tiles->draw();
 
-  gb.display.setColor(INDEX_RED);
-  gb.display.printf("%d/%d", gb.frameCount, gb.getCpuLoad());
+  uint8_t cpuLoad = gb.getCpuLoad();
+  gb.display.setColor(cpuLoad < 80 ? INDEX_GREEN : (cpuLoad < 100 ? INDEX_YELLOW : INDEX_RED));
+  gb.display.printf("%d", cpuLoad);
 }
