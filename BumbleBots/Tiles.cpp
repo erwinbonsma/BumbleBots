@@ -184,13 +184,18 @@ void Tile::draw(TilePos pos, TileType* tileType) const {
     gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
   }
 
-  uint8_t frame = tileType->spriteIndex;
-  uint8_t dy = tileType->spriteYDelta;
-  for (uint8_t i = 0; i < tileType->spriteHeight; i++) {
-    mapTilesImage.setFrame(frame++);
-    gb.display.drawImage(x, y + dy, mapTilesImage);
-    dy += 8;
-  }
+  // Draw top image (which has transparency)
+  uint8_t imageIndex = tileType->topImageIndex;
+  int8_t dy = tileImageInfo[imageIndex].dy;
+  tileImages[imageIndex].setFrame(tileType->topFrameIndex);
+  gb.display.drawImage(x + tileImageInfo[imageIndex].dx, y + dy, tileImages[imageIndex]);
+  dy += tileImages[imageIndex].height();
+
+  // Draw bottom image (without transparency)
+  imageIndex = tileType->bottomImageIndex;
+  dy += tileImageInfo[imageIndex].dy;
+  tileImages[imageIndex].setFrame(tileType->bottomFrameIndex);
+  gb.display.drawImage(x + tileImageInfo[imageIndex].dx, y + dy, tileImages[imageIndex]);
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 
