@@ -3,9 +3,6 @@
 #include "Utils.h"
 
 struct TilesSpec {
-  const uint8_t numCols;
-  const uint8_t numRows;
-
   /* 1D array for 2D map
    *
    * bits:

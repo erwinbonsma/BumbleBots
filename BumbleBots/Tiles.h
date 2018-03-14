@@ -53,14 +53,6 @@ public:
   Tiles();
   void init(const LevelSpec* levelSpec);
 
-  uint8_t numCols() const {
-    return _levelSpec->tilesSpec.numCols;
-  }
-
-  uint8_t numRows() const {
-    return _levelSpec->tilesSpec.numRows;
-  }
-
   ScreenPos cameraPos() const {
     return _cameraPos;
   }

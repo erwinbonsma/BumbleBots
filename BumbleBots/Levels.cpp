@@ -12,8 +12,6 @@ const uint8_t H7 = 0xe0;
 const LevelSpec levelSpecs[numLevels] = {
   LevelSpec {
     .tilesSpec = TilesSpec {
-      .numCols = 8,
-      .numRows = 8,
       .tiles = {
         0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7,
         0x00|H7, 0x00|H7, 0x00|H6, 0x00|H6, 0x00|H6, 0x00|H6, 0x00|H6, 0x00|H6,
@@ -28,8 +26,6 @@ const LevelSpec levelSpecs[numLevels] = {
   },
   LevelSpec {
     .tilesSpec = TilesSpec {
-      .numCols = 8,
-      .numRows = 8,
       .tiles = {
         0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0,
         0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0,
