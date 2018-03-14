@@ -30,6 +30,11 @@ inline TilePos makeTilePos(int8_t col, int8_t row) {
   return (row << 3) + col;
 }
 
+struct ScreenPos {
+  int8_t x;
+  int8_t y;
+};
+
 // Exclusive
 const TilePos maxTilePos = maxCols * maxRows;
 

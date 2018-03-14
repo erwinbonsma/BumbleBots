@@ -12,12 +12,19 @@
 Tiles _tiles = Tiles();
 
 // Exposed in Globals.h
-Tiles* tiles = &_tiles;
+Tiles *const tiles = &_tiles;
 
 enum IsoLineSide {
   LEFT_SIDE = 0,
   RIGHT_SIDE = 1
 };
+
+inline ScreenPos TilePosToScreenPos(int8_t col, int8_t row) {
+  return ScreenPos {
+    .x = (int8_t)((col - row) * 8),
+    .y = (int8_t)((col + row) * 4)
+  };
+}
 
 //-----------------------------------------------------------------------------
 // IsoLine declaration
@@ -170,17 +177,18 @@ void Tile::setWave(int8_t waveHeight) {
   _height = _height0 + waveHeight;
 }
 
-void Tile::draw(TilePos pos, TileType* tileType) const {
-  int8_t col = colOfPos(pos);
-  int8_t row = rowOfPos(pos);
-  int8_t x = (col - row) * 8 + 32;
-  int8_t y = (col + row) * 4 - _height;
+void Tile::draw(TilePos tilePos, TileType* tileType) const {
+  int8_t col = colOfPos(tilePos);
+  int8_t row = rowOfPos(tilePos);
+  ScreenPos pos = TilePosToScreenPos(col, row);
+  pos.x += 40 - tiles->cameraPos().x;
+  pos.y += 32 - tiles->cameraPos().y - _height;
 
-  if (x <= -16 || x >= 80) {
+  if (pos.x <= -16 || pos.x >= 80) {
     return;
   }
 
-  if (!(tileType->flags & TILEFLAG_CHECKERED) || (col + row) % 2) {
+  if (!(tileType->flags & TILEFLAG_CHECKERED) || ((col + row) & 0x01)) {
     gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
   }
 
@@ -188,19 +196,19 @@ void Tile::draw(TilePos pos, TileType* tileType) const {
   uint8_t imageIndex = tileType->topImageIndex;
   int8_t dy = tileImageInfo[imageIndex].dy;
   tileImages[imageIndex].setFrame(tileType->topFrameIndex);
-  gb.display.drawImage(x + tileImageInfo[imageIndex].dx, y + dy, tileImages[imageIndex]);
+  gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
   dy += tileImages[imageIndex].height();
 
   // Draw bottom image (without transparency)
   imageIndex = tileType->bottomImageIndex;
   dy += tileImageInfo[imageIndex].dy;
   tileImages[imageIndex].setFrame(tileType->bottomFrameIndex);
-  gb.display.drawImage(x + tileImageInfo[imageIndex].dx, y + dy, tileImages[imageIndex]);
+  gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 
   if (_moverIndex >= 0) {
-    movers[_moverIndex]->draw(x + 4, y - 2);
+    movers[_moverIndex]->draw(pos.x + 4, pos.y - 2);
   }
 }
 
@@ -311,11 +319,30 @@ void Tiles::update() {
   }
 }
 
+extern Player player;
+
 void Tiles::draw() {
+  // Let camera focus on player
+  TilePos targetTilePos = player.drawTilePos();
+  // When player is at the edge, do not fully center player (to not
+  // unnecessarily limit the number of visible tiles).
+  int8_t col = colOfPos(targetTilePos);
+  int8_t row = rowOfPos(targetTilePos);
+  ScreenPos targetPos = TilePosToScreenPos(col, row);
+  targetPos.x = min(38, max(-26, targetPos.x + player.dx()));
+  targetPos.y = min(44, max( 18, targetPos.y + player.dy()));
+  // Move camera gradually, 1 pixel at most.
+  _cameraPos.x += sign(targetPos.x - _cameraPos.x);
+  _cameraPos.y += sign(targetPos.y - _cameraPos.y);
+
   for (TilePos pos = 0; pos < maxTilePos; pos++) {
     uint8_t tile = _levelSpec->tilesSpec.tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
     _units[pos].draw(pos, &tileType);
   }
+
+  //gb.display.setColor(INDEX_GRAY);
+  //gb.display.drawFastVLine( 8, 0, 64);
+  //gb.display.drawFastVLine(72, 0, 64);
 }
 

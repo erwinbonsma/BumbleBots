@@ -53,6 +53,12 @@ protected:
   void updateHeight();
   void updateDxDy();
 
+  // Tile that the mover is on for drawing purposes
+  TilePos drawTilePos();
+  // The offset of the mover's screen position wrt to its drawTile
+  int8_t dx() { return _dx; }
+  int8_t dy() { return _dy; }
+
   bool canEnterTile(int8_t tileIndex);
   void enteringTile(int8_t tileIndex);
   virtual void swapTiles();

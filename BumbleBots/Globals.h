@@ -1,11 +1,11 @@
 
 const uint8_t maxNumMovers = 8;
 
-// Implemented in Movers.h
+// Implemented in Movers.cpp
 class Mover;
 extern uint8_t numMovers;
 extern Mover* movers[maxNumMovers];
 
-// Implemented in Tiles.h
+// Implemented in Tiles.cpp
 class Tiles;
-extern Tiles* tiles;
+extern Tiles *const tiles;

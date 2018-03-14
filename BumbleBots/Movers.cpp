@@ -69,6 +69,11 @@ void Mover::updateDxDy() {
   }
 }
 
+TilePos Mover::drawTilePos() {
+  return (TilePos)_drawTileIndex;
+}
+
+
 void Mover::moveStep() {
   _movement += _movementInc;
 

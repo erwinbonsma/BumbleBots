@@ -41,6 +41,8 @@ class Tiles {
   //const uint8_t _numIsoLines;
   //IsoLineElement** _isoLines;
 
+  ScreenPos _cameraPos;
+
   DirectionalWave _wave;
   float _waveStrength;
   float _waveStrengthDelta;
@@ -54,6 +56,10 @@ public:
 
   uint8_t numRows() const {
     return _levelSpec->tilesSpec.numRows;
+  }
+
+  ScreenPos cameraPos() const {
+    return _cameraPos;
   }
 
   Tile* tileAtIndex(int8_t tileIndex) { return &_units[tileIndex]; }
