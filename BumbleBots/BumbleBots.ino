@@ -13,7 +13,7 @@ Enemy enemy = Enemy();
 void setup() {
   gb.begin();
 
-  tiles->init(&levelSpecs[0]);
+  tiles->init(&levelSpecs[1]);
 
   botImage.setTransparentColor(INDEX_BLACK);
   dazedImage.setTransparentColor(INDEX_BLACK);

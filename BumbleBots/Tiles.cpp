@@ -14,6 +14,8 @@ Tiles _tiles = Tiles();
 // Exposed in Globals.h
 Tiles *const tiles = &_tiles;
 
+const int8_t offMapTileHeight = -8; // TMP: Should be lower
+
 enum IsoLineSide {
   LEFT_SIDE = 0,
   RIGHT_SIDE = 1
@@ -178,8 +180,8 @@ void Tile::setWave(int8_t waveHeight) {
 }
 
 void Tile::draw(TilePos tilePos, TileType* tileType) const {
-  int8_t col = colOfPos(tilePos);
-  int8_t row = rowOfPos(tilePos);
+  int8_t col = colOfAnyPos(tilePos);
+  int8_t row = rowOfAnyPos(tilePos);
   ScreenPos pos = TilePosToScreenPos(col, row);
   pos.x += 40 - tiles->cameraPos().x;
   pos.y += 32 - tiles->cameraPos().y - _height;
@@ -188,24 +190,26 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
     return;
   }
 
-  if (!(tileType->flags & TILEFLAG_CHECKERED) || ((col + row) & 0x01)) {
-    gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
+  if (isPosOnMap(tilePos)) {
+    if (!(tileType->flags & TILEFLAG_CHECKERED) || ((col + row) & 0x01)) {
+      gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
+    }
+
+    // Draw top image (which has transparency)
+    uint8_t imageIndex = tileType->topImageIndex;
+   int8_t dy = tileImageInfo[imageIndex].dy;
+   tileImages[imageIndex].setFrame(tileType->topFrameIndex);
+   gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
+   dy += tileImages[imageIndex].height();
+
+    // Draw bottom image (without transparency)
+    imageIndex = tileType->bottomImageIndex;
+    dy += tileImageInfo[imageIndex].dy;
+    tileImages[imageIndex].setFrame(tileType->bottomFrameIndex);
+    gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
+
+    gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
   }
-
-  // Draw top image (which has transparency)
-  uint8_t imageIndex = tileType->topImageIndex;
-  int8_t dy = tileImageInfo[imageIndex].dy;
-  tileImages[imageIndex].setFrame(tileType->topFrameIndex);
-  gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
-  dy += tileImages[imageIndex].height();
-
-  // Draw bottom image (without transparency)
-  imageIndex = tileType->bottomImageIndex;
-  dy += tileImageInfo[imageIndex].dy;
-  tileImages[imageIndex].setFrame(tileType->bottomFrameIndex);
-  gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
-
-  gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 
   if (_moverIndex >= 0) {
     movers[_moverIndex]->draw(pos.x + 4, pos.y - 2);
@@ -231,6 +235,9 @@ void Tiles::init(const LevelSpec* levelSpec) {
     int8_t height0 = tileType.height0 + 2 * (tile & 0xe0) >> 5;
     _units[pos].init(height0);
   }
+
+  _offMapTile.init(offMapTileHeight);
+  _offMapTilePos = makeTilePos(-1, 0); // Any off-map position suffices
 
   _waveStrength = 0;
   _waveStrengthDelta = 0.5;
@@ -278,10 +285,7 @@ int8_t Tiles::neighbour(int8_t tileIndex, Heading heading) {
   TilePos tilePos = (TilePos)tileIndex;
   int8_t col = colOfPos(tilePos) + colDelta[heading];
   int8_t row = rowOfPos(tilePos) + rowDelta[heading];
-  if (col < 0 || col >= numCols() || row < 0 || row >= numRows()) {
-    return -1;
-  }
-  return makeTilePos(col, row);
+  return makeAnyTilePos(col, row);
 }
 
 void Tiles::addMover(int8_t tileIndex, int8_t moverIndex) {
@@ -299,7 +303,13 @@ void Tiles::addMover(int8_t tileIndex, int8_t moverIndex) {
 
   mover->_drawTileIndex = tileIndex;
   // TODO: Update when supporting multiple movers on one tile
-  _units[mover->_drawTileIndex]._moverIndex = moverIndex;
+  if (isPosOnMap(posOfTile(tileIndex))) {
+    _units[tileIndex]._moverIndex = moverIndex;
+  }
+  else {
+    _offMapTile._moverIndex = moverIndex;
+    _offMapTilePos = posOfTile(tileIndex);
+  }
 }
 
 void Tiles::update() {
@@ -326,8 +336,8 @@ void Tiles::draw() {
   TilePos targetTilePos = player.drawTilePos();
   // When player is at the edge, do not fully center player (to not
   // unnecessarily limit the number of visible tiles).
-  int8_t col = colOfPos(targetTilePos);
-  int8_t row = rowOfPos(targetTilePos);
+  int8_t col = colOfAnyPos(targetTilePos);
+  int8_t row = rowOfAnyPos(targetTilePos);
   ScreenPos targetPos = TilePosToScreenPos(col, row);
   targetPos.x = min(38, max(-26, targetPos.x + player.dx()));
   targetPos.y = min(44, max( 18, targetPos.y + player.dy()));
@@ -341,6 +351,11 @@ void Tiles::draw() {
     _units[pos].draw(pos, &tileType);
   }
 
+  // TODO: Draw at correct moment (wait until isoline-based drawing is implemented)
+  _offMapTile.draw(_offMapTilePos, tileTypes);
+
+  gb.display.printf("%d,%d\n",col,row);
+  gb.display.printf("%d,%d\n",colOfAnyPos(_offMapTilePos),rowOfAnyPos(_offMapTilePos));
   //gb.display.setColor(INDEX_GRAY);
   //gb.display.drawFastVLine( 8, 0, 64);
   //gb.display.drawFastVLine(72, 0, 64);

@@ -109,11 +109,9 @@ void Mover::moveStep() {
 
 bool Mover::canEnterTile(int8_t tileIndex) {
   return (
-    tileIndex >= 0 &&
-    (
-      tiles->tileAtIndex(tileIndex)->height() <=
-      tiles->tileAtIndex(_tileIndex)->height()
-    )
+    !isPosOnMap(tiles->posOfTile(tileIndex)) ||
+    tiles->tileAtIndex(tileIndex)->height() <=
+    tiles->tileAtIndex(_tileIndex)->height()
   );
 }
 
@@ -121,14 +119,16 @@ void Mover::enteringTile(int8_t tileIndex) {
   _tileIndex2 = tileIndex;
 
   // TODO: Check falling
-
+  TilePos destPos = tiles->posOfTile(_tileIndex2);
   TilePos fromPos = tiles->posOfTile(_tileIndex);
-  TilePos toPos = tiles->posOfTile(_tileIndex2);
 
-  if ( colOfPos(toPos) + rowOfPos(toPos) > colOfPos(fromPos) + rowOfPos(fromPos) ) {
-    // Next tile is in front of current one.
+  if (
+    colOfAnyPos(destPos) + rowOfAnyPos(destPos) >
+    colOfPos(fromPos) + rowOfPos(fromPos)
+  ) {
+    // Destination tile is in front of current one.
     // Add mover there, to ensure it is drawn on top of both tiles.
-    tiles->addMover(toPos, _moverIndex);
+    tiles->addMover(destPos, _moverIndex);
     _movement -= _movementMax * sign(_movement);
   }
 }

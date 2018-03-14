@@ -37,6 +37,9 @@ class Tiles {
   // 1D-array of Tiles, representing a 2D map
   Tile _units[maxCols * maxRows];
 
+  Tile _offMapTile;
+  TilePos _offMapTilePos;
+
   // 1D-array of IsoLineElement pointers
   //const uint8_t _numIsoLines;
   //IsoLineElement** _isoLines;
@@ -65,6 +68,10 @@ public:
   Tile* tileAtIndex(int8_t tileIndex) { return &_units[tileIndex]; }
   TilePos posOfTile(int8_t tileIndex) { return (TilePos)tileIndex; }
 
+  /* Returns the index of the tile neighbouring the given on in the indicated
+   * direction. It can return positions off the map. It is only valid when the 
+   * provided tile index corresponds to a tile on the map.
+   */
   int8_t neighbour(int8_t tileIndex, Heading heading);
 
   /* Adds mover to specified tile for drawing purposes.

@@ -6,6 +6,58 @@ const int8_t colDelta[] = {0, 1, 0, -1 };
 // row Delta for heading
 const int8_t rowDelta[] = {-1, 0, 1, 0 };
 
+TilePos makeOffMapTilePos(int8_t col, int8_t row) {
+  if (col < 0 || col >= 8) {
+    if (col < 0) {
+      return 0x80 | (row & 0x07);
+    }
+    else {
+      return 0x90 | (row & 0x07);
+    }
+  }
+  else {
+    if (row < 0) {
+      return 0xa0 | (col & 0x07);
+    }
+    else {
+      return 0xb0 | (col & 0x07);
+    }
+  }
+}
+
+int8_t colOfOffMapPos(TilePos pos) {
+  if (pos & 0x20) {
+    return pos & 0x07;
+  }
+  else {
+    return (pos & 0x10) ? 8 : -1;
+  }
+}
+
+int8_t rowOfOffMapPos(TilePos pos) {
+  if (pos & 0x20) {
+    return (pos & 0x10) ? 8 : -1;
+  }
+  else {
+    return pos & 0x07;
+  }
+}
+
+TilePos makeAnyTilePos(int8_t col, int8_t row) {
+  if (col < 0 || col >= 8 || row < 0 || row >= 8) {
+    return makeOffMapTilePos(col, row);
+  }
+  return makeTilePos(col, row);
+}
+
+int8_t colOfAnyPos(TilePos pos) {
+  return isPosOnMap(pos) ? colOfPos(pos) : colOfOffMapPos(pos);
+}
+int8_t rowOfAnyPos(TilePos pos) {
+  return isPosOnMap(pos) ? rowOfPos(pos) : rowOfOffMapPos(pos);
+}
+
+
 const float clampLimit = 12;
 
 float smoothClamp(float value) {
