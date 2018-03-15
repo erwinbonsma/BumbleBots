@@ -11,6 +11,13 @@
 uint8_t numMovers = 0;
 Mover* movers[maxNumMovers];
 
+bool isFall(int8_t fromTileIndex, int8_t destTileIndex) {
+  return (
+    tiles->tileAtIndex(fromTileIndex)->height() -
+    tiles->tileAtIndex(destTileIndex)->height()
+  ) > 6;
+}
+
 //-----------------------------------------------------------------------------
 // Mover implementation
 
@@ -25,9 +32,9 @@ void Mover::init(int8_t moverIndex) {
 }
 
 void Mover::reset() {
-  _tileIndex = -1;
-  _tileIndex2 = -1;
-  _drawTileIndex = -1;
+  _tileIndex = NO_TILE;
+  _tileIndex2 = NO_TILE;
+  _drawTileIndex = NO_TILE;
 
   _movement = 0;
   _movementDir = 0;
@@ -35,6 +42,7 @@ void Mover::reset() {
 
   _height = 40;
   _dropSpeed = 6;
+  _isFalling = false;
 }
 
 bool Mover::canStartMove() {
@@ -137,7 +145,8 @@ bool Mover::canEnterTile(int8_t tileIndex) {
 void Mover::enteringTile(int8_t tileIndex) {
   _tileIndex2 = tileIndex;
 
-  // TODO: Check falling
+  _isFalling = isFall(_tileIndex, _tileIndex2);
+
   TilePos destPos = tiles->posOfTile(_tileIndex2);
   TilePos fromPos = tiles->posOfTile(_tileIndex);
 
@@ -165,7 +174,7 @@ void Mover::exitedTile() {
     tiles->addMover(_tileIndex, _moverIndex);
     _movement -= _movementMax * sign(_movement);
   }
-  _tileIndex2 = -1;
+  _tileIndex2 = NO_TILE;
 }
 
 void Mover::update() {
@@ -179,7 +188,16 @@ void Mover::update() {
   updateDxDy();
 
   // TODO: visit objects
-  // TODO: destroy when falling
+
+  if (
+    _isFalling &&
+    // Wait with checking until mover is not on two tiles anymore
+    _tileIndex2 != NO_TILE
+  ) {
+    // TODO: destroy when falling
+
+    _isFalling = false;
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -322,6 +340,123 @@ void Player::update() {
 
 Enemy::Enemy() : Bot(1, 3) {}
 
+void Enemy::init(int8_t moverIndex, int8_t targetIndex) {
+  Bot::init(moverIndex);
+
+  _targetIndex = targetIndex;
+}
+
 const Color* Enemy::getBotPalette(bool flipped) {
   return flipped ? palettes[PALETTE_FLIPPED_ENEMY] : palettes[PALETTE_ENEMY];
+}
+
+void Enemy::bump() {
+  Bot::bump();
+  _dazed += floor(rand() % 20) - 10;
+  _bumpCount += 1;
+}
+
+bool Enemy::canEnterTile(int8_t tileIndex) {
+  if (
+    isBlocked(tileIndex) ||
+    !Bot::canEnterTile(tileIndex)
+  ) {
+    return false;
+  }
+  // TODO: Check box/other enemy entering
+  // TODO: Check other enemy present
+
+  return true;
+}
+
+bool Enemy::isBlocked(int8_t tileIndex) {
+  // TODO: Let (most) objects block
+  return (
+    // Fear big falls
+    tiles->tileAtIndex(_tileIndex)->height() -
+    tiles->tileAtIndex(tileIndex)->height()
+  ) > 10;
+}
+
+int8_t Enemy::headingScore(Heading h) {
+  int8_t destTileIndex = tiles->neighbour(_tileIndex, h);
+
+  if (
+    !isPosOnMap((TilePos)destTileIndex) ||
+    tiles->tileAtIndex(destTileIndex)->height() < -5
+  ) {
+    // Do not move off the map
+    return -99;
+  }
+
+  int8_t score = 0;
+  int8_t targetTileIndex = movers[_targetIndex]->_tileIndex;
+
+  if (
+    distance((TilePos)destTileIndex, (TilePos)targetTileIndex) <
+    distance((TilePos)_tileIndex, (TilePos)targetTileIndex)
+  ) {
+    // Reward getting closer
+    score += 4;
+  }
+
+  if (h == heading()) {
+    if (_bumpCount < 3) {
+      // Prefer moving straight
+      score += 1;
+    }
+    else {
+      // Unless that failed three times in a row.
+      // This is needed to prevent deadlock situations.
+      score -= 20;
+    }
+  }
+
+  if (canEnterTile(destTileIndex)) {
+    // Reward possible movement
+    score += 2;
+  }
+  else if (isBlocked(destTileIndex)) {
+    score -= 6;
+  }
+  else {
+    // Penalize climbs
+    int8_t hDelta = (
+      tiles->tileAtIndex(destTileIndex)->height() -
+      tiles->tileAtIndex(_tileIndex)->height()
+    );
+    score -= max(0, min(5, hDelta));
+  }
+}
+
+void Enemy::update() {
+  Mover* target = movers[_targetIndex];
+  if (
+    _tileIndex == target->_tileIndex &&
+    !target->_isFalling &&
+    abs(_height - target->_height) < 6
+  ) {
+    // TODO: Signal death. Intercepted
+  }
+
+  if (canStartMove()) {
+    int8_t bestScore = -127;
+    int8_t bestRotationDir;
+    for (int8_t rotationDir = -1; rotationDir < 1; rotationDir++) {
+      int8_t h = (heading() + rotationDir + 4) % 4;
+      int8_t score = headingScore(h);
+      if (score > bestScore) {
+        bestRotationDir = rotationDir;
+        bestScore = score;
+      }
+    }
+
+    _rotationDir = bestRotationDir;
+
+    if (!isTurning()) {
+      _movementDir = 1;
+    }
+  }
+
+  Bot::update();
 }

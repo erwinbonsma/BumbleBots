@@ -15,9 +15,17 @@ const int8_t NORTH_EAST = 0;
 //const int8_t NORTH_WEST = 3;
 
 /* Valid values: 0..maxCols * maxRows - 1
-   Using signed to enable more efficient iteration
-*/
+ * Using signed to enable more efficient iteration (and support for off-map positions)
+ */
 typedef int8_t TilePos;
+
+/* Use when tile position/index is unset.
+ *
+ * It does not correspond to either a valid on-map or off-map position.
+ */
+const int8_t NO_TILE = 0xff;
+
+int8_t distance(TilePos pos1, TilePos pos2);
 
 inline bool isPosOnMap(TilePos pos) {
   return pos >= 0;

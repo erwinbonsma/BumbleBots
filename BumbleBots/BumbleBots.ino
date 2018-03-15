@@ -20,6 +20,7 @@ void resetLevel() {
   }
 
   tiles->addMover(28, player.index());
+  tiles->addMover(7, enemy.index());
 }
 
 void setup() {
@@ -37,9 +38,8 @@ void setup() {
   player.init(numMovers++);
   movers[player.index()] = &player;
 
-  //enemy.setIndex(numMovers++);
-  //movers[enemy.index()] = &enemy;
-  //tiles->addMover(9, enemy.index());
+  enemy.init(numMovers++, player.index());
+  movers[enemy.index()] = &enemy;
 
   resetLevel();
 

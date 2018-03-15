@@ -9,7 +9,8 @@ class Tile;
 
 class Mover {
   friend class Tiles;
-  friend class Player; // TMP
+  friend class Player;
+  friend class Enemy;
 
   int8_t _moverIndex;
   int8_t _drawTileIndex;
@@ -21,8 +22,10 @@ class Mover {
 
   int8_t _height;
   int8_t _dropSpeed;
+  bool _isFalling;
 
 protected:
+
   // Movement
   int8_t _movementDir; // -1, 0, 1
   int8_t _movement; // <-movementMax .. movementMax]
@@ -60,14 +63,14 @@ protected:
   int8_t dx() { return _dx; }
   int8_t dy() { return _dy; }
 
-  bool canEnterTile(int8_t tileIndex);
+  virtual bool canEnterTile(int8_t tileIndex);
   void enteringTile(int8_t tileIndex);
   virtual void swapTiles();
   void exitedTile();
 
 public:
   Mover(uint8_t movementDelay);
-  void init(int8_t moverIndex);
+  virtual void init(int8_t moverIndex);
   virtual void reset();
 
   int8_t index() { return _moverIndex; }
@@ -96,7 +99,7 @@ protected:
 
   int8_t _dazed;
 
-  void bump();
+  virtual void bump();
   bool isDazed() { return _dazed > 0; }
 
   Heading heading();
@@ -141,9 +144,25 @@ public:
 // Enemy declaration
 
 class Enemy : public Bot {
+  int8_t _targetIndex;
+  int8_t _bumpCount;
+
+  /* Returns true iff the enemy is not expected to be able to move to the unit soon.
+   */
+  bool isBlocked(int8_t tileIndex);
+
+  int8_t headingScore(Heading heading);
+
 protected:
   const Color* getBotPalette(bool flipped);
 
+  void bump();
+  bool canEnterTile(int8_t tileIndex);
+
 public:
   Enemy();
+
+  void init(int8_t moverIndex, int8_t targetIndex);
+
+  void update();
 };
