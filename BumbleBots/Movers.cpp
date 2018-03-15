@@ -14,8 +14,11 @@ Mover* movers[maxNumMovers];
 //-----------------------------------------------------------------------------
 // Mover implementation
 
-Mover::Mover() {
-  _moverIndex = -1;
+void Mover::init(int8_t moverIndex) {
+  _moverIndex = moverIndex;
+}
+
+void Mover::reset() {
   _tileIndex = -1;
   _tileIndex2 = -1;
   _drawTileIndex = -1;
@@ -161,11 +164,6 @@ void Mover::exitedTile() {
   _tileIndex2 = -1;
 }
 
-void Mover::setIndex(int8_t moverIndex) {
-  assert(_moverIndex == -1);
-  _moverIndex = moverIndex;
-}
-
 void Mover::update() {
   if (canMove()) {
     if (isMoving()) {
@@ -183,7 +181,9 @@ void Mover::update() {
 //-----------------------------------------------------------------------------
 // Bot implementation
 
-Bot::Bot() : Mover() {
+void Bot::reset() {
+  Mover::reset();
+
   rotation = 0;
   rotationDir = 0;
 

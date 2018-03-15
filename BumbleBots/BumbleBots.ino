@@ -10,10 +10,20 @@
 Player player = Player();
 Enemy enemy = Enemy();
 
+uint8_t levelNum = 0;
+
+void resetLevel() {
+  tiles->init(&levelSpecs[levelNum]);
+
+  for (int8_t i = numMovers; --i >= 0; ) {
+    movers[i]->reset();
+  }
+
+  tiles->addMover(28, player.index());
+}
+
 void setup() {
   gb.begin();
-
-  tiles->init(&levelSpecs[1]);
 
   botImage.setTransparentColor(INDEX_BLACK);
   dazedImage.setTransparentColor(INDEX_BLACK);
@@ -24,13 +34,14 @@ void setup() {
   }
 
   numMovers = 0;
-  player.setIndex(numMovers++);
+  player.init(numMovers++);
   movers[player.index()] = &player;
-  tiles->addMover(28, player.index());
 
   //enemy.setIndex(numMovers++);
   //movers[enemy.index()] = &enemy;
   //tiles->addMover(9, enemy.index());
+
+  resetLevel();
 
   gb.setFrameRate(20);
 }
@@ -38,6 +49,13 @@ void setup() {
 void loop() {
   while(!gb.update());
   gb.display.clear();
+
+  if (gb.buttons.held(BUTTON_A, 0)) {
+    resetLevel();
+  }
+  if (gb.buttons.held(BUTTON_B, 0)) {
+    levelNum = (levelNum + 1 ) % numLevels;
+  }
 
   tiles->update();
   for (int8_t i = numMovers; --i >= 0; ) {

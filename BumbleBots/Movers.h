@@ -66,10 +66,10 @@ protected:
   void exitedTile();
 
 public:
-  Mover();
+  void init(int8_t moverIndex);
+  virtual void reset();
 
   int8_t index() { return _moverIndex; }
-  void setIndex(int8_t moverIndex);
 
   virtual void update();
   virtual void draw(int8_t x, int8_t y) = 0;
@@ -112,7 +112,7 @@ protected:
   virtual const Color* getBotPalette(bool flipped);
 
 public:
-  Bot();
+  virtual void reset();
 
   void update();
   void draw(int8_t x, int8_t y);
