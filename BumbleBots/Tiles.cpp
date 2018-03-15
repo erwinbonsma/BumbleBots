@@ -14,7 +14,7 @@ Tiles _tiles = Tiles();
 // Exposed in Globals.h
 Tiles *const tiles = &_tiles;
 
-const int8_t offMapTileHeight = -8; // TMP: Should be lower
+const int8_t offMapTileHeight = -64;
 
 enum IsoLineSide {
   LEFT_SIDE = 0,
@@ -281,6 +281,15 @@ Tiles::Tiles(uint8_t numCols, uint8_t numRows) :
 }
 */
 
+Tile* Tiles::tileAtIndex(int8_t tileIndex) {
+  if (isPosOnMap((TilePos)tileIndex)) {
+    return &_units[tileIndex];
+  }
+  else {
+    return &_offMapTile;
+  }
+}
+
 int8_t Tiles::neighbour(int8_t tileIndex, Heading heading) {
   TilePos tilePos = (TilePos)tileIndex;
   int8_t col = colOfPos(tilePos) + colDelta[heading];
@@ -354,8 +363,8 @@ void Tiles::draw() {
   // TODO: Draw at correct moment (wait until isoline-based drawing is implemented)
   _offMapTile.draw(_offMapTilePos, tileTypes);
 
-  gb.display.printf("%d,%d\n",col,row);
-  gb.display.printf("%d,%d\n",colOfAnyPos(_offMapTilePos),rowOfAnyPos(_offMapTilePos));
+  //gb.display.printf("%d,%d\n",col,row);
+  //gb.display.printf("%d,%d\n",colOfAnyPos(_offMapTilePos),rowOfAnyPos(_offMapTilePos));
   //gb.display.setColor(INDEX_GRAY);
   //gb.display.drawFastVLine( 8, 0, 64);
   //gb.display.drawFastVLine(72, 0, 64);

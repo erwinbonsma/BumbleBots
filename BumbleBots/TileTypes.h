@@ -25,7 +25,7 @@ struct ImageInfo {
   const ColorIndex transparentColor;
 };
 
-const uint8_t numTileTypes = 2;
+const uint8_t numTileTypes = 3;
 extern TileType tileTypes[numTileTypes];
 
 const uint8_t numTileImages = 4;

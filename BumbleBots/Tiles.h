@@ -57,7 +57,7 @@ public:
     return _cameraPos;
   }
 
-  Tile* tileAtIndex(int8_t tileIndex) { return &_units[tileIndex]; }
+  Tile* tileAtIndex(int8_t tileIndex);
   TilePos posOfTile(int8_t tileIndex) { return (TilePos)tileIndex; }
 
   /* Returns the index of the tile neighbouring the given on in the indicated

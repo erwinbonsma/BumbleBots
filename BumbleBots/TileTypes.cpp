@@ -25,6 +25,19 @@ TileType tileTypes[numTileTypes] = {
     .height0 = 0,
     .flexibility = 2,
     .flags = TILEFLAG_CHECKERED
+  },
+
+  // 2: TMP Basic, high flexibilty
+  TileType {
+    .topImageIndex = 0,
+    .topFrameIndex = 0,
+    .bottomImageIndex = 1,
+    .bottomFrameIndex = 0,
+
+    .paletteIndex = 4,
+    .height0 = 0,
+    .flexibility = 8,
+    .flags = TILEFLAG_CHECKERED
   }
 };
 

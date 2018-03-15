@@ -20,6 +20,7 @@ class Mover {
   uint8_t _movementMax;
 
   int8_t _height;
+  int8_t _dropSpeed;
 
 protected:
   // Movement

@@ -16,6 +16,6 @@ struct LevelSpec {
   const TilesSpec tilesSpec;
 };
 
-const uint8_t numLevels = 2;
+const uint8_t numLevels = 3;
 extern const LevelSpec levelSpecs[numLevels];
 

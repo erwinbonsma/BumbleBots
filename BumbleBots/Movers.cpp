@@ -27,6 +27,7 @@ Mover::Mover() {
   _movementMax = _movementDelay * 8;
 
   _height = 40;
+  _dropSpeed = 6;
 }
 
 bool Mover::canStartMove() {
@@ -46,15 +47,26 @@ Heading Mover::moveHeading() {
 }
 
 void Mover::updateHeight() {
-  int8_t height = tiles->tileAtIndex(_tileIndex)->height();
+  int8_t tileHeight = tiles->tileAtIndex(_tileIndex)->height();
 
   // On two tiles. Height determined by highest one
   if (_tileIndex2 >= 0) {
-    height = max(height, tiles->tileAtIndex(_tileIndex2)->height());
+    tileHeight = max(tileHeight, tiles->tileAtIndex(_tileIndex2)->height());
   }
 
-  // TODO: Implement falling
-  _height = height;
+  if (_height > tileHeight) {
+    // Gradual fall
+    _height = max(tileHeight, _height - _dropSpeed/4);
+    _dropSpeed += 1;
+  }
+  else {
+    _height = tileHeight;
+    _dropSpeed = 6;
+  }
+
+  gb.display.setColor(INDEX_BLUE);
+  gb.display.printf("h=%d,th=%d,ds=%d\n", _height, tileHeight, _dropSpeed);
+
   _heightDelta = _height - tiles->tileAtIndex(_drawTileIndex)->height();
 }
 
