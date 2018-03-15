@@ -16,8 +16,8 @@ class Mover {
   int8_t _tileIndex;
   int8_t _tileIndex2;
 
-  uint8_t _movementDelay; // >=1, higher value means slower movement
-  uint8_t _movementMax;
+  const uint8_t _movementDelay; // >=1, higher value means slower movement
+  const uint8_t _movementMax;
 
   int8_t _height;
   int8_t _dropSpeed;
@@ -66,6 +66,7 @@ protected:
   void exitedTile();
 
 public:
+  Mover(uint8_t movementDelay);
   void init(int8_t moverIndex);
   virtual void reset();
 
@@ -82,16 +83,16 @@ class Bot : public Mover {
 
 protected:
   // Rotation
-  uint8_t rotation;      // [0 .. rotationMax >
-  int8_t rotationDir;   // -1, 0, 1
+  uint8_t _rotation;      // [0 .. rotationMax >
+  int8_t _rotationDir;   // -1, 0, 1
 
   // Rotation speed
-  uint8_t rotationDelay; // >= 1, higher value means slower turning
+  const uint8_t _rotationDelay; // >= 1, higher value means slower turning
 
   // Amount of steps to complete a turn (derived from rotationDelay)
-  uint8_t rotationTurn;
+  const uint8_t _rotationTurn;
   // Maximum rotation value (derived from rotationTurn)
-  uint8_t rotationMax;
+  const uint8_t _rotationMax;
 
   int8_t _dazed;
 
@@ -100,7 +101,7 @@ protected:
 
   Heading heading();
 
-  bool isTurning() { return rotationDir != 0; }
+  bool isTurning() { return _rotationDir != 0; }
   void turnStep();
 
   bool canMove();
@@ -112,6 +113,8 @@ protected:
   virtual const Color* getBotPalette(bool flipped);
 
 public:
+  Bot(uint8_t movementDelay, uint8_t rotationDelay);
+
   virtual void reset();
 
   void update();
@@ -129,6 +132,8 @@ protected:
   void swapTiles();
 
 public:
+  Player();
+
   void update();
 };
 
@@ -138,4 +143,7 @@ public:
 class Enemy : public Bot {
 protected:
   const Color* getBotPalette(bool flipped);
+
+public:
+  Enemy();
 };

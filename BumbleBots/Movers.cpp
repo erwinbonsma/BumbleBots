@@ -14,6 +14,12 @@ Mover* movers[maxNumMovers];
 //-----------------------------------------------------------------------------
 // Mover implementation
 
+Mover::Mover(uint8_t movementDelay) :
+  _movementDelay(movementDelay),
+  _movementMax(movementDelay * 8) {
+  // void
+}
+
 void Mover::init(int8_t moverIndex) {
   _moverIndex = moverIndex;
 }
@@ -26,8 +32,6 @@ void Mover::reset() {
   _movement = 0;
   _movementDir = 0;
   _movementInc = 1;
-  _movementDelay = 1; //2;
-  _movementMax = _movementDelay * 8;
 
   _height = 40;
   _dropSpeed = 6;
@@ -181,28 +185,32 @@ void Mover::update() {
 //-----------------------------------------------------------------------------
 // Bot implementation
 
+Bot::Bot(uint8_t movementDelay, uint8_t rotationDelay) :
+  Mover(movementDelay),
+  _rotationDelay(rotationDelay),
+  _rotationTurn(5 * rotationDelay),
+  _rotationMax(20 * rotationDelay) {
+  // void
+}
+
 void Bot::reset() {
   Mover::reset();
 
-  rotation = 0;
-  rotationDir = 0;
-
-  rotationDelay = 2;
-  rotationTurn = 5 * rotationDelay;
-  rotationMax = 4 * rotationTurn;
+  _rotation = 0;
+  _rotationDir = 0;
 }
 
 Heading Bot::heading() {
-  return rotation / rotationTurn;
+  return _rotation / _rotationTurn;
 }
 
 void Bot::turnStep() {
-  rotation += rotationDir + rotationMax;
-  rotation %= rotationMax;
+  _rotation += _rotationDir + _rotationMax;
+  _rotation %= _rotationMax;
 
-  if (rotation % rotationTurn == 0) {
+  if (_rotation % _rotationTurn == 0) {
     // Finished turn
-    rotationDir = 0;
+    _rotationDir = 0;
   }
 }
 
@@ -235,7 +243,7 @@ void Bot::update() {
 }
 
 void Bot::draw(int8_t x, int8_t y) {
-  uint8_t r = floor(rotation / rotationDelay);
+  uint8_t r = floor(_rotation / _rotationDelay);
 
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
@@ -250,6 +258,8 @@ void Bot::draw(int8_t x, int8_t y) {
 
 //-----------------------------------------------------------------------------
 // Player implementation
+
+Player::Player() : Bot(1, 2) {}
 
 void Player::swapTiles() {
   Mover::swapTiles();
@@ -274,7 +284,7 @@ void Player::update() {
 
   if (canStartMove()) {
     if (_nextRotationDir != 0) {
-      rotationDir = _nextRotationDir;
+      _rotationDir = _nextRotationDir;
       _nextRotationDir = 0;
     }
     else {
@@ -309,6 +319,8 @@ void Player::update() {
 
 //-----------------------------------------------------------------------------
 // Enemy implementation
+
+Enemy::Enemy() : Bot(1, 3) {}
 
 const Color* Enemy::getBotPalette(bool flipped) {
   return flipped ? palettes[PALETTE_FLIPPED_ENEMY] : palettes[PALETTE_ENEMY];
