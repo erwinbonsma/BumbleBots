@@ -362,10 +362,28 @@ bool Enemy::canEnterTile(int8_t tileIndex) {
   ) {
     return false;
   }
-  // TODO: Check box/other enemy entering
-  // TODO: Check other enemy present
+
+  Tile* tile = tiles->tileAtIndex(tileIndex);
+  if (
+    // Another enemy is entering
+    tile->isEnemyEntering() ||
+    // or already there
+    tile->moverOfType(TYPE_ENEMY, _moverIndex) != -1
+  ) {
+    return false;
+  }
 
   return true;
+}
+
+void Enemy::enteringTile(int8_t tileIndex) {
+  Bot::enteringTile(tileIndex);
+  tiles->tileAtIndex(tileIndex)->setEnemyEntering();
+}
+
+void Enemy::exitedTile() {
+  Bot::exitedTile();
+  tiles->tileAtIndex(_tileIndex)->clearEnemyEntering();
 }
 
 void Enemy::turnStep() {
@@ -466,3 +484,18 @@ void Enemy::update() {
 
   Bot::update();
 }
+
+// TMP
+//void Enemy::draw(int8_t x, int8_t y) {
+//  Bot::draw(x, y);
+//
+//  int8_t otherEnemy = tiles->tileAtIndex(_tileIndex)->moverOfType(TYPE_ENEMY, _moverIndex);
+//  if (
+//    otherEnemy != -1
+//  ) {
+//    gb.display.setColor(INDEX_YELLOW);
+//    gb.display.printf("ENEMY: %d\n", otherEnemy);
+//  } else {
+//    gb.display.printf("%d\n", otherEnemy);
+//  }
+//}

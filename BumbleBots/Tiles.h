@@ -8,6 +8,8 @@ class Mover;
 class IsoLineElement;
 struct TileType;
 
+const int8_t TILEFLAG_ENEMY_ENTERING = 0x01;
+
 class Tile {
   friend class Tiles;
 
@@ -19,6 +21,8 @@ class Tile {
   // Height after applying wave
   int8_t _height;
 
+  int8_t _flags;
+
 public:
   Tile();
 
@@ -27,10 +31,18 @@ public:
   void setWave(int8_t waveHeight);
   int8_t height() const { return _height; }
 
-  void draw(TilePos pos, TileType* tileType) const;
+  void setEnemyEntering() { _flags |= TILEFLAG_ENEMY_ENTERING; }
+  void clearEnemyEntering() { _flags &= ~TILEFLAG_ENEMY_ENTERING; }
+  bool isEnemyEntering() { return _flags & TILEFLAG_ENEMY_ENTERING; }
 
   void addMover(int8_t moverIndex);
   void removeMover(int8_t moverIndex);
+  /* Returns the mover of the given type that resides at this tile, if any.
+   * If excludeMover >= 0, it will not return a mover with this index.
+   */
+  int8_t moverOfType(MoverType moverType, int8_t excludeMover);
+
+  void draw(TilePos pos, TileType* tileType) const;
 };
 
 

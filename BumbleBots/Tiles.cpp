@@ -173,6 +173,7 @@ void Tile::init(int8_t height0) {
   _height = height0;
 
   _moverIndex = -1;
+  _flags = 0;
 }
 
 void Tile::setWave(int8_t waveHeight) {
@@ -204,6 +205,19 @@ void Tile::removeMover(int8_t moverIndex) {
       movers[moverIndex]->_nextMoverIndex = -1;
     }
   }
+}
+
+int8_t Tile::moverOfType(MoverType moverType, int8_t excludeMover) {
+  int8_t p = _moverIndex;
+  while (
+    p != -1 && (
+      movers[p]->moverType() != moverType ||
+      p == excludeMover
+    )
+  ) {
+    p = movers[p]->_nextMoverIndex;
+  }
+  return p;
 }
 
 void Tile::draw(TilePos tilePos, TileType* tileType) const {

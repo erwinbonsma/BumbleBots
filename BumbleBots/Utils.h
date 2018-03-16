@@ -14,6 +14,13 @@ const int8_t NORTH_EAST = 0;
 //const int8_t SOUTH_WEST = 2;
 //const int8_t NORTH_WEST = 3;
 
+enum class MoverType : int8_t {
+  Player,
+  Enemy
+};
+const MoverType TYPE_PLAYER = MoverType::Player;
+const MoverType TYPE_ENEMY = MoverType::Enemy;
+
 /* Valid values: 0..maxCols * maxRows - 1
  * Using signed to enable more efficient iteration (and support for off-map positions)
  */

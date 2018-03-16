@@ -68,9 +68,9 @@ protected:
   int8_t dy() { return _dy; }
 
   virtual bool canEnterTile(int8_t tileIndex);
-  void enteringTile(int8_t tileIndex);
+  virtual void enteringTile(int8_t tileIndex);
   virtual void swapTiles();
-  void exitedTile();
+  virtual void exitedTile();
 
 public:
   Mover(uint8_t movementDelay);
@@ -78,6 +78,8 @@ public:
   virtual void reset();
 
   int8_t index() { return _moverIndex; }
+
+  virtual MoverType moverType() = 0;
 
   virtual void update();
   virtual void draw(int8_t x, int8_t y) = 0;
@@ -141,6 +143,8 @@ protected:
 public:
   Player();
 
+  MoverType moverType() { return TYPE_PLAYER; }
+
   void update();
 };
 
@@ -162,6 +166,8 @@ protected:
 
   void bump();
   bool canEnterTile(int8_t tileIndex);
+  void enteringTile(int8_t tileIndex);
+  void exitedTile();
   void turnStep();
 
 public:
@@ -169,5 +175,8 @@ public:
 
   void init(int8_t moverIndex, int8_t targetIndex);
 
+  MoverType moverType() { return TYPE_ENEMY; }
+
   void update();
+  //void draw(int8_t x, int8_t y); // TMP
 };
