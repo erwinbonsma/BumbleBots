@@ -79,9 +79,6 @@ void Mover::updateHeight() {
     _dropSpeed = 6;
   }
 
-  gb.display.setColor(INDEX_BLUE);
-  gb.display.printf("h=%d,th=%d,ds=%d\n", _height, tileHeight, _dropSpeed);
-
   _heightDelta = _height - tiles->tileAtIndex(_drawTileIndex)->height();
 }
 
@@ -369,6 +366,11 @@ bool Enemy::canEnterTile(int8_t tileIndex) {
   return true;
 }
 
+void Enemy::turnStep() {
+  Bot::turnStep();
+  _bumpCount = 0;
+}
+
 bool Enemy::isBlocked(int8_t tileIndex) {
   // TODO: Let (most) objects block
   return (
@@ -427,6 +429,8 @@ int8_t Enemy::headingScore(Heading h) {
     );
     score -= max(0, min(5, hDelta));
   }
+
+  return score;
 }
 
 void Enemy::update() {
@@ -442,7 +446,7 @@ void Enemy::update() {
   if (canStartMove()) {
     int8_t bestScore = -127;
     int8_t bestRotationDir;
-    for (int8_t rotationDir = -1; rotationDir < 1; rotationDir++) {
+    for (int8_t rotationDir = -1; rotationDir <= 1; rotationDir++) {
       int8_t h = (heading() + rotationDir + 4) % 4;
       int8_t score = headingScore(h);
       if (score > bestScore) {

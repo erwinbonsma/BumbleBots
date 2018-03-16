@@ -105,7 +105,7 @@ protected:
   Heading heading();
 
   bool isTurning() { return _rotationDir != 0; }
-  void turnStep();
+  virtual void turnStep();
 
   bool canMove();
   bool canStartMove();
@@ -158,6 +158,7 @@ protected:
 
   void bump();
   bool canEnterTile(int8_t tileIndex);
+  void turnStep();
 
 public:
   Enemy();
