@@ -36,6 +36,8 @@ void Mover::reset() {
   _tileIndex2 = NO_TILE;
   _drawTileIndex = NO_TILE;
 
+  _nextMoverIndex = -1;
+
   _movement = 0;
   _movementDir = 0;
   _movementInc = 1;
@@ -153,7 +155,7 @@ void Mover::enteringTile(int8_t tileIndex) {
   ) {
     // Destination tile is in front of current one.
     // Add mover there, to ensure it is drawn on top of both tiles.
-    tiles->addMover(destPos, _moverIndex);
+    tiles->moveMoverToTile(_moverIndex, destPos);
     _movement -= _movementMax * sign(_movement);
   }
 }
@@ -168,7 +170,7 @@ void Mover::exitedTile() {
   if (_drawTileIndex != _tileIndex) {
     // The mover was not yet added to the new tile. Do so now, now it is not covering the
     // previous tile anymore.
-    tiles->addMover(_tileIndex, _moverIndex);
+    tiles->moveMoverToTile(_moverIndex, _tileIndex);
     _movement -= _movementMax * sign(_movement);
   }
   _tileIndex2 = NO_TILE;

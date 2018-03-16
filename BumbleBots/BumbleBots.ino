@@ -8,9 +8,11 @@
 #include "Globals.h"
 
 Player player = Player();
-Enemy enemy = Enemy();
 
-uint8_t levelNum = 0;
+const int8_t numEnemies = 4;
+Enemy enemies[numEnemies];
+
+uint8_t levelNum = 1;
 
 void resetLevel() {
   tiles->init(&levelSpecs[levelNum]);
@@ -19,8 +21,11 @@ void resetLevel() {
     movers[i]->reset();
   }
 
-  tiles->addMover(28, player.index());
-  tiles->addMover(7, enemy.index());
+  tiles->putMoverOnTile(player.index(), 28);
+  tiles->putMoverOnTile(enemies[0].index(), 0);
+  tiles->putMoverOnTile(enemies[1].index(), 7);
+  tiles->putMoverOnTile(enemies[2].index(), 56);
+  tiles->putMoverOnTile(enemies[3].index(), 63);
 }
 
 void setup() {
@@ -38,23 +43,31 @@ void setup() {
   player.init(numMovers++);
   movers[player.index()] = &player;
 
-  enemy.init(numMovers++, player.index());
-  movers[enemy.index()] = &enemy;
+  for (uint8_t i = 0; i < numEnemies; i++) {
+    enemies[i].init(numMovers++, player.index());
+    movers[enemies[i].index()] = &enemies[i];
+  }
 
   resetLevel();
 
   gb.setFrameRate(20);
 }
 
+uint8_t frameRate = 20;
+
 void loop() {
   while(!gb.update());
   gb.display.clear();
 
   if (gb.buttons.held(BUTTON_A, 0)) {
-    resetLevel();
+    //resetLevel();
+    if (frameRate > 1) {
+      gb.setFrameRate(--frameRate);
+    }
   }
   if (gb.buttons.held(BUTTON_B, 0)) {
-    levelNum = (levelNum + 1 ) % numLevels;
+    //levelNum = (levelNum + 1 ) % numLevels;
+    gb.setFrameRate(++frameRate);
   }
 
   tiles->update();

@@ -8,6 +8,7 @@ class Tile;
 // Mover declaration
 
 class Mover {
+  friend class Tile;
   friend class Tiles;
   friend class Player;
   friend class Enemy;
@@ -16,6 +17,9 @@ class Mover {
   int8_t _drawTileIndex;
   int8_t _tileIndex;
   int8_t _tileIndex2;
+
+  // Link to next mover on same tile (if any)
+  int8_t _nextMoverIndex;
 
   const uint8_t _movementDelay; // >=1, higher value means slower movement
   const uint8_t _movementMax;

@@ -179,6 +179,33 @@ void Tile::setWave(int8_t waveHeight) {
   _height = _height0 + waveHeight;
 }
 
+void Tile::addMover(int8_t moverIndex) {
+  // Insert at head of list
+  movers[moverIndex]->_nextMoverIndex = _moverIndex;
+  _moverIndex = moverIndex;
+}
+
+void Tile::removeMover(int8_t moverIndex) {
+  if (_moverIndex == moverIndex) {
+    // Mover was at head of list (the 99% case)
+    _moverIndex = movers[moverIndex]->_nextMoverIndex;
+    movers[moverIndex]->_nextMoverIndex = -1;
+  }
+  else {
+    int8_t pred = _moverIndex;
+    int8_t next = movers[pred]->_nextMoverIndex;
+    while (pred != -1 && next != moverIndex) {
+      pred = next;
+      next = movers[pred]->_nextMoverIndex;
+    }
+    if (pred != -1) {
+      // Found it!
+      movers[pred]->_nextMoverIndex = movers[moverIndex]->_nextMoverIndex;
+      movers[moverIndex]->_nextMoverIndex = -1;
+    }
+  }
+}
+
 void Tile::draw(TilePos tilePos, TileType* tileType) const {
   int8_t col = colOfAnyPos(tilePos);
   int8_t row = rowOfAnyPos(tilePos);
@@ -211,8 +238,10 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
     gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
   }
 
-  if (_moverIndex >= 0) {
-    movers[_moverIndex]->draw(pos.x + 4, pos.y - 2);
+  int8_t moverIndex = _moverIndex;
+  while (moverIndex >= 0) {
+    movers[moverIndex]->draw(pos.x + 4, pos.y - 2);
+    moverIndex = movers[moverIndex]->_nextMoverIndex;
   }
 }
 
@@ -297,26 +326,25 @@ int8_t Tiles::neighbour(int8_t tileIndex, Heading heading) {
   return makeAnyTilePos(col, row);
 }
 
-void Tiles::addMover(int8_t tileIndex, int8_t moverIndex) {
+void Tiles::putMoverOnTile(int8_t moverIndex, int8_t tileIndex) {
   Mover* mover = movers[moverIndex];
-
-  if (mover->_drawTileIndex >= 0) {
-    // Remove from current tile
-    assert(_units[mover->_drawTileIndex]._moverIndex == moverIndex);
-
-    // TODO: Update when supporting multiple movers on one tile
-    _units[mover->_drawTileIndex]._moverIndex = -1;
-  } else {
-    mover->_tileIndex = tileIndex;
-  }
+  mover->_tileIndex = tileIndex;
 
   mover->_drawTileIndex = tileIndex;
-  // TODO: Update when supporting multiple movers on one tile
+  _units[tileIndex].addMover(moverIndex);
+}
+
+void Tiles::moveMoverToTile(int8_t moverIndex, int8_t tileIndex) {
+  Mover* mover = movers[moverIndex];
+
+  assert(mover->_drawTileIndex >= 0); // Only move movers on the map
+  _units[mover->_drawTileIndex].removeMover(moverIndex);
+  mover->_drawTileIndex = tileIndex;
   if (isPosOnMap(posOfTile(tileIndex))) {
-    _units[tileIndex]._moverIndex = moverIndex;
+    _units[tileIndex].addMover(moverIndex);
   }
   else {
-    _offMapTile._moverIndex = moverIndex;
+    _offMapTile.addMover(moverIndex);
     _offMapTilePos = posOfTile(tileIndex);
   }
 }

@@ -28,6 +28,9 @@ public:
   int8_t height() const { return _height; }
 
   void draw(TilePos pos, TileType* tileType) const;
+
+  void addMover(int8_t moverIndex);
+  void removeMover(int8_t moverIndex);
 };
 
 
@@ -66,10 +69,15 @@ public:
    */
   int8_t neighbour(int8_t tileIndex, Heading heading);
 
-  /* Adds mover to specified tile for drawing purposes.
-   * This implicitly removes it from current tile, if any
+  /* Adds mover to the map on the specified tile. This should only be called once.
    */
-  void addMover(int8_t tileIndex, int8_t moverIndex);
+  void putMoverOnTile(int8_t moverIndex, int8_t tileIndex);
+
+  /* Moves mover from its current tile to the specified tile.
+   *
+   * Note: The mover should be on a tile that is on the map.
+   */
+  void moveMoverToTile(int8_t moverIndex, int8_t tileIndex);
 
   void update();
   void draw();
