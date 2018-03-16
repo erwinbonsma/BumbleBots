@@ -12,12 +12,21 @@
 Tiles _tiles = Tiles();
 
 // Exposed in Globals.h
-Tiles* tiles = &_tiles;
+Tiles *const tiles = &_tiles;
+
+const int8_t offMapTileHeight = -64;
 
 enum IsoLineSide {
   LEFT_SIDE = 0,
   RIGHT_SIDE = 1
 };
+
+inline ScreenPos TilePosToScreenPos(int8_t col, int8_t row) {
+  return ScreenPos {
+    .x = (int8_t)((col - row) * 8),
+    .y = (int8_t)((col + row) * 4)
+  };
+}
 
 //-----------------------------------------------------------------------------
 // IsoLine declaration
@@ -164,43 +173,89 @@ void Tile::init(int8_t height0) {
   _height = height0;
 
   _moverIndex = -1;
+  _flags = 0;
 }
 
 void Tile::setWave(int8_t waveHeight) {
   _height = _height0 + waveHeight;
 }
 
-void Tile::draw(TilePos pos, TileType* tileType) const {
-  int8_t col = colOfPos(pos);
-  int8_t row = rowOfPos(pos);
-  int8_t x = (col - row) * 8 + 32;
-  int8_t y = (col + row) * 4 - _height;
+void Tile::addMover(int8_t moverIndex) {
+  // Insert at head of list
+  movers[moverIndex]->_nextMoverIndex = _moverIndex;
+  _moverIndex = moverIndex;
+}
 
-  if (x <= -16 || x >= 80) {
+void Tile::removeMover(int8_t moverIndex) {
+  if (_moverIndex == moverIndex) {
+    // Mover was at head of list (the 99% case)
+    _moverIndex = movers[moverIndex]->_nextMoverIndex;
+    movers[moverIndex]->_nextMoverIndex = -1;
+  }
+  else {
+    int8_t pred = _moverIndex;
+    int8_t next = movers[pred]->_nextMoverIndex;
+    while (pred != -1 && next != moverIndex) {
+      pred = next;
+      next = movers[pred]->_nextMoverIndex;
+    }
+    if (pred != -1) {
+      // Found it!
+      movers[pred]->_nextMoverIndex = movers[moverIndex]->_nextMoverIndex;
+      movers[moverIndex]->_nextMoverIndex = -1;
+    }
+  }
+}
+
+int8_t Tile::moverOfType(MoverType moverType, int8_t excludeMover) {
+  int8_t p = _moverIndex;
+  while (
+    p != -1 && (
+      movers[p]->moverType() != moverType ||
+      p == excludeMover
+    )
+  ) {
+    p = movers[p]->_nextMoverIndex;
+  }
+  return p;
+}
+
+void Tile::draw(TilePos tilePos, TileType* tileType) const {
+  int8_t col = colOfAnyPos(tilePos);
+  int8_t row = rowOfAnyPos(tilePos);
+  ScreenPos pos = TilePosToScreenPos(col, row);
+  pos.x += 40 - tiles->cameraPos().x;
+  pos.y += 32 - tiles->cameraPos().y - _height;
+
+  if (pos.x <= -16 || pos.x >= 80) {
     return;
   }
 
-  if (!(tileType->flags & TILEFLAG_CHECKERED) || (col + row) % 2) {
-    gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
+  if (isPosOnMap(tilePos)) {
+    if (!(tileType->flags & TILEFLAG_CHECKERED) || ((col + row) & 0x01)) {
+      gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
+    }
+
+    // Draw top image (which has transparency)
+    uint8_t imageIndex = tileType->topImageIndex;
+   int8_t dy = tileImageInfo[imageIndex].dy;
+   tileImages[imageIndex].setFrame(tileType->topFrameIndex);
+   gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
+   dy += tileImages[imageIndex].height();
+
+    // Draw bottom image (without transparency)
+    imageIndex = tileType->bottomImageIndex;
+    dy += tileImageInfo[imageIndex].dy;
+    tileImages[imageIndex].setFrame(tileType->bottomFrameIndex);
+    gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
+
+    gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
   }
 
-  // Draw top image (which has transparency)
-  uint8_t imageIndex = tileType->topImageIndex;
-  int8_t dy = tileImageInfo[imageIndex].dy;
-  tileImages[imageIndex].setFrame(tileType->topFrameIndex);
-  gb.display.drawImage(x + tileImageInfo[imageIndex].dx, y + dy, tileImages[imageIndex]);
-  dy += tileImages[imageIndex].height();
-
-  // Draw bottom image (without transparency)
-  imageIndex = tileType->bottomImageIndex;
-  dy += tileImageInfo[imageIndex].dy;
-  tileImages[imageIndex].setFrame(tileType->bottomFrameIndex);
-  gb.display.drawImage(x + tileImageInfo[imageIndex].dx, y + dy, tileImages[imageIndex]);
-
-  gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
-
-  if (_moverIndex >= 0) {
-    movers[_moverIndex]->draw(x + 4, y - 2);
+  int8_t moverIndex = _moverIndex;
+  while (moverIndex >= 0) {
+    movers[moverIndex]->draw(pos.x + 4, pos.y - 2);
+    moverIndex = movers[moverIndex]->_nextMoverIndex;
   }
 }
 
@@ -223,6 +278,9 @@ void Tiles::init(const LevelSpec* levelSpec) {
     int8_t height0 = tileType.height0 + 2 * (tile & 0xe0) >> 5;
     _units[pos].init(height0);
   }
+
+  _offMapTile.init(offMapTileHeight);
+  _offMapTilePos = makeTilePos(-1, 0); // Any off-map position suffices
 
   _waveStrength = 0;
   _waveStrengthDelta = 0.5;
@@ -266,32 +324,43 @@ Tiles::Tiles(uint8_t numCols, uint8_t numRows) :
 }
 */
 
+Tile* Tiles::tileAtIndex(int8_t tileIndex) {
+  if (isPosOnMap((TilePos)tileIndex)) {
+    return &_units[tileIndex];
+  }
+  else {
+    return &_offMapTile;
+  }
+}
+
 int8_t Tiles::neighbour(int8_t tileIndex, Heading heading) {
   TilePos tilePos = (TilePos)tileIndex;
   int8_t col = colOfPos(tilePos) + colDelta[heading];
   int8_t row = rowOfPos(tilePos) + rowDelta[heading];
-  if (col < 0 || col >= numCols() || row < 0 || row >= numRows()) {
-    return -1;
-  }
-  return makeTilePos(col, row);
+  return makeAnyTilePos(col, row);
 }
 
-void Tiles::addMover(int8_t tileIndex, int8_t moverIndex) {
+void Tiles::putMoverOnTile(int8_t moverIndex, int8_t tileIndex) {
   Mover* mover = movers[moverIndex];
-
-  if (mover->_drawTileIndex >= 0) {
-    // Remove from current tile
-    assert(_units[mover->_drawTileIndex]._moverIndex == moverIndex);
-
-    // TODO: Update when supporting multiple movers on one tile
-    _units[mover->_drawTileIndex]._moverIndex = -1;
-  } else {
-    mover->_tileIndex = tileIndex;
-  }
+  mover->_tileIndex = tileIndex;
 
   mover->_drawTileIndex = tileIndex;
-  // TODO: Update when supporting multiple movers on one tile
-  _units[mover->_drawTileIndex]._moverIndex = moverIndex;
+  _units[tileIndex].addMover(moverIndex);
+}
+
+void Tiles::moveMoverToTile(int8_t moverIndex, int8_t tileIndex) {
+  Mover* mover = movers[moverIndex];
+
+  assert(mover->_drawTileIndex >= 0); // Only move movers on the map
+  _units[mover->_drawTileIndex].removeMover(moverIndex);
+  mover->_drawTileIndex = tileIndex;
+  if (isPosOnMap(posOfTile(tileIndex))) {
+    _units[tileIndex].addMover(moverIndex);
+  }
+  else {
+    _offMapTile.addMover(moverIndex);
+    _offMapTilePos = posOfTile(tileIndex);
+  }
 }
 
 void Tiles::update() {
@@ -311,11 +380,35 @@ void Tiles::update() {
   }
 }
 
+extern Player player;
+
 void Tiles::draw() {
+  // Let camera focus on player
+  TilePos targetTilePos = player.drawTilePos();
+  // When player is at the edge, do not fully center player (to not
+  // unnecessarily limit the number of visible tiles).
+  int8_t col = colOfAnyPos(targetTilePos);
+  int8_t row = rowOfAnyPos(targetTilePos);
+  ScreenPos targetPos = TilePosToScreenPos(col, row);
+  targetPos.x = min(38, max(-26, targetPos.x + player.dx()));
+  targetPos.y = min(44, max( 18, targetPos.y + player.dy()));
+  // Move camera gradually, 1 pixel at most.
+  _cameraPos.x += sign(targetPos.x - _cameraPos.x);
+  _cameraPos.y += sign(targetPos.y - _cameraPos.y);
+
   for (TilePos pos = 0; pos < maxTilePos; pos++) {
     uint8_t tile = _levelSpec->tilesSpec.tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
     _units[pos].draw(pos, &tileType);
   }
+
+  // TODO: Draw at correct moment (wait until isoline-based drawing is implemented)
+  _offMapTile.draw(_offMapTilePos, tileTypes);
+
+  //gb.display.printf("%d,%d\n",col,row);
+  //gb.display.printf("%d,%d\n",colOfAnyPos(_offMapTilePos),rowOfAnyPos(_offMapTilePos));
+  //gb.display.setColor(INDEX_GRAY);
+  //gb.display.drawFastVLine( 8, 0, 64);
+  //gb.display.drawFastVLine(72, 0, 64);
 }
 

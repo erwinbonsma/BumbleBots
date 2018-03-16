@@ -8,12 +8,28 @@
 #include "Globals.h"
 
 Player player = Player();
-Enemy enemy = Enemy();
+
+const int8_t numEnemies = 4;
+Enemy enemies[numEnemies];
+
+uint8_t levelNum = 1;
+
+void resetLevel() {
+  tiles->init(&levelSpecs[levelNum]);
+
+  for (int8_t i = numMovers; --i >= 0; ) {
+    movers[i]->reset();
+  }
+
+  tiles->putMoverOnTile(player.index(), 28);
+  tiles->putMoverOnTile(enemies[0].index(), 0);
+  tiles->putMoverOnTile(enemies[1].index(), 7);
+  tiles->putMoverOnTile(enemies[2].index(), 56);
+  tiles->putMoverOnTile(enemies[3].index(), 63);
+}
 
 void setup() {
   gb.begin();
-
-  tiles->init(&levelSpecs[0]);
 
   botImage.setTransparentColor(INDEX_BLACK);
   dazedImage.setTransparentColor(INDEX_BLACK);
@@ -24,20 +40,35 @@ void setup() {
   }
 
   numMovers = 0;
-  player.setIndex(numMovers++);
+  player.init(numMovers++);
   movers[player.index()] = &player;
-  tiles->addMover(28, player.index());
 
-  //enemy.setIndex(numMovers++);
-  //movers[enemy.index()] = &enemy;
-  //tiles->addMover(9, enemy.index());
+  for (uint8_t i = 0; i < numEnemies; i++) {
+    enemies[i].init(numMovers++, player.index());
+    movers[enemies[i].index()] = &enemies[i];
+  }
+
+  resetLevel();
 
   gb.setFrameRate(20);
 }
 
+uint8_t frameRate = 20;
+
 void loop() {
   while(!gb.update());
   gb.display.clear();
+
+  if (gb.buttons.held(BUTTON_A, 0)) {
+    //resetLevel();
+    if (frameRate > 1) {
+      gb.setFrameRate(--frameRate);
+    }
+  }
+  if (gb.buttons.held(BUTTON_B, 0)) {
+    //levelNum = (levelNum + 1 ) % numLevels;
+    gb.setFrameRate(++frameRate);
+  }
 
   tiles->update();
   for (int8_t i = numMovers; --i >= 0; ) {

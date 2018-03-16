@@ -3,9 +3,6 @@
 #include "Utils.h"
 
 struct TilesSpec {
-  const uint8_t numCols;
-  const uint8_t numRows;
-
   /* 1D array for 2D map
    *
    * bits:
@@ -19,6 +16,6 @@ struct LevelSpec {
   const TilesSpec tilesSpec;
 };
 
-const uint8_t numLevels = 2;
+const uint8_t numLevels = 3;
 extern const LevelSpec levelSpecs[numLevels];
 

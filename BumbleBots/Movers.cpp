@@ -11,22 +11,40 @@
 uint8_t numMovers = 0;
 Mover* movers[maxNumMovers];
 
+bool isFall(int8_t fromTileIndex, int8_t destTileIndex) {
+  return (
+    tiles->tileAtIndex(fromTileIndex)->height() -
+    tiles->tileAtIndex(destTileIndex)->height()
+  ) > 6;
+}
+
 //-----------------------------------------------------------------------------
 // Mover implementation
 
-Mover::Mover() {
-  _moverIndex = -1;
-  _tileIndex = -1;
-  _tileIndex2 = -1;
-  _drawTileIndex = -1;
+Mover::Mover(uint8_t movementDelay) :
+  _movementDelay(movementDelay),
+  _movementMax(movementDelay * 8) {
+  // void
+}
+
+void Mover::init(int8_t moverIndex) {
+  _moverIndex = moverIndex;
+}
+
+void Mover::reset() {
+  _tileIndex = NO_TILE;
+  _tileIndex2 = NO_TILE;
+  _drawTileIndex = NO_TILE;
+
+  _nextMoverIndex = -1;
 
   _movement = 0;
   _movementDir = 0;
   _movementInc = 1;
-  _movementDelay = 1; //2;
-  _movementMax = _movementDelay * 8;
 
   _height = 40;
+  _dropSpeed = 6;
+  _isFalling = false;
 }
 
 bool Mover::canStartMove() {
@@ -46,15 +64,23 @@ Heading Mover::moveHeading() {
 }
 
 void Mover::updateHeight() {
-  int8_t height = tiles->tileAtIndex(_tileIndex)->height();
+  int8_t tileHeight = tiles->tileAtIndex(_tileIndex)->height();
 
   // On two tiles. Height determined by highest one
   if (_tileIndex2 >= 0) {
-    height = max(height, tiles->tileAtIndex(_tileIndex2)->height());
+    tileHeight = max(tileHeight, tiles->tileAtIndex(_tileIndex2)->height());
   }
 
-  // TODO: Implement falling
-  _height = height;
+  if (_height > tileHeight) {
+    // Gradual fall
+    _height = max(tileHeight, _height - _dropSpeed/4);
+    _dropSpeed += 1;
+  }
+  else {
+    _height = tileHeight;
+    _dropSpeed = 6;
+  }
+
   _heightDelta = _height - tiles->tileAtIndex(_drawTileIndex)->height();
 }
 
@@ -68,6 +94,11 @@ void Mover::updateDxDy() {
     _dy = 0;
   }
 }
+
+TilePos Mover::drawTilePos() {
+  return (TilePos)_drawTileIndex;
+}
+
 
 void Mover::moveStep() {
   _movement += _movementInc;
@@ -104,26 +135,27 @@ void Mover::moveStep() {
 
 bool Mover::canEnterTile(int8_t tileIndex) {
   return (
-    tileIndex >= 0 &&
-    (
-      tiles->tileAtIndex(tileIndex)->height() <=
-      tiles->tileAtIndex(_tileIndex)->height()
-    )
+    !isPosOnMap(tiles->posOfTile(tileIndex)) ||
+    tiles->tileAtIndex(tileIndex)->height() <=
+    tiles->tileAtIndex(_tileIndex)->height()
   );
 }
 
 void Mover::enteringTile(int8_t tileIndex) {
   _tileIndex2 = tileIndex;
 
-  // TODO: Check falling
+  _isFalling = isFall(_tileIndex, _tileIndex2);
 
+  TilePos destPos = tiles->posOfTile(_tileIndex2);
   TilePos fromPos = tiles->posOfTile(_tileIndex);
-  TilePos toPos = tiles->posOfTile(_tileIndex2);
 
-  if ( colOfPos(toPos) + rowOfPos(toPos) > colOfPos(fromPos) + rowOfPos(fromPos) ) {
-    // Next tile is in front of current one.
+  if (
+    colOfAnyPos(destPos) + rowOfAnyPos(destPos) >
+    colOfPos(fromPos) + rowOfPos(fromPos)
+  ) {
+    // Destination tile is in front of current one.
     // Add mover there, to ensure it is drawn on top of both tiles.
-    tiles->addMover(toPos, _moverIndex);
+    tiles->moveMoverToTile(_moverIndex, destPos);
     _movement -= _movementMax * sign(_movement);
   }
 }
@@ -138,15 +170,10 @@ void Mover::exitedTile() {
   if (_drawTileIndex != _tileIndex) {
     // The mover was not yet added to the new tile. Do so now, now it is not covering the
     // previous tile anymore.
-    tiles->addMover(_tileIndex, _moverIndex);
+    tiles->moveMoverToTile(_moverIndex, _tileIndex);
     _movement -= _movementMax * sign(_movement);
   }
-  _tileIndex2 = -1;
-}
-
-void Mover::setIndex(int8_t moverIndex) {
-  assert(_moverIndex == -1);
-  _moverIndex = moverIndex;
+  _tileIndex2 = NO_TILE;
 }
 
 void Mover::update() {
@@ -160,32 +187,47 @@ void Mover::update() {
   updateDxDy();
 
   // TODO: visit objects
-  // TODO: destroy when falling
+
+  if (
+    _isFalling &&
+    // Wait with checking until mover is not on two tiles anymore
+    _tileIndex2 != NO_TILE
+  ) {
+    // TODO: destroy when falling
+
+    _isFalling = false;
+  }
 }
 
 //-----------------------------------------------------------------------------
 // Bot implementation
 
-Bot::Bot() : Mover() {
-  rotation = 0;
-  rotationDir = 0;
+Bot::Bot(uint8_t movementDelay, uint8_t rotationDelay) :
+  Mover(movementDelay),
+  _rotationDelay(rotationDelay),
+  _rotationTurn(5 * rotationDelay),
+  _rotationMax(20 * rotationDelay) {
+  // void
+}
 
-  rotationDelay = 2;
-  rotationTurn = 5 * rotationDelay;
-  rotationMax = 4 * rotationTurn;
+void Bot::reset() {
+  Mover::reset();
+
+  _rotation = 0;
+  _rotationDir = 0;
 }
 
 Heading Bot::heading() {
-  return rotation / rotationTurn;
+  return _rotation / _rotationTurn;
 }
 
 void Bot::turnStep() {
-  rotation += rotationDir + rotationMax;
-  rotation %= rotationMax;
+  _rotation += _rotationDir + _rotationMax;
+  _rotation %= _rotationMax;
 
-  if (rotation % rotationTurn == 0) {
+  if (_rotation % _rotationTurn == 0) {
     // Finished turn
-    rotationDir = 0;
+    _rotationDir = 0;
   }
 }
 
@@ -218,7 +260,7 @@ void Bot::update() {
 }
 
 void Bot::draw(int8_t x, int8_t y) {
-  uint8_t r = floor(rotation / rotationDelay);
+  uint8_t r = floor(_rotation / _rotationDelay);
 
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
@@ -233,6 +275,8 @@ void Bot::draw(int8_t x, int8_t y) {
 
 //-----------------------------------------------------------------------------
 // Player implementation
+
+Player::Player() : Bot(1, 2) {}
 
 void Player::swapTiles() {
   Mover::swapTiles();
@@ -257,7 +301,7 @@ void Player::update() {
 
   if (canStartMove()) {
     if (_nextRotationDir != 0) {
-      rotationDir = _nextRotationDir;
+      _rotationDir = _nextRotationDir;
       _nextRotationDir = 0;
     }
     else {
@@ -293,6 +337,165 @@ void Player::update() {
 //-----------------------------------------------------------------------------
 // Enemy implementation
 
+Enemy::Enemy() : Bot(1, 3) {}
+
+void Enemy::init(int8_t moverIndex, int8_t targetIndex) {
+  Bot::init(moverIndex);
+
+  _targetIndex = targetIndex;
+}
+
 const Color* Enemy::getBotPalette(bool flipped) {
   return flipped ? palettes[PALETTE_FLIPPED_ENEMY] : palettes[PALETTE_ENEMY];
 }
+
+void Enemy::bump() {
+  Bot::bump();
+  _dazed += floor(rand() % 20) - 10;
+  _bumpCount += 1;
+}
+
+bool Enemy::canEnterTile(int8_t tileIndex) {
+  if (
+    isBlocked(tileIndex) ||
+    !Bot::canEnterTile(tileIndex)
+  ) {
+    return false;
+  }
+
+  Tile* tile = tiles->tileAtIndex(tileIndex);
+  if (
+    // Another enemy is entering
+    tile->isEnemyEntering() ||
+    // or already there
+    tile->moverOfType(TYPE_ENEMY, _moverIndex) != -1
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+void Enemy::enteringTile(int8_t tileIndex) {
+  Bot::enteringTile(tileIndex);
+  tiles->tileAtIndex(tileIndex)->setEnemyEntering();
+}
+
+void Enemy::exitedTile() {
+  Bot::exitedTile();
+  tiles->tileAtIndex(_tileIndex)->clearEnemyEntering();
+}
+
+void Enemy::turnStep() {
+  Bot::turnStep();
+  _bumpCount = 0;
+}
+
+bool Enemy::isBlocked(int8_t tileIndex) {
+  // TODO: Let (most) objects block
+  return (
+    // Fear big falls
+    tiles->tileAtIndex(_tileIndex)->height() -
+    tiles->tileAtIndex(tileIndex)->height()
+  ) > 10;
+}
+
+int8_t Enemy::headingScore(Heading h) {
+  int8_t destTileIndex = tiles->neighbour(_tileIndex, h);
+
+  if (
+    !isPosOnMap((TilePos)destTileIndex) ||
+    tiles->tileAtIndex(destTileIndex)->height() < -5
+  ) {
+    // Do not move off the map
+    return -99;
+  }
+
+  int8_t score = 0;
+  int8_t targetTileIndex = movers[_targetIndex]->_tileIndex;
+
+  if (
+    distance((TilePos)destTileIndex, (TilePos)targetTileIndex) <
+    distance((TilePos)_tileIndex, (TilePos)targetTileIndex)
+  ) {
+    // Reward getting closer
+    score += 4;
+  }
+
+  if (h == heading()) {
+    if (_bumpCount < 3) {
+      // Prefer moving straight
+      score += 1;
+    }
+    else {
+      // Unless that failed three times in a row.
+      // This is needed to prevent deadlock situations.
+      score -= 20;
+    }
+  }
+
+  if (canEnterTile(destTileIndex)) {
+    // Reward possible movement
+    score += 2;
+  }
+  else if (isBlocked(destTileIndex)) {
+    score -= 6;
+  }
+  else {
+    // Penalize climbs
+    int8_t hDelta = (
+      tiles->tileAtIndex(destTileIndex)->height() -
+      tiles->tileAtIndex(_tileIndex)->height()
+    );
+    score -= max(0, min(5, hDelta));
+  }
+
+  return score;
+}
+
+void Enemy::update() {
+  Mover* target = movers[_targetIndex];
+  if (
+    _tileIndex == target->_tileIndex &&
+    !target->_isFalling &&
+    abs(_height - target->_height) < 6
+  ) {
+    // TODO: Signal death. Intercepted
+  }
+
+  if (canStartMove()) {
+    int8_t bestScore = -127;
+    int8_t bestRotationDir;
+    for (int8_t rotationDir = -1; rotationDir <= 1; rotationDir++) {
+      int8_t h = (heading() + rotationDir + 4) % 4;
+      int8_t score = headingScore(h);
+      if (score > bestScore) {
+        bestRotationDir = rotationDir;
+        bestScore = score;
+      }
+    }
+
+    _rotationDir = bestRotationDir;
+
+    if (!isTurning()) {
+      _movementDir = 1;
+    }
+  }
+
+  Bot::update();
+}
+
+// TMP
+//void Enemy::draw(int8_t x, int8_t y) {
+//  Bot::draw(x, y);
+//
+//  int8_t otherEnemy = tiles->tileAtIndex(_tileIndex)->moverOfType(TYPE_ENEMY, _moverIndex);
+//  if (
+//    otherEnemy != -1
+//  ) {
+//    gb.display.setColor(INDEX_YELLOW);
+//    gb.display.printf("ENEMY: %d\n", otherEnemy);
+//  } else {
+//    gb.display.printf("%d\n", otherEnemy);
+//  }
+//}

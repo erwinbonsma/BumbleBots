@@ -8,20 +8,28 @@ class Tile;
 // Mover declaration
 
 class Mover {
+  friend class Tile;
   friend class Tiles;
-  friend class Player; // TMP
+  friend class Player;
+  friend class Enemy;
 
   int8_t _moverIndex;
   int8_t _drawTileIndex;
   int8_t _tileIndex;
   int8_t _tileIndex2;
 
-  uint8_t _movementDelay; // >=1, higher value means slower movement
-  uint8_t _movementMax;
+  // Link to next mover on same tile (if any)
+  int8_t _nextMoverIndex;
+
+  const uint8_t _movementDelay; // >=1, higher value means slower movement
+  const uint8_t _movementMax;
 
   int8_t _height;
+  int8_t _dropSpeed;
+  bool _isFalling;
 
 protected:
+
   // Movement
   int8_t _movementDir; // -1, 0, 1
   int8_t _movement; // <-movementMax .. movementMax]
@@ -53,16 +61,25 @@ protected:
   void updateHeight();
   void updateDxDy();
 
-  bool canEnterTile(int8_t tileIndex);
-  void enteringTile(int8_t tileIndex);
+  // Tile that the mover is on for drawing purposes
+  TilePos drawTilePos();
+  // The offset of the mover's screen position wrt to its drawTile
+  int8_t dx() { return _dx; }
+  int8_t dy() { return _dy; }
+
+  virtual bool canEnterTile(int8_t tileIndex);
+  virtual void enteringTile(int8_t tileIndex);
   virtual void swapTiles();
-  void exitedTile();
+  virtual void exitedTile();
 
 public:
-  Mover();
+  Mover(uint8_t movementDelay);
+  virtual void init(int8_t moverIndex);
+  virtual void reset();
 
   int8_t index() { return _moverIndex; }
-  void setIndex(int8_t moverIndex);
+
+  virtual MoverType moverType() = 0;
 
   virtual void update();
   virtual void draw(int8_t x, int8_t y) = 0;
@@ -75,26 +92,26 @@ class Bot : public Mover {
 
 protected:
   // Rotation
-  uint8_t rotation;      // [0 .. rotationMax >
-  int8_t rotationDir;   // -1, 0, 1
+  uint8_t _rotation;      // [0 .. rotationMax >
+  int8_t _rotationDir;   // -1, 0, 1
 
   // Rotation speed
-  uint8_t rotationDelay; // >= 1, higher value means slower turning
+  const uint8_t _rotationDelay; // >= 1, higher value means slower turning
 
   // Amount of steps to complete a turn (derived from rotationDelay)
-  uint8_t rotationTurn;
+  const uint8_t _rotationTurn;
   // Maximum rotation value (derived from rotationTurn)
-  uint8_t rotationMax;
+  const uint8_t _rotationMax;
 
   int8_t _dazed;
 
-  void bump();
+  virtual void bump();
   bool isDazed() { return _dazed > 0; }
 
   Heading heading();
 
-  bool isTurning() { return rotationDir != 0; }
-  void turnStep();
+  bool isTurning() { return _rotationDir != 0; }
+  virtual void turnStep();
 
   bool canMove();
   bool canStartMove();
@@ -105,7 +122,9 @@ protected:
   virtual const Color* getBotPalette(bool flipped);
 
 public:
-  Bot();
+  Bot(uint8_t movementDelay, uint8_t rotationDelay);
+
+  virtual void reset();
 
   void update();
   void draw(int8_t x, int8_t y);
@@ -122,6 +141,10 @@ protected:
   void swapTiles();
 
 public:
+  Player();
+
+  MoverType moverType() { return TYPE_PLAYER; }
+
   void update();
 };
 
@@ -129,6 +152,31 @@ public:
 // Enemy declaration
 
 class Enemy : public Bot {
+  int8_t _targetIndex;
+  int8_t _bumpCount;
+
+  /* Returns true iff the enemy is not expected to be able to move to the unit soon.
+   */
+  bool isBlocked(int8_t tileIndex);
+
+  int8_t headingScore(Heading heading);
+
 protected:
   const Color* getBotPalette(bool flipped);
+
+  void bump();
+  bool canEnterTile(int8_t tileIndex);
+  void enteringTile(int8_t tileIndex);
+  void exitedTile();
+  void turnStep();
+
+public:
+  Enemy();
+
+  void init(int8_t moverIndex, int8_t targetIndex);
+
+  MoverType moverType() { return TYPE_ENEMY; }
+
+  void update();
+  //void draw(int8_t x, int8_t y); // TMP
 };
