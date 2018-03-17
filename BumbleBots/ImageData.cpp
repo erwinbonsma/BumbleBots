@@ -2,7 +2,7 @@
 #include "ImageData.h"
 
 const uint8_t botImageData[] = {
-  8, 10, 10, 0, 0, 0xFF, 1,
+  8, 10, 10, 0, 0, (uint8_t)INDEX_BLACK, 1,
 
   0x00, 0x00, 0xc0, 0x00,
   0x00, 0xcc, 0xcc, 0xc0,
@@ -117,7 +117,7 @@ const uint8_t botImageData[] = {
 Image botImage = Image(botImageData);
 
 const uint8_t dazedData[] = {
-  4, 3, 2, 0, 2, 0xFF, 1,
+  4, 3, 2, 0, 2, (uint8_t)INDEX_BLACK, 1,
   0x00, 0x90,
   0x09, 0x00,
   0x00, 0x09,

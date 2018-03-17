@@ -45,31 +45,27 @@ ImageInfo tileImageInfo[numTileImages] = {
   // 0
   ImageInfo {
     .dx = 1,
-    .dy = 0,
-    .transparentColor = INDEX_LIGHTBLUE
+    .dy = 0
   },
   // 1
   ImageInfo {
     .dx = 0,
-    .dy = 0,
-    .transparentColor = NO_TRANSPARANCY
+    .dy = 0
   },
   // 2
   ImageInfo {
     .dx = 2,
-    .dy = 0,
-    .transparentColor = INDEX_LIGHTBLUE
+    .dy = 0
   },
   // 3
   ImageInfo {
     .dx = 0,
-    .dy = 0,
-    .transparentColor = NO_TRANSPARANCY
+    .dy = 0
   }
 };
 
 const uint8_t data_0[] = {
-  13, 4, 1, 0, 0, 0xFF, 1,
+  13, 4, 1, 0, 0, (uint8_t)INDEX_LIGHTBLUE, 1,
   0xcc, 0xcc, 0xcc, 0x7c, 0xcc, 0xcc, 0xcc,
   0xcc, 0xcc, 0x77, 0x77, 0x7c, 0xcc, 0xcc,
   0xcc, 0x77, 0x77, 0x77, 0x77, 0x7c, 0xcc,
@@ -88,7 +84,7 @@ const uint8_t data_1[] = {
 
 // Note: dx differs compared to data_0, so cannot be merged with current scheme
 const uint8_t data_2[] = {
-  13, 4, 1, 0, 0, 0xFF, 1,
+  13, 4, 1, 0, 0, (uint8_t)INDEX_LIGHTBLUE, 1,
   0xcc, 0xcc, 0xcc, 0x7c, 0xcc, 0xcc, 0xcc,
   0xcc, 0xcc, 0x77, 0x77, 0x7c, 0xcc, 0xcc,
   0xcc, 0x77, 0x77, 0x77, 0x77, 0x7c, 0xcc,

@@ -31,14 +31,6 @@ void resetLevel() {
 void setup() {
   gb.begin();
 
-  botImage.setTransparentColor(INDEX_BLACK);
-  dazedImage.setTransparentColor(INDEX_BLACK);
-  for (uint8_t i = 0; i < numTileImages; i++) {
-    if (tileImageInfo[i].transparentColor != NO_TRANSPARANCY) {
-      tileImages[i].setTransparentColor(tileImageInfo[i].transparentColor);
-    }
-  }
-
   numMovers = 0;
   player.init(numMovers++);
   movers[player.index()] = &player;
@@ -60,14 +52,14 @@ void loop() {
   gb.display.clear();
 
   if (gb.buttons.held(BUTTON_A, 0)) {
-    resetLevel();
-    //if (frameRate > 1) {
-    //  gb.setFrameRate(--frameRate);
-    //}
+    //resetLevel();
+    if (frameRate > 1) {
+      gb.setFrameRate(--frameRate);
+    }
   }
   if (gb.buttons.held(BUTTON_B, 0)) {
-    levelNum = (levelNum + 1 ) % numLevels;
-    //gb.setFrameRate(++frameRate);
+    //levelNum = (levelNum + 1 ) % numLevels;
+    gb.setFrameRate(++frameRate);
   }
 
   tiles->update();
@@ -78,5 +70,5 @@ void loop() {
 
   uint8_t cpuLoad = gb.getCpuLoad();
   gb.display.setColor(cpuLoad < 80 ? INDEX_GREEN : (cpuLoad < 100 ? INDEX_YELLOW : INDEX_RED));
-  gb.display.printf("%d", cpuLoad);
+  gb.display.printf("%d/%d", cpuLoad, frameRate);
 }
