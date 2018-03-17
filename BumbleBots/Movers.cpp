@@ -464,7 +464,7 @@ void Enemy::update() {
     !target->_isFalling &&
     abs(_height - target->_height) < 6
   ) {
-    // TODO: Signal death. Intercepted
+    signalDeath("Intercepted");
   }
 
   if (canStartMove()) {

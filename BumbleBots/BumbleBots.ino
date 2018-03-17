@@ -7,8 +7,11 @@ Level level = Level();
 
 uint8_t frameRate = 20;
 
+int8_t dyingCount;
+const char* deathCause;
 void signalDeath(const char* cause) {
-  level.reset();
+  dyingCount = 60;
+  deathCause = cause;
 }
 
 void setup() {
@@ -37,8 +40,18 @@ void loop() {
     //gb.setFrameRate(++frameRate);
   }
 
-  level.update();
+  if (dyingCount < 0) {
+    level.update();
+  }
   level.draw();
+  if (dyingCount >= 0) {
+    gb.display.setColor(INDEX_RED);
+    gb.display.println(deathCause);
+
+    if (dyingCount-- == 0) {
+      level.reset();
+    }
+  }
 
   uint8_t cpuLoad = gb.getCpuLoad();
   gb.display.setColor(cpuLoad < 80 ? INDEX_GREEN : (cpuLoad < 100 ? INDEX_YELLOW : INDEX_RED));
