@@ -1,12 +1,9 @@
 #include "Utils.h"
 
-#include "Levels.h"
 #include "Waves.h"
 
-class Tiles;
-class Mover;
-class IsoLineElement;
 struct TileType;
+class Player;
 
 const int8_t TILEFLAG_ENEMY_ENTERING = 0x01;
 
@@ -45,9 +42,18 @@ public:
   void draw(TilePos pos, TileType* tileType) const;
 };
 
+struct TilesSpec {
+  /* 1D array for 2D map
+   *
+   * bits:
+   * 7..5 : height (0..7)
+   * 4..0 : tileType (0..31)
+   */
+  const uint8_t tiles[maxCols * maxRows];
+};
 
 class Tiles {
-  const LevelSpec* _levelSpec;
+  const TilesSpec* _tilesSpec;
 
   // 1D-array of Tiles, representing a 2D map
   Tile _units[maxCols * maxRows];
@@ -69,7 +75,7 @@ class Tiles {
 
 public:
   Tiles();
-  void init(const LevelSpec* levelSpec);
+  void init(const TilesSpec* tilesSpec);
 
   ScreenPos cameraPos() const {
     return _cameraPos;
@@ -95,6 +101,6 @@ public:
   void moveMoverToTile(int8_t moverIndex, int8_t tileIndex);
 
   void update();
-  void draw();
+  void draw(Player *player);
 };
 

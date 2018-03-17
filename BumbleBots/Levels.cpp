@@ -1,5 +1,7 @@
 #include "Levels.h"
 
+#include "Globals.h"
+
 const uint8_t H0 = 0x00;
 const uint8_t H1 = 0x20;
 const uint8_t H2 = 0x40;
@@ -9,9 +11,14 @@ const uint8_t H5 = 0xa0;
 const uint8_t H6 = 0xc0;
 const uint8_t H7 = 0xe0;
 
+const TilePos enemyStartPosLevel1[1] = { makeTilePos(6, 1) };
+
 const LevelSpec levelSpecs[numLevels] = {
   // 0: Going Down
   LevelSpec {
+    .playerStartPos = makeTilePos(1, 1),
+    .numEnemies = 0,
+    .enemyStartPos = (const TilePos*)0,
     .tilesSpec = TilesSpec {
       .tiles = {
         0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7,
@@ -28,6 +35,9 @@ const LevelSpec levelSpecs[numLevels] = {
 
   // Ride the Waves
   LevelSpec {
+    .playerStartPos = makeTilePos(2, 5),
+    .numEnemies = 1,
+    .enemyStartPos = enemyStartPosLevel1,
     .tilesSpec = TilesSpec {
       .tiles = {
         0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0,
@@ -44,6 +54,9 @@ const LevelSpec levelSpecs[numLevels] = {
 
   // Testing level: falling
   LevelSpec {
+    .playerStartPos = makeTilePos(2, 5),
+    .numEnemies = 1,
+    .enemyStartPos = enemyStartPosLevel1,
     .tilesSpec = TilesSpec {
       .tiles = {
         0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
@@ -60,6 +73,9 @@ const LevelSpec levelSpecs[numLevels] = {
 
   // Testing level: drawing
   LevelSpec {
+    .playerStartPos = makeTilePos(2, 5),
+    .numEnemies = 1,
+    .enemyStartPos = enemyStartPosLevel1,
     .tilesSpec = TilesSpec {
       .tiles = {
         0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
@@ -74,4 +90,40 @@ const LevelSpec levelSpecs[numLevels] = {
     }
   }
 };
+
+void Level::init(const LevelSpec *levelSpec) {
+  _levelSpec = levelSpec;
+
+  numMovers = 0;
+  _player.init(numMovers++);
+  movers[_player.index()] = &_player;
+
+  for (uint8_t i = 0; i < _levelSpec->numEnemies; i++) {
+    _enemies[i].init(numMovers++, _player.index());
+    movers[_enemies[i].index()] = &_enemies[i];
+  }
+}
+
+void Level::reset() {
+  tiles->init(&_levelSpec->tilesSpec);
+
+  _player.reset();
+  tiles->putMoverOnTile(_player.index(), _levelSpec->playerStartPos);
+
+  for (int8_t i = _levelSpec->numEnemies; --i >= 0; ) {
+    _enemies[i].reset();
+    tiles->putMoverOnTile(_enemies[i].index(), _levelSpec->enemyStartPos[i]);
+  }
+}
+
+void Level::update() {
+  tiles->update();
+  for (int8_t i = numMovers; --i >= 0; ) {
+    movers[i]->update();
+  }
+}
+
+void Level::draw() {
+  tiles->draw(&_player);
+}
 

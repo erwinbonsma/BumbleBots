@@ -4,7 +4,6 @@
 #include "ImageData.h"
 #include "Movers.h"
 #include "TileTypes.h"
-#include "Waves.h"
 #include "Palettes.h"
 
 #include <assert.h>
@@ -220,11 +219,11 @@ Tiles::Tiles() :
   _wave.setAmplitude(1);
 }
 
-void Tiles::init(const LevelSpec* levelSpec) {
-  _levelSpec = levelSpec;
+void Tiles::init(const TilesSpec* tilesSpec) {
+  _tilesSpec = tilesSpec;
 
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
-    uint8_t tile = _levelSpec->tilesSpec.tiles[pos];
+    uint8_t tile = _tilesSpec->tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
 
     int8_t height0 = tileType.height0 + 2 * (tile & 0xe0) >> 5;
@@ -281,7 +280,7 @@ void Tiles::update() {
   _waveStrength = max(0.5, min(1, _waveStrength + _waveStrengthDelta));
 
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
-    uint8_t tile = _levelSpec->tilesSpec.tiles[pos];
+    uint8_t tile = _tilesSpec->tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
 
     if (tileType.flexibility) {
@@ -305,7 +304,7 @@ void Tiles::update() {
 void Tiles::drawPartOfIsoline(int8_t elementIndex) {
   if (elementIndex <= 0) {
     TilePos pos = (TilePos)-elementIndex;
-    uint8_t tile = _levelSpec->tilesSpec.tiles[pos];
+    uint8_t tile = _tilesSpec->tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
     _units[pos].draw(pos, &tileType);
   }
@@ -325,18 +324,16 @@ void Tiles::drawPartOfIsoline(int8_t elementIndex) {
   }
 }
 
-extern Player player; // TODO: Remove
-
-void Tiles::draw() {
+void Tiles::draw(Player *player) {
   // Let camera focus on player
-  TilePos targetTilePos = player.drawTilePos();
+  TilePos targetTilePos = player->drawTilePos();
   // When player is at the edge, do not fully center player (to not
   // unnecessarily limit the number of visible tiles).
   int8_t col = colOfAnyPos(targetTilePos);
   int8_t row = rowOfAnyPos(targetTilePos);
   ScreenPos targetPos = TilePosToScreenPos(col, row);
-  targetPos.x = min(38, max(-26, targetPos.x + player.dx()));
-  targetPos.y = min(44, max( 18, targetPos.y + player.dy()));
+  targetPos.x = min(38, max(-26, targetPos.x + player->dx()));
+  targetPos.y = min(44, max( 18, targetPos.y + player->dy()));
   // Move camera gradually, 1 pixel at most.
   _cameraPos.x += sign(targetPos.x - _cameraPos.x);
   _cameraPos.y += sign(targetPos.y - _cameraPos.y);
