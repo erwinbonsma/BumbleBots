@@ -5,7 +5,7 @@
 uint8_t levelNum = 0;
 Level level = Level();
 
-uint8_t frameRate = 20;
+uint8_t frameRate = 25;
 
 int8_t dyingCount;
 const char* deathCause;

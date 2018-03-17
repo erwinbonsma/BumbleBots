@@ -90,7 +90,7 @@ extern const int8_t rowDelta[];
 float smoothClamp(float value);
 float smoothStep(float value);
 
-float fastCos(float value);
+int16_t fastCos(int16_t value);
 
 inline int8_t sign(int8_t value) {
   return (value > 0) - (value < 0);

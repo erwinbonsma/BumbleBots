@@ -279,14 +279,16 @@ void Tiles::moveMoverToTile(int8_t moverIndex, int8_t tileIndex) {
 void Tiles::update() {
   _waveStrength = max(0.5, min(1, _waveStrength + _waveStrengthDelta));
 
+  // TODO: Refactor. Express period differently (in power of two)?
+  uint8_t t = (gb.frameCount % _wave.period()) * (256 / _wave.period());
+
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
     uint8_t tile = _tilesSpec->tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
 
     if (tileType.flexibility) {
-      //float waveHeight = smoothStep( _wave.eval(pos) );
-      float waveHeight = _wave.eval(pos);
-      int8_t actualHeight = round(waveHeight * tileType.flexibility);
+      int16_t waveHeight = _wave.eval(pos, t);
+      int8_t actualHeight = (waveHeight * tileType.flexibility) >> 8;
 
       _units[pos].setWave(actualHeight);
     }
