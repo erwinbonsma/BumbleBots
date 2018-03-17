@@ -64,6 +64,9 @@ class Tiles {
   DirectionalWave _wave;
   float _waveStrength;
   float _waveStrengthDelta;
+
+  void drawPartOfIsoline(int8_t elementIndex);
+
 public:
   Tiles();
   void init(const LevelSpec* levelSpec);

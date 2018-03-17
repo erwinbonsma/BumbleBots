@@ -60,14 +60,14 @@ void loop() {
   gb.display.clear();
 
   if (gb.buttons.held(BUTTON_A, 0)) {
-    //resetLevel();
-    if (frameRate > 1) {
-      gb.setFrameRate(--frameRate);
-    }
+    resetLevel();
+    //if (frameRate > 1) {
+    //  gb.setFrameRate(--frameRate);
+    //}
   }
   if (gb.buttons.held(BUTTON_B, 0)) {
-    //levelNum = (levelNum + 1 ) % numLevels;
-    gb.setFrameRate(++frameRate);
+    levelNum = (levelNum + 1 ) % numLevels;
+    //gb.setFrameRate(++frameRate);
   }
 
   tiles->update();
