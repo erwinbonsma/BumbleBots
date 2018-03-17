@@ -331,6 +331,10 @@ void Player::update() {
   //  // TODO: Sound effect
   //}
 
+  if (_height < -50) {
+    signalDeath("System crash");
+  }
+
   //gb.display.printf("t1=%d, t2=%d, dt=%d\n", _tileIndex, _tileIndex2, _drawTileIndex);
 }
 

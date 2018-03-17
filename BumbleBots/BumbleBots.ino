@@ -7,6 +7,10 @@ Level level = Level();
 
 uint8_t frameRate = 20;
 
+void signalDeath(const char* cause) {
+  level.reset();
+}
+
 void setup() {
   gb.begin();
 

@@ -9,3 +9,6 @@ extern Mover* movers[maxNumMovers];
 // Implemented in Tiles.cpp
 class Tiles;
 extern Tiles *const tiles;
+
+// Implemented in main
+void signalDeath(const char* cause);
