@@ -262,8 +262,8 @@ void Tiles::reset(const TilesSpec* tilesSpec) {
   _offMapTile.reset();
   _offMapTilePos = makeTilePos(-1, 0); // Any off-map position suffices
 
-  _waveStrength = 0;
-  _waveStrengthDelta = 1;
+  _waveStrength = 92;
+  _waveStrengthDelta = 2;
 }
 
 Tile* Tiles::tileAtIndex(int8_t tileIndex) {
@@ -378,7 +378,7 @@ void Tiles::draw(Player *player) {
   int8_t row = rowOfAnyPos(targetTilePos);
   ScreenPos targetPos = TilePosToScreenPos(col, row);
   targetPos.x = min(38, max(-26, targetPos.x + player->dx()));
-  targetPos.y = min(48, max( 12, targetPos.y + player->dy()));
+  targetPos.y = min(40, max( 12, targetPos.y + player->dy()));
   // Move camera gradually, 1 pixel at most.
   _cameraPos.x += sign(targetPos.x - _cameraPos.x);
   _cameraPos.y += sign(targetPos.y - _cameraPos.y);

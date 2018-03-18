@@ -123,7 +123,7 @@ public:
    */
   void putObjectOnTile(int8_t objectIndex, int8_t tileIndex);
 
-  void attenuateWaves() { _waveStrengthDelta = -1; }
+  void attenuateWaves() { _waveStrengthDelta = -2; }
 
   void update();
   void draw(Player *player);
