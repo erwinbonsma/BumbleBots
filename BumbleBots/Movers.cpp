@@ -6,6 +6,7 @@
 #include "ImageData.h"
 #include "Palettes.h"
 #include "Tiles.h"
+#include "Objects.h"
 
 // Exposed in Globals.h
 uint8_t numMovers = 0;
@@ -44,7 +45,11 @@ void Mover::reset() {
 
   _height = 40;
   _dropSpeed = 6;
-  _isFalling = false;
+  _flags = 0;
+}
+
+bool Mover::canMove() {
+  return !isFrozen();
 }
 
 bool Mover::canStartMove() {
@@ -87,9 +92,49 @@ void Mover::updateHeight() {
 void Mover::updateDxDy() {
   if (isMoving()) {
     Heading h = heading();
-    _dx = floor((colDelta[h] - rowDelta[h]) * _movement / (float)_movementDelay + 0.5) * _movementDir;
-    _dy = floor((colDelta[h] + rowDelta[h]) * _movement / (float)_movementDelay / 2 + 0.5) * _movementDir;
-  } else {
+
+    // Direction
+    _dx = ((colDelta[h] - rowDelta[h]) * _movementDir);
+    _dy = ((colDelta[h] + rowDelta[h]) * _movementDir);
+
+    // Scale and carefully round the delta vectors.
+    //
+    // Care is taken to ensure that there is a steady rounding rythm. I.e.
+    // the period (in update cycles) between changes of the DX and DY values is
+    // fixed when the mover moves in a particular direction. This is harder than
+    // one might expect, as the _movement argument changes sign when the mover's
+    // drawing tile changes. For this reason, rounding is based on the sign of
+    // the _movement value.
+    //
+    // Note: The exact path that a mover traverses depends on its direction.
+    // Keeping this the same would further complicate the formula's below which
+    // does not seem worth the hassle.
+    if (_movement > 0) {
+      if (_movementDelay > 1) {
+        _dx *= (_movement + _movementDelay / 2) / _movementDelay;
+      }
+      else {
+        // No rounding
+        _dx *= _movement;
+      }
+      _dy *= (_movement + _movementDelay) / (_movementDelay * 2);
+    }
+    else {
+      // Note: condition is different from the one above. This is intentional.
+      // See comment below.
+      if (_movementDelay > 2) {
+        _dx *= (_movement - _movementDelay / 2 + 1) / _movementDelay;
+      }
+      else {
+        // The "+ 1" term in the above formula should only be used when
+        // _movementDelay / 2 is non-zero, which is not the case for
+        // _movementDelay < 2.
+        _dx *= _movement / _movementDelay;
+      }
+      _dy *= (_movement - _movementDelay + 1) / (_movementDelay * 2);
+    }
+  }
+  else {
     _dx = 0;
     _dy = 0;
   }
@@ -144,7 +189,9 @@ bool Mover::canEnterTile(int8_t tileIndex) {
 void Mover::enteringTile(int8_t tileIndex) {
   _tileIndex2 = tileIndex;
 
-  _isFalling = isFall(_tileIndex, _tileIndex2);
+  if (isFall(_tileIndex, _tileIndex2)) {
+    setFalling();
+  }
 
   TilePos destPos = tiles->posOfTile(_tileIndex2);
   TilePos fromPos = tiles->posOfTile(_tileIndex);
@@ -186,16 +233,19 @@ void Mover::update() {
   updateHeight();
   updateDxDy();
 
-  // TODO: visit objects
+  Tile* tile = tiles->tileAtIndex(_tileIndex);
+  if (tile->object() >= 0 && _height == tile->height()) {
+    objects[tile->object()]->visit(_moverIndex);
+  }
 
   if (
-    _isFalling &&
+    isFalling() &&
     // Wait with checking until mover is not on two tiles anymore
     _tileIndex2 != NO_TILE
   ) {
     // TODO: destroy when falling
 
-    _isFalling = false;
+    clearFalling();
   }
 }
 
@@ -276,7 +326,11 @@ void Bot::draw(int8_t x, int8_t y) {
 //-----------------------------------------------------------------------------
 // Player implementation
 
-Player::Player() : Bot(1, 2) {}
+#ifdef EMULATION_SETTINGS
+  Player::Player() : Bot(1, 2) {}
+#else
+  Player::Player() : Bot(2, 2) {}
+#endif
 
 void Player::swapTiles() {
   Mover::swapTiles();
@@ -331,13 +385,22 @@ void Player::update() {
   //  // TODO: Sound effect
   //}
 
+  if (_height < -50) {
+    signalDeath("System crash");
+  }
+
   //gb.display.printf("t1=%d, t2=%d, dt=%d\n", _tileIndex, _tileIndex2, _drawTileIndex);
 }
 
 //-----------------------------------------------------------------------------
 // Enemy implementation
 
-Enemy::Enemy() : Bot(1, 3) {}
+#ifdef EMULATION_SETTINGS
+  // Move faster
+  Enemy::Enemy() : Bot(1, 3) {}
+#else
+  Enemy::Enemy() : Bot(2, 3) {}
+#endif
 
 void Enemy::init(int8_t moverIndex, int8_t targetIndex) {
   Bot::init(moverIndex);
@@ -392,11 +455,15 @@ void Enemy::turnStep() {
 }
 
 bool Enemy::isBlocked(int8_t tileIndex) {
-  // TODO: Let (most) objects block
+  Tile* destTile = tiles->tileAtIndex(tileIndex);
+
   return (
+    // Objects block
+    destTile->object() >= 0
+  ) || (
     // Fear big falls
     tiles->tileAtIndex(_tileIndex)->height() -
-    tiles->tileAtIndex(tileIndex)->height()
+    destTile->height()
   ) > 10;
 }
 
@@ -457,10 +524,10 @@ void Enemy::update() {
   Mover* target = movers[_targetIndex];
   if (
     _tileIndex == target->_tileIndex &&
-    !target->_isFalling &&
+    !target->isFalling() &&
     abs(_height - target->_height) < 6
   ) {
-    // TODO: Signal death. Intercepted
+    signalDeath("Intercepted");
   }
 
   if (canStartMove()) {
@@ -485,17 +552,9 @@ void Enemy::update() {
   Bot::update();
 }
 
-// TMP
 //void Enemy::draw(int8_t x, int8_t y) {
 //  Bot::draw(x, y);
 //
-//  int8_t otherEnemy = tiles->tileAtIndex(_tileIndex)->moverOfType(TYPE_ENEMY, _moverIndex);
-//  if (
-//    otherEnemy != -1
-//  ) {
-//    gb.display.setColor(INDEX_YELLOW);
-//    gb.display.printf("ENEMY: %d\n", otherEnemy);
-//  } else {
-//    gb.display.printf("%d\n", otherEnemy);
-//  }
+//  gb.display.setColor(INDEX_YELLOW);
+//  gb.display.printf("frozen=%d\n", isFrozen());
 //}

@@ -124,21 +124,21 @@ const uint8_t fastCosTable[fastCosTableSize + 1] = {
 /* Fast Cosine function approximation.
  * It is not very accurate, but that's okay.
  *
- * Note: The period of this function is 1 instead of 2*PI
+ * Note: The period of this function is 256
+ * It returns values in range of -255..255
  */
-float fastCos(float value) {
-  // Ensure it's in range [0..1>
-  value = abs(value);
-  value = value - (int)value;
+int16_t fastCos(int16_t value) {
+  // Ensure value is in range [0..128>
+  value = abs(value / 2) % 128;
 
   // Exploit symmetry
-  if (value > 0.5f) {
-    value = 1 - value;
+  if (value >= 64) {
+    value = 128 - value;
   }
-  if (value < 0.25f) {
-    return fastCosTable[(int)(value * 4 * fastCosTableSize + 0.5f)] / 255.0f;
+  if (value <= 32) {
+    return fastCosTable[value];
   }
   else {
-    return -fastCosTable[(int)((0.5f - value) * 4 * fastCosTableSize + 0.5f)] / 255.0f;
+    return -(int16_t)fastCosTable[64 - value];
   }
 }
