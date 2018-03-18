@@ -97,20 +97,44 @@ void Mover::updateDxDy() {
     _dx = ((colDelta[h] - rowDelta[h]) * _movementDir);
     _dy = ((colDelta[h] + rowDelta[h]) * _movementDir);
 
-    // Scale and round
+    // Scale and carefully round the delta vectors.
+    //
+    // Care is taken to ensure that there is a steady rounding rythm. I.e.
+    // the period (in update cycles) between changes of the DX and DY values is
+    // fixed when the mover moves in a particular direction. This is harder than
+    // one might expect, as the _movement argument changes sign when the mover's
+    // drawing tile changes. For this reason, rounding is based on the sign of
+    // the _movement value.
+    //
+    // Note: The exact path that a mover traverses depends on its direction.
+    // Keeping this the same would further complicate the formula's below which
+    // does not seem worth the hassle.
     if (_movement > 0) {
-      // For positive movement, round up
-      _dx = _dx * (_movement + _movementDelay / 2) / _movementDelay;
-      _dy = _dy * (_movement + _movementDelay) / (_movementDelay * 2);
+      if (_movementDelay > 1) {
+        _dx *= (_movement + _movementDelay / 2) / _movementDelay;
+      }
+      else {
+        // No rounding
+        _dx *= _movement;
+      }
+      _dy *= (_movement + _movementDelay) / (_movementDelay * 2);
     }
     else {
-      // For negative movement, do not round. This is needed to ensure that
-      // during a full move the "rounding rythm" does not change when the mover
-      // switches the drawing tile (which changes the sign of _movement).
-      _dx = _dx * (_movement) / _movementDelay;
-      _dy = _dy * (_movement) / (_movementDelay * 2);
+      // Note: condition is different from the one above. This is intentional.
+      // See comment below.
+      if (_movementDelay > 2) {
+        _dx *= (_movement - _movementDelay / 2 + 1) / _movementDelay;
+      }
+      else {
+        // The "+ 1" term in the above formula should only be used when
+        // _movementDelay / 2 is non-zero, which is not the case for
+        // _movementDelay < 2.
+        _dx *= _movement / _movementDelay;
+      }
+      _dy *= (_movement - _movementDelay + 1) / (_movementDelay * 2);
     }
-  } else {
+  }
+  else {
     _dx = 0;
     _dy = 0;
   }
