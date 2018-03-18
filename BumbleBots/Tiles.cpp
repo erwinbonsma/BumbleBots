@@ -306,6 +306,7 @@ void Tiles::moveMoverToTile(int8_t moverIndex, int8_t tileIndex) {
 }
 
 void Tiles::putObjectOnTile(int8_t objectIndex, int8_t tileIndex) {
+  objects[objectIndex]->_tileIndex = tileIndex;
   _units[tileIndex].addObject(objectIndex);
 }
 

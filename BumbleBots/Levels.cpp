@@ -127,7 +127,7 @@ void Level::init(const LevelSpec *levelSpec) {
 
   numObjects = 0;
 
-  // Create and place objects
+  // Create and place pick-ups
   for (uint8_t i = 0; i < _levelSpec->numPickups; i++) {
     assert(numObjects < maxNumObjects);
 
@@ -136,6 +136,7 @@ void Level::init(const LevelSpec *levelSpec) {
 
     tiles->putObjectOnTile(_pickups[i].index(), _levelSpec->pickupStartPos[i]);
   }
+  _numPickupsCollected = 0;
 
   Level::reset();
 }
@@ -155,6 +156,10 @@ void Level::reset() {
   for (int8_t i = numObjects; --i >= 0; ) {
     objects[i]->reset();
   }
+}
+
+bool Level::isCompleted() {
+  return _numPickupsCollected == _levelSpec->numPickups;
 }
 
 void Level::update() {

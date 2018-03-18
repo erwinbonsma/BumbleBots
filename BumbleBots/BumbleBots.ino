@@ -9,6 +9,7 @@ Level level = Level();
 uint8_t frameRate = 25;
 
 DieAnimation dieAnimation;
+LevelDoneAnimation levelDoneAnimation;
 
 // The active animation, if any
 Animation *animation = 0;
@@ -17,6 +18,20 @@ const char *deathCause = 0;
 
 void signalDeath(const char* cause) {
   deathCause = cause;
+}
+
+void signalPickupCollected() {
+  level.pickupCollected();
+
+  if (level.isCompleted()) {
+    levelDoneAnimation.init();
+    animation = &levelDoneAnimation;
+  }
+}
+
+void nextLevel() {
+  levelNum = (levelNum + 1 ) % numLevels;
+  level.init(&levelSpecs[levelNum]);
 }
 
 void setup() {
@@ -38,8 +53,7 @@ void loop() {
     //}
   }
   if (gb.buttons.held(BUTTON_B, 0)) {
-    levelNum = (levelNum + 1 ) % numLevels;
-    level.init(&levelSpecs[levelNum]);
+    nextLevel();
     //gb.setFrameRate(++frameRate);
   }
 

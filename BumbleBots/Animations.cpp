@@ -3,6 +3,7 @@
 #include "Animations.h"
 
 #include "Levels.h"
+#include "Globals.h"
 
 extern Level level;
 
@@ -46,4 +47,23 @@ void DieAnimation::draw() {
     gb.display.print(".");
   }
   gb.display.println();
+}
+
+//-----------------------------------------------------------------------------
+// LevelDoneAnimation implementation
+
+Animation* LevelDoneAnimation::update() {
+  Animation::update();
+
+  if (clock() == 80) {
+    nextLevel();
+    return 0;
+  }
+
+  return this;
+}
+
+void LevelDoneAnimation::draw() {
+  gb.display.setColor(INDEX_GREEN);
+  gb.display.println("Level completed!");
 }

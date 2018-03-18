@@ -81,6 +81,8 @@ public:
 
   virtual MoverType moverType() = 0;
 
+  virtual bool isFrozen() { return false; }
+
   virtual void update();
   virtual void draw(int8_t x, int8_t y) = 0;
 };

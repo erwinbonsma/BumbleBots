@@ -6,6 +6,7 @@
 #include "ImageData.h"
 #include "Palettes.h"
 #include "Tiles.h"
+#include "Objects.h"
 
 // Exposed in Globals.h
 uint8_t numMovers = 0;
@@ -186,7 +187,10 @@ void Mover::update() {
   updateHeight();
   updateDxDy();
 
-  // TODO: visit objects
+  Tile* tile = tiles->tileAtIndex(_tileIndex);
+  if (tile->object() >= 0 && _height == tile->height()) {
+    objects[tile->object()]->visit(_moverIndex);
+  }
 
   if (
     _isFalling &&
@@ -396,11 +400,15 @@ void Enemy::turnStep() {
 }
 
 bool Enemy::isBlocked(int8_t tileIndex) {
-  // TODO: Let (most) objects block
+  Tile* destTile = tiles->tileAtIndex(tileIndex);
+
   return (
+    // Objects block
+    destTile->object() >= 0
+  ) || (
     // Fear big falls
     tiles->tileAtIndex(_tileIndex)->height() -
-    tiles->tileAtIndex(tileIndex)->height()
+    destTile->height()
   ) > 10;
 }
 

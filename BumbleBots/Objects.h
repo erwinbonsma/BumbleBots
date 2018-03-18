@@ -3,6 +3,10 @@
 #include "Utils.h"
 
 class Object {
+  friend class Tiles;
+
+protected:
+  int8_t _tileIndex;
   int8_t _objectIndex;
 
 public:

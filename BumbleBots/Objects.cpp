@@ -2,6 +2,8 @@
 
 #include "Globals.h"
 #include "ImageData.h"
+#include "Movers.h"
+#include "Tiles.h"
 
 // Exposed in Globals.h
 uint8_t numObjects = 0;
@@ -18,7 +20,10 @@ void Object::init(int8_t objectIndex) {
 // Pickup implementation
 
 void Pickup::visit(int8_t moverIndex) {
-  // TODO
+  if (!movers[moverIndex]->isFrozen()) {
+    tiles->tileAtIndex(_tileIndex)->removeObject(_objectIndex);
+    signalPickupCollected();
+  }
 }
 
 void Pickup::draw(int8_t x, int8_t y) {

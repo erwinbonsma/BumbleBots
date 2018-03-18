@@ -18,3 +18,5 @@ extern Tiles *const tiles;
 
 // Implemented in main
 void signalDeath(const char* cause);
+void signalPickupCollected();
+void nextLevel();

@@ -33,6 +33,8 @@ const uint8_t maxNumPickups = 13;
 class Level {
   const LevelSpec *_levelSpec;
 
+  uint8_t _numPickupsCollected;
+
   Player _player;
   Enemy _enemies[maxNumEnemies];
   Pickup _pickups[maxNumPickups];
@@ -58,6 +60,11 @@ public:
    * realized by simply invoking init again.
    */
   void reset();
+
+  /* Invoke to signal that a pick-up has been completed.
+   */
+  void pickupCollected() { _numPickupsCollected++; }
+  bool isCompleted();
 
   void update();
   void draw();

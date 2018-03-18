@@ -35,3 +35,13 @@ public:
 
   void draw();
 };
+
+//-----------------------------------------------------------------------------
+// LevelDoneAnimation declaration
+
+class LevelDoneAnimation : public Animation {
+public:
+  Animation* update();
+
+  void draw();
+};
