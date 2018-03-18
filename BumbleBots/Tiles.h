@@ -7,11 +7,20 @@ class Player;
 
 const int8_t TILEFLAG_ENEMY_ENTERING = 0x01;
 
+//-----------------------------------------------------------------------------
+// Tile declaration
+
 class Tile {
   friend class Tiles;
 
-  // The mover at this unit, if any
+  /* The mover(s) at this unit, if any.
+   *
+   * Note: There can be multiple, as movers can form a linked list.
+   */
   int8_t _moverIndex;
+
+  // The object at this unit, if any.
+  int8_t _objectIndex;
 
   int8_t _height0;
 
@@ -24,6 +33,7 @@ public:
   Tile();
 
   void init(int8_t _height0);
+  void reset();
 
   void setWave(int8_t waveHeight);
   int8_t height() const { return _height; }
@@ -39,8 +49,15 @@ public:
    */
   int8_t moverOfType(MoverType moverType, int8_t excludeMover);
 
+  void addObject(int8_t objectIndex);
+  void removeObject(int8_t objectIndex);
+  int8_t object() { return _objectIndex; }
+
   void draw(TilePos pos, TileType* tileType) const;
 };
+
+//-----------------------------------------------------------------------------
+// TileSpec declaration
 
 struct TilesSpec {
   /* 1D array for 2D map
@@ -51,6 +68,9 @@ struct TilesSpec {
    */
   const uint8_t tiles[maxCols * maxRows];
 };
+
+//-----------------------------------------------------------------------------
+// Tiles declaration
 
 class Tiles {
   const TilesSpec* _tilesSpec;
@@ -76,6 +96,7 @@ class Tiles {
 public:
   Tiles();
   void init(const TilesSpec* tilesSpec);
+  void reset(const TilesSpec* tilesSpec);
 
   ScreenPos cameraPos() const {
     return _cameraPos;
@@ -90,7 +111,9 @@ public:
    */
   int8_t neighbour(int8_t tileIndex, Heading heading);
 
-  /* Adds mover to the map on the specified tile. This should only be called once.
+  /* Adds mover to the map on the specified tile. This should only be called
+   * once. I.e. it should not be called when the mover subsequently moves to
+   * another tile.
    */
   void putMoverOnTile(int8_t moverIndex, int8_t tileIndex);
 
@@ -100,7 +123,10 @@ public:
    */
   void moveMoverToTile(int8_t moverIndex, int8_t tileIndex);
 
+  /* Adds object to the map on the specified tile.
+   */
+  void putObjectOnTile(int8_t objectIndex, int8_t tileIndex);
+
   void update();
   void draw(Player *player);
 };
-

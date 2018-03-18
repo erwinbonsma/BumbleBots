@@ -13,12 +13,23 @@ const uint8_t H7 = 0xe0;
 
 const TilePos enemyStartPosLevel1[1] = { makeTilePos(6, 1) };
 
+const TilePos pickupStartPosLevel0[13] = {
+  makeTilePos(0, 0), makeTilePos(0, 2), makeTilePos(0, 3), makeTilePos(0, 5), makeTilePos(0, 7),
+  makeTilePos(2, 1), makeTilePos(2, 3), makeTilePos(2, 5), makeTilePos(2, 7),
+  makeTilePos(7, 0), makeTilePos(7, 2), makeTilePos(7, 4), makeTilePos(7, 6),
+};
+const TilePos pickupStartPosLevel1[4] = {
+  makeTilePos(0, 0), makeTilePos(0, 7), makeTilePos(7, 0), makeTilePos(7, 7)
+};
+
 const LevelSpec levelSpecs[numLevels] = {
   // 0: Going Down
   LevelSpec {
     .playerStartPos = makeTilePos(1, 1),
     .numEnemies = 0,
     .enemyStartPos = (const TilePos*)0,
+    .numPickups = 13,
+    .pickupStartPos = pickupStartPosLevel0,
     .tilesSpec = TilesSpec {
       .tiles = {
         0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7,
@@ -38,6 +49,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .playerStartPos = makeTilePos(2, 5),
     .numEnemies = 1,
     .enemyStartPos = enemyStartPosLevel1,
+    .numPickups = 4,
+    .pickupStartPos = pickupStartPosLevel1,
     .tilesSpec = TilesSpec {
       .tiles = {
         0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0,
@@ -52,6 +65,7 @@ const LevelSpec levelSpecs[numLevels] = {
     }
   },
 
+#ifdef TEST_LEVELS
   // Testing level: falling
   LevelSpec {
     .playerStartPos = makeTilePos(2, 5),
@@ -89,23 +103,45 @@ const LevelSpec levelSpecs[numLevels] = {
       }
     }
   }
+#endif
 };
 
 void Level::init(const LevelSpec *levelSpec) {
   _levelSpec = levelSpec;
 
+  tiles->init(&_levelSpec->tilesSpec);
+
   numMovers = 0;
+
+  // Create player
   _player.init(numMovers++);
   movers[_player.index()] = &_player;
 
+  // Create enemies
   for (uint8_t i = 0; i < _levelSpec->numEnemies; i++) {
+    assert(numMovers < maxNumMovers);
+
     _enemies[i].init(numMovers++, _player.index());
     movers[_enemies[i].index()] = &_enemies[i];
   }
+
+  numObjects = 0;
+
+  // Create and place objects
+  for (uint8_t i = 0; i < _levelSpec->numPickups; i++) {
+    assert(numObjects < maxNumObjects);
+
+    _pickups[i].init(numObjects++);
+    objects[_pickups[i].index()] = &_pickups[i];
+
+    tiles->putObjectOnTile(_pickups[i].index(), _levelSpec->pickupStartPos[i]);
+  }
+
+  Level::reset();
 }
 
 void Level::reset() {
-  tiles->init(&_levelSpec->tilesSpec);
+  tiles->reset(&_levelSpec->tilesSpec);
 
   _player.reset();
   tiles->putMoverOnTile(_player.index(), _levelSpec->playerStartPos);
@@ -113,6 +149,11 @@ void Level::reset() {
   for (int8_t i = _levelSpec->numEnemies; --i >= 0; ) {
     _enemies[i].reset();
     tiles->putMoverOnTile(_enemies[i].index(), _levelSpec->enemyStartPos[i]);
+  }
+
+  // Reset all objects
+  for (int8_t i = numObjects; --i >= 0; ) {
+    objects[i]->reset();
   }
 }
 

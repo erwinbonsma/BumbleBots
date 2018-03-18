@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "ImageData.h"
 #include "Movers.h"
+#include "Objects.h"
 #include "TileTypes.h"
 #include "Palettes.h"
 
@@ -121,8 +122,11 @@ Tile::Tile() {}
 
 void Tile::init(int8_t height0) {
   _height0 = height0;
-  _height = height0;
+  _objectIndex = -1;
+}
 
+void Tile::reset() {
+  _height = _height0;
   _moverIndex = -1;
   _flags = 0;
 }
@@ -171,6 +175,17 @@ int8_t Tile::moverOfType(MoverType moverType, int8_t excludeMover) {
   return p;
 }
 
+void Tile::addObject(int8_t objectIndex) {
+  assert(_objectIndex == -1);
+  _objectIndex = objectIndex;
+}
+
+void Tile::removeObject(int8_t objectIndex) {
+  assert(_objectIndex == objectIndex);
+  _objectIndex = -1;
+}
+
+
 void Tile::draw(TilePos tilePos, TileType* tileType) const {
   int8_t col = colOfAnyPos(tilePos);
   int8_t row = rowOfAnyPos(tilePos);
@@ -208,6 +223,10 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
     movers[moverIndex]->draw(pos.x + 4, pos.y - 2);
     moverIndex = movers[moverIndex]->_nextMoverIndex;
   }
+
+  if (_objectIndex >= 0) {
+    objects[_objectIndex]->draw(pos.x + 4, pos.y - 2);
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -231,6 +250,16 @@ void Tiles::init(const TilesSpec* tilesSpec) {
   }
 
   _offMapTile.init(offMapTileHeight);
+}
+
+void Tiles::reset(const TilesSpec* tilesSpec) {
+  _tilesSpec = tilesSpec;
+
+  for (TilePos pos = maxTilePos; --pos >= 0; ) {
+    _units[pos].reset();
+  }
+
+  _offMapTile.reset();
   _offMapTilePos = makeTilePos(-1, 0); // Any off-map position suffices
 
   _waveStrength = 0;
@@ -274,6 +303,10 @@ void Tiles::moveMoverToTile(int8_t moverIndex, int8_t tileIndex) {
     _offMapTile.addMover(moverIndex);
     _offMapTilePos = posOfTile(tileIndex);
   }
+}
+
+void Tiles::putObjectOnTile(int8_t objectIndex, int8_t tileIndex) {
+  _units[tileIndex].addObject(objectIndex);
 }
 
 void Tiles::update() {

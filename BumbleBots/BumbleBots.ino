@@ -18,7 +18,6 @@ void setup() {
   gb.begin();
 
   level.init(&levelSpecs[levelNum]);
-  level.reset();
 
   gb.setFrameRate(frameRate);
 }
@@ -36,20 +35,21 @@ void loop() {
   if (gb.buttons.held(BUTTON_B, 0)) {
     levelNum = (levelNum + 1 ) % numLevels;
     level.init(&levelSpecs[levelNum]);
-    level.reset();
     //gb.setFrameRate(++frameRate);
   }
 
-  if (dyingCount < 0) {
-    level.update();
-  }
-  level.draw();
-  if (dyingCount >= 0) {
-    gb.display.setColor(INDEX_RED);
-    gb.display.println(deathCause);
+  if (1) {
+    if (dyingCount < 0) {
+      level.update();
+    }
+    level.draw();
+    if (dyingCount >= 0) {
+      gb.display.setColor(INDEX_RED);
+      gb.display.println(deathCause);
 
-    if (dyingCount-- == 0) {
-      level.reset();
+      if (dyingCount-- == 0) {
+        level.reset();
+      }
     }
   }
 
