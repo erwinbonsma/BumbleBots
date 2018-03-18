@@ -92,8 +92,24 @@ void Mover::updateHeight() {
 void Mover::updateDxDy() {
   if (isMoving()) {
     Heading h = heading();
-    _dx = floor((colDelta[h] - rowDelta[h]) * _movement / (float)_movementDelay + 0.5) * _movementDir;
-    _dy = floor((colDelta[h] + rowDelta[h]) * _movement / (float)_movementDelay / 2 + 0.5) * _movementDir;
+
+    // Direction
+    _dx = ((colDelta[h] - rowDelta[h]) * _movementDir);
+    _dy = ((colDelta[h] + rowDelta[h]) * _movementDir);
+
+    // Scale and round
+    if (_movement > 0) {
+      // For positive movement, round up
+      _dx = _dx * (_movement + _movementDelay / 2) / _movementDelay;
+      _dy = _dy * (_movement + _movementDelay) / (_movementDelay * 2);
+    }
+    else {
+      // For negative movement, do not round. This is needed to ensure that
+      // during a full move the "rounding rythm" does not change when the mover
+      // switches the drawing tile (which changes the sign of _movement).
+      _dx = _dx * (_movement) / _movementDelay;
+      _dy = _dy * (_movement) / (_movementDelay * 2);
+    }
   } else {
     _dx = 0;
     _dy = 0;
