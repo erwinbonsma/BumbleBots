@@ -286,7 +286,7 @@ void Bot::draw(int8_t x, int8_t y) {
 //-----------------------------------------------------------------------------
 // Player implementation
 
-Player::Player() : Bot(1, 2) {}
+Player::Player() : Bot(2, 2) {}
 
 void Player::swapTiles() {
   Mover::swapTiles();
@@ -351,7 +351,7 @@ void Player::update() {
 //-----------------------------------------------------------------------------
 // Enemy implementation
 
-Enemy::Enemy() : Bot(1, 3) {}
+Enemy::Enemy() : Bot(2, 3) {}
 
 void Enemy::init(int8_t moverIndex, int8_t targetIndex) {
   Bot::init(moverIndex);

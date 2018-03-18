@@ -2,19 +2,9 @@
 
 Wave::Wave() {
   _amplitude = 1;
-  _period = 64; // ~3 seconds
+  _period = 80; // ~3 seconds
   _waveLength = 4;
 }
-
-//DirectionalWave::DirectionalWave(float angle) : Wave() {
-//  _dcol = cos(angle);
-//  _drow = sin(angle);
-//}
-//
-//float const DirectionalWave::eval(TilePos pos) {
-//  float d = colOfPos(pos) * _dcol + rowOfPos(pos) * _drow;
-//  return fastCos(d/_waveLength - gb.frameCount/_period) * _amplitude;
-//}
 
 DirectionalWave::DirectionalWave(float angle) : Wave() {
   int16_t intAngle = (int16_t)(256 * angle / (2 * PI));
