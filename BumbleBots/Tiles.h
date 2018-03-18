@@ -88,8 +88,8 @@ class Tiles {
   ScreenPos _cameraPos;
 
   DirectionalWave _wave;
-  float _waveStrength;
-  float _waveStrengthDelta;
+  uint8_t _waveStrength;
+  int8_t _waveStrengthDelta;
 
   void drawPartOfIsoline(int8_t elementIndex);
 
@@ -126,6 +126,8 @@ public:
   /* Adds object to the map on the specified tile.
    */
   void putObjectOnTile(int8_t objectIndex, int8_t tileIndex);
+
+  void attenuateWaves() { _waveStrengthDelta = -1; }
 
   void update();
   void draw(Player *player);

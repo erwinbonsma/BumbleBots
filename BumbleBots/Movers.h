@@ -7,6 +7,9 @@ class Tile;
 //-----------------------------------------------------------------------------
 // Mover declaration
 
+const int8_t MOVERFLAG_FALLING = 0x01;
+const int8_t MOVERFLAG_FROZEN = 0x02;
+
 class Mover {
   friend class Tile;
   friend class Tiles;
@@ -26,7 +29,7 @@ class Mover {
 
   int8_t _height;
   int8_t _dropSpeed;
-  bool _isFalling;
+  int8_t _flags;
 
 protected:
 
@@ -41,8 +44,8 @@ protected:
   // Delta wrt to drawTile
   int8_t _heightDelta;
 
-  virtual bool canMove() { return true; }
   bool isMoving() { return _movementDir; }
+  virtual bool canMove();
   // Returns true iff Bot can initiate a new move or turn during update
   virtual bool canStartMove();
   void moveStep();
@@ -81,7 +84,12 @@ public:
 
   virtual MoverType moverType() = 0;
 
-  virtual bool isFrozen() { return false; }
+  void freeze() { _flags |= MOVERFLAG_FROZEN; }
+  bool isFrozen() { return _flags & MOVERFLAG_FROZEN; }
+
+  void setFalling() { _flags |= MOVERFLAG_FALLING; }
+  void clearFalling() { _flags &= ~MOVERFLAG_FALLING; }
+  bool isFalling() { return _flags & MOVERFLAG_FALLING; }
 
   virtual void update();
   virtual void draw(int8_t x, int8_t y) = 0;
@@ -180,5 +188,5 @@ public:
   MoverType moverType() { return TYPE_ENEMY; }
 
   void update();
-  //void draw(int8_t x, int8_t y); // TMP
+//  void draw(int8_t x, int8_t y); // TMP
 };

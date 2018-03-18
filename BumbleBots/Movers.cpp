@@ -45,7 +45,11 @@ void Mover::reset() {
 
   _height = 40;
   _dropSpeed = 6;
-  _isFalling = false;
+  _flags = 0;
+}
+
+bool Mover::canMove() {
+  return !isFrozen();
 }
 
 bool Mover::canStartMove() {
@@ -145,7 +149,9 @@ bool Mover::canEnterTile(int8_t tileIndex) {
 void Mover::enteringTile(int8_t tileIndex) {
   _tileIndex2 = tileIndex;
 
-  _isFalling = isFall(_tileIndex, _tileIndex2);
+  if (isFall(_tileIndex, _tileIndex2)) {
+    setFalling();
+  }
 
   TilePos destPos = tiles->posOfTile(_tileIndex2);
   TilePos fromPos = tiles->posOfTile(_tileIndex);
@@ -193,13 +199,13 @@ void Mover::update() {
   }
 
   if (
-    _isFalling &&
+    isFalling() &&
     // Wait with checking until mover is not on two tiles anymore
     _tileIndex2 != NO_TILE
   ) {
     // TODO: destroy when falling
 
-    _isFalling = false;
+    clearFalling();
   }
 }
 
@@ -469,7 +475,7 @@ void Enemy::update() {
   Mover* target = movers[_targetIndex];
   if (
     _tileIndex == target->_tileIndex &&
-    !target->_isFalling &&
+    !target->isFalling() &&
     abs(_height - target->_height) < 6
   ) {
     signalDeath("Intercepted");
@@ -497,17 +503,9 @@ void Enemy::update() {
   Bot::update();
 }
 
-// TMP
 //void Enemy::draw(int8_t x, int8_t y) {
 //  Bot::draw(x, y);
 //
-//  int8_t otherEnemy = tiles->tileAtIndex(_tileIndex)->moverOfType(TYPE_ENEMY, _moverIndex);
-//  if (
-//    otherEnemy != -1
-//  ) {
-//    gb.display.setColor(INDEX_YELLOW);
-//    gb.display.printf("ENEMY: %d\n", otherEnemy);
-//  } else {
-//    gb.display.printf("%d\n", otherEnemy);
-//  }
+//  gb.display.setColor(INDEX_YELLOW);
+//  gb.display.printf("frozen=%d\n", isFrozen());
 //}

@@ -61,6 +61,8 @@ public:
    */
   void reset();
 
+  void freeze();
+
   /* Invoke to signal that a pick-up has been completed.
    */
   void pickupCollected() { _numPickupsCollected++; }

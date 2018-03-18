@@ -27,6 +27,7 @@ void DieAnimation::init(const char *cause) {
   Animation::init();
 
   _cause = cause;
+  level.freeze();
 }
 
 Animation* DieAnimation::update() {
@@ -51,6 +52,12 @@ void DieAnimation::draw() {
 
 //-----------------------------------------------------------------------------
 // LevelDoneAnimation implementation
+
+void LevelDoneAnimation::init() {
+  Animation::init();
+
+  level.freeze();
+}
 
 Animation* LevelDoneAnimation::update() {
   Animation::update();

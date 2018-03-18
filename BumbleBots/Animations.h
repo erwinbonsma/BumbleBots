@@ -41,6 +41,8 @@ public:
 
 class LevelDoneAnimation : public Animation {
 public:
+  void init();
+
   Animation* update();
 
   void draw();

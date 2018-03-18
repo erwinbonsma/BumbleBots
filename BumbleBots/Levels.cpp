@@ -158,6 +158,14 @@ void Level::reset() {
   }
 }
 
+void Level::freeze() {
+  tiles->attenuateWaves();
+
+  for (int8_t i = numMovers; --i >= 0; ) {
+    movers[i]->freeze();
+  }
+}
+
 bool Level::isCompleted() {
   return _numPickupsCollected == _levelSpec->numPickups;
 }

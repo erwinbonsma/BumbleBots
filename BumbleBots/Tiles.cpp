@@ -263,7 +263,7 @@ void Tiles::reset(const TilesSpec* tilesSpec) {
   _offMapTilePos = makeTilePos(-1, 0); // Any off-map position suffices
 
   _waveStrength = 0;
-  _waveStrengthDelta = 0.5;
+  _waveStrengthDelta = 1;
 }
 
 Tile* Tiles::tileAtIndex(int8_t tileIndex) {
@@ -311,7 +311,16 @@ void Tiles::putObjectOnTile(int8_t objectIndex, int8_t tileIndex) {
 }
 
 void Tiles::update() {
-  _waveStrength = max(0.5, min(1, _waveStrength + _waveStrengthDelta));
+  if (_waveStrengthDelta > 0) {
+    if (_waveStrength < 128) {
+      _waveStrength += _waveStrengthDelta;
+    }
+  }
+  else {
+    if (_waveStrength > 0) {
+      _waveStrength += _waveStrengthDelta;
+    }
+  }
 
   // TODO: Refactor. Express period differently (in power of two)?
   uint8_t t = (gb.frameCount % _wave.period()) * (256 / _wave.period());
@@ -322,7 +331,7 @@ void Tiles::update() {
 
     if (tileType.flexibility) {
       int16_t waveHeight = _wave.eval(pos, t);
-      int8_t actualHeight = (waveHeight * tileType.flexibility) >> 8;
+      int8_t actualHeight = ((int32_t)waveHeight * tileType.flexibility * _waveStrength) >> 15;
 
       _units[pos].setWave(actualHeight);
     }
