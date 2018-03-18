@@ -21,6 +21,11 @@ enum class MoverType : int8_t {
 const MoverType TYPE_PLAYER = MoverType::Player;
 const MoverType TYPE_ENEMY = MoverType::Enemy;
 
+enum class ObjectType : int8_t {
+  Pickup
+};
+const ObjectType TYPE_PICKUP = ObjectType::Pickup;
+
 /* Valid values: 0..maxCols * maxRows - 1
  * Using signed to enable more efficient iteration (and support for off-map positions)
  */
@@ -90,7 +95,7 @@ extern const int8_t rowDelta[];
 float smoothClamp(float value);
 float smoothStep(float value);
 
-float fastCos(float value);
+int16_t fastCos(int16_t value);
 
 inline int8_t sign(int8_t value) {
   return (value > 0) - (value < 0);

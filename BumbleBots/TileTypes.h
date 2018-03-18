@@ -22,7 +22,6 @@ struct TileType {
 struct ImageInfo {
   const int8_t dx;
   const int8_t dy;
-  const ColorIndex transparentColor;
 };
 
 const uint8_t numTileTypes = 3;
