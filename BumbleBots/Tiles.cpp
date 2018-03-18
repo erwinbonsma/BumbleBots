@@ -378,7 +378,7 @@ void Tiles::draw(Player *player) {
   int8_t row = rowOfAnyPos(targetTilePos);
   ScreenPos targetPos = TilePosToScreenPos(col, row);
   targetPos.x = min(38, max(-26, targetPos.x + player->dx()));
-  targetPos.y = min(44, max( 18, targetPos.y + player->dy()));
+  targetPos.y = min(48, max( 12, targetPos.y + player->dy()));
   // Move camera gradually, 1 pixel at most.
   _cameraPos.x += sign(targetPos.x - _cameraPos.x);
   _cameraPos.y += sign(targetPos.y - _cameraPos.y);
