@@ -2,6 +2,8 @@
 const uint8_t maxNumMovers = 8;
 const uint8_t maxNumObjects = 16;
 
+#define EMULATION_SETTINGS
+
 // Implemented in Movers.cpp
 class Mover;
 extern uint8_t numMovers;

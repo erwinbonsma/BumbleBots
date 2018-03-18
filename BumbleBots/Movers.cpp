@@ -286,7 +286,11 @@ void Bot::draw(int8_t x, int8_t y) {
 //-----------------------------------------------------------------------------
 // Player implementation
 
-Player::Player() : Bot(2, 2) {}
+#ifdef EMULATION_SETTINGS
+  Player::Player() : Bot(1, 2) {}
+#else
+  Player::Player() : Bot(2, 2) {}
+#endif
 
 void Player::swapTiles() {
   Mover::swapTiles();
@@ -351,7 +355,12 @@ void Player::update() {
 //-----------------------------------------------------------------------------
 // Enemy implementation
 
-Enemy::Enemy() : Bot(2, 3) {}
+#ifdef EMULATION_SETTINGS
+  // Move faster
+  Enemy::Enemy() : Bot(1, 3) {}
+#else
+  Enemy::Enemy() : Bot(2, 3) {}
+#endif
 
 void Enemy::init(int8_t moverIndex, int8_t targetIndex) {
   Bot::init(moverIndex);
