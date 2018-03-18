@@ -28,7 +28,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .playerStartPos = makeTilePos(1, 1),
     .numEnemies = 0,
     .enemyStartPos = (const TilePos*)0,
-    .numPickups = 13,
+    .numPickups = 2, // TMP, was 13,
     .pickupStartPos = pickupStartPosLevel0,
     .tilesSpec = TilesSpec {
       .tiles = {
@@ -137,13 +137,20 @@ void Level::init(const LevelSpec *levelSpec) {
     tiles->putObjectOnTile(_pickups[i].index(), _levelSpec->pickupStartPos[i]);
   }
   _numPickupsCollected = 0;
-
-  Level::reset();
 }
 
 void Level::reset() {
   tiles->reset(&_levelSpec->tilesSpec);
 
+  // Reset all objects
+  for (int8_t i = numObjects; --i >= 0; ) {
+    objects[i]->reset();
+  }
+
+  _playing = false;
+}
+
+void Level::start() {
   _player.reset();
   tiles->putMoverOnTile(_player.index(), _levelSpec->playerStartPos);
 
@@ -152,10 +159,7 @@ void Level::reset() {
     tiles->putMoverOnTile(_enemies[i].index(), _levelSpec->enemyStartPos[i]);
   }
 
-  // Reset all objects
-  for (int8_t i = numObjects; --i >= 0; ) {
-    objects[i]->reset();
-  }
+  _playing = true;
 }
 
 void Level::freeze() {
@@ -164,6 +168,8 @@ void Level::freeze() {
   for (int8_t i = numMovers; --i >= 0; ) {
     movers[i]->freeze();
   }
+
+  _playing = false;
 }
 
 bool Level::isCompleted() {
@@ -172,8 +178,11 @@ bool Level::isCompleted() {
 
 void Level::update() {
   tiles->update();
-  for (int8_t i = numMovers; --i >= 0; ) {
-    movers[i]->update();
+
+  if (_playing) {
+    for (int8_t i = numMovers; --i >= 0; ) {
+      movers[i]->update();
+    }
   }
 }
 

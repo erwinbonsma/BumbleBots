@@ -19,6 +19,8 @@ class Tiles;
 extern Tiles *const tiles;
 
 // Implemented in main
+class Animation;
 void signalDeath(const char* cause);
 void signalPickupCollected();
+Animation* restartLevel();
 void nextLevel();

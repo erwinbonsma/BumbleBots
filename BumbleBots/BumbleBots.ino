@@ -10,6 +10,7 @@ uint8_t frameRate = 25;
 
 DieAnimation dieAnimation;
 LevelDoneAnimation levelDoneAnimation;
+LevelStartAnimation levelStartAnimation;
 
 // The active animation, if any
 Animation *animation = 0;
@@ -24,8 +25,7 @@ void signalPickupCollected() {
   level.pickupCollected();
 
   if (level.isCompleted()) {
-    levelDoneAnimation.init();
-    animation = &levelDoneAnimation;
+    animation = levelDoneAnimation.init();
   }
 }
 
@@ -34,10 +34,18 @@ void nextLevel() {
   level.init(&levelSpecs[levelNum]);
 }
 
+/* Starts or re-starts the current level.
+ */
+Animation* restartLevel() {
+  animation = levelStartAnimation.init();
+  return animation;
+}
+
 void setup() {
   gb.begin();
 
   level.init(&levelSpecs[levelNum]);
+  restartLevel();
 
   gb.setFrameRate(frameRate);
 }
@@ -46,16 +54,12 @@ void loop() {
   while(!gb.update());
   gb.display.clear();
 
-  if (gb.buttons.held(BUTTON_A, 0)) {
-    level.reset();
-    //if (frameRate > 1) {
-    //  gb.setFrameRate(--frameRate);
-    //}
-  }
-  if (gb.buttons.held(BUTTON_B, 0)) {
-    nextLevel();
-    //gb.setFrameRate(++frameRate);
-  }
+//  if (gb.buttons.held(BUTTON_A, 0)) {
+//    level.reset();
+//  }
+//  if (gb.buttons.held(BUTTON_B, 0)) {
+//    nextLevel();
+//  }
 
   if (1) {
     if (animation) {
@@ -65,8 +69,7 @@ void loop() {
     deathCause = 0;
     level.update();
     if (!animation && deathCause) {
-      dieAnimation.init(deathCause);
-      animation = &dieAnimation;
+      animation = dieAnimation.init(deathCause);
     }
 
     level.draw();

@@ -9,7 +9,7 @@ protected:
   uint8_t clock() const { return _clock; }
 
 public:
-  virtual void init();
+  virtual Animation* init();
 
   /* Updates the animations.
    *
@@ -29,7 +29,7 @@ class DieAnimation : public Animation {
   const char *_cause;
 
 public:
-  void init(const char *cause);
+  Animation* init(const char *cause);
 
   Animation* update();
 
@@ -41,7 +41,19 @@ public:
 
 class LevelDoneAnimation : public Animation {
 public:
-  void init();
+  Animation* init();
+
+  Animation* update();
+
+  void draw();
+};
+
+//-----------------------------------------------------------------------------
+// LevelStartAnimation declaration
+
+class LevelStartAnimation : public Animation {
+public:
+  Animation* init();
 
   Animation* update();
 

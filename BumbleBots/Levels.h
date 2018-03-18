@@ -33,6 +33,7 @@ const uint8_t maxNumPickups = 13;
 class Level {
   const LevelSpec *_levelSpec;
 
+  bool _playing;
   uint8_t _numPickupsCollected;
 
   Player _player;
@@ -43,10 +44,6 @@ public:
   /* Initialises the level based on the given spec.
    *
    * This should be called once when entering a level.
-   *
-   * Note: This top-level init also invokes reset. This is the exception. Other
-   * classes should not do so. They can rely on this class to invoke reset when
-   * needed.
    */
   void init(const LevelSpec *levelSpec);
 
@@ -61,6 +58,13 @@ public:
    */
   void reset();
 
+  /* Start playing. This adds the movers to the level. It should be called
+   * (sometime) after reset is called.
+   */
+  void start();
+
+  /* Stop playing. Movers are frozen.
+   */
   void freeze();
 
   /* Invoke to signal that a pick-up has been completed.
