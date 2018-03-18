@@ -81,10 +81,6 @@ class Tiles {
   Tile _offMapTile;
   TilePos _offMapTilePos;
 
-  // 1D-array of IsoLineElement pointers
-  //const uint8_t _numIsoLines;
-  //IsoLineElement** _isoLines;
-
   ScreenPos _cameraPos;
 
   DirectionalWave _wave;
