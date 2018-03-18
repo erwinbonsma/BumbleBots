@@ -1,16 +1,21 @@
 #include <Gamebuino-Meta.h>
 
 #include "Levels.h"
+#include "Animations.h"
 
 uint8_t levelNum = 0;
 Level level = Level();
 
 uint8_t frameRate = 25;
 
-int8_t dyingCount;
-const char* deathCause;
+DieAnimation dieAnimation;
+
+// The active animation, if any
+Animation *animation = 0;
+
+const char *deathCause = 0;
+
 void signalDeath(const char* cause) {
-  dyingCount = 60;
   deathCause = cause;
 }
 
@@ -39,17 +44,20 @@ void loop() {
   }
 
   if (1) {
-    if (dyingCount < 0) {
-      level.update();
+    if (animation) {
+      animation = animation->update();
     }
-    level.draw();
-    if (dyingCount >= 0) {
-      gb.display.setColor(INDEX_RED);
-      gb.display.println(deathCause);
 
-      if (dyingCount-- == 0) {
-        level.reset();
-      }
+    deathCause = 0;
+    level.update();
+    if (!animation && deathCause) {
+      dieAnimation.init(deathCause);
+      animation = &dieAnimation;
+    }
+
+    level.draw();
+    if (animation) {
+      animation->draw();
     }
   }
 
