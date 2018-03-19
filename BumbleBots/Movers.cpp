@@ -133,7 +133,7 @@ void Mover::moveStep() {
 
   //gb.display.printf("rm=%d,",relMov);
   //gb.display.printf("relMov=%d, hd=%d\n", relMov, moveHeading());
-  if (relMov == 4) {
+  if (relMov == 3) {
     // About to enter next tile
     int8_t destTile = tiles->neighbour(_tileIndex, moveHeading());
     if (canEnterTile(destTile)) {
@@ -151,7 +151,7 @@ void Mover::moveStep() {
     // Halfway
     swapTiles();
   }
-  else if (relMov == 13) {
+  else if (relMov == 14) {
     exitedTile();
   }
   else if (relMov == 0) {
