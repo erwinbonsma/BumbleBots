@@ -156,6 +156,8 @@ public:
   MoverType moverType() { return TYPE_PLAYER; }
 
   void update();
+
+  void drawDebugInfo(); // TMP
 };
 
 //-----------------------------------------------------------------------------

@@ -388,8 +388,10 @@ void Player::update() {
   if (_height < -50) {
     signalDeath("System crash");
   }
+}
 
-  //gb.display.printf("t1=%d, t2=%d, dt=%d\n", _tileIndex, _tileIndex2, _drawTileIndex);
+void Player::drawDebugInfo() {
+  gb.display.printf("m=%d,dt=%d,t1=%d,t2=%d\n", _movement, _drawTileIndex, _tileIndex, _tileIndex2);
 }
 
 //-----------------------------------------------------------------------------
