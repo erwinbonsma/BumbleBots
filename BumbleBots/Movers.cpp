@@ -22,9 +22,7 @@ bool isFall(int8_t fromTileIndex, int8_t destTileIndex) {
 //-----------------------------------------------------------------------------
 // Mover implementation
 
-Mover::Mover(uint8_t movementDelay) :
-  _movementDelay(movementDelay),
-  _movementMax(movementDelay * 8) {
+Mover::Mover() {
   // void
 }
 
@@ -110,28 +108,12 @@ void Mover::updateDxDy() {
     // Keeping this the same would further complicate the formula's below which
     // does not seem worth the hassle.
     if (_movement > 0) {
-      if (_movementDelay > 1) {
-        _dx *= (_movement + _movementDelay / 2) / _movementDelay;
-      }
-      else {
-        // No rounding
-        _dx *= _movement;
-      }
-      _dy *= (_movement + _movementDelay) / (_movementDelay * 2);
+      _dx *= (_movement + 1) / 2;
+      _dy *= (_movement + 2) / 4;
     }
     else {
-      // Note: condition is different from the one above. This is intentional.
-      // See comment below.
-      if (_movementDelay > 2) {
-        _dx *= (_movement - _movementDelay / 2 + 1) / _movementDelay;
-      }
-      else {
-        // The "+ 1" term in the above formula should only be used when
-        // _movementDelay / 2 is non-zero, which is not the case for
-        // _movementDelay < 2.
-        _dx *= _movement / _movementDelay;
-      }
-      _dy *= (_movement - _movementDelay + 1) / (_movementDelay * 2);
+      _dx *= _movement / 2;
+      _dy *= (_movement - 1) / 4;
     }
   }
   else {
@@ -147,10 +129,11 @@ TilePos Mover::drawTilePos() {
 
 void Mover::moveStep() {
   _movement += _movementInc;
+  int8_t relMov = (_movement * _movementInc + 16) % 16;
 
-  int8_t relMov = (_movement * _movementInc + _movementMax) % _movementMax;
+  //gb.display.printf("rm=%d,",relMov);
   //gb.display.printf("relMov=%d, hd=%d\n", relMov, moveHeading());
-  if (relMov == 2 * _movementDelay) {
+  if (relMov == 3) {
     // About to enter next tile
     int8_t destTile = tiles->neighbour(_tileIndex, moveHeading());
     if (canEnterTile(destTile)) {
@@ -164,11 +147,11 @@ void Mover::moveStep() {
       bump();
     }
   }
-  else if (relMov == 4 * _movementDelay) {
+  else if (relMov == 8) {
     // Halfway
     swapTiles();
   }
-  else if (relMov == 6 * _movementDelay) {
+  else if (relMov == 14) {
     exitedTile();
   }
   else if (relMov == 0) {
@@ -203,7 +186,7 @@ void Mover::enteringTile(int8_t tileIndex) {
     // Destination tile is in front of current one.
     // Add mover there, to ensure it is drawn on top of both tiles.
     tiles->moveMoverToTile(_moverIndex, destPos);
-    _movement -= _movementMax * sign(_movement);
+    _movement -= 16 * sign(_movement);
   }
 }
 
@@ -218,7 +201,7 @@ void Mover::exitedTile() {
     // The mover was not yet added to the new tile. Do so now, now it is not covering the
     // previous tile anymore.
     tiles->moveMoverToTile(_moverIndex, _tileIndex);
-    _movement -= _movementMax * sign(_movement);
+    _movement -= 16 * sign(_movement);
   }
   _tileIndex2 = NO_TILE;
 }
@@ -252,8 +235,8 @@ void Mover::update() {
 //-----------------------------------------------------------------------------
 // Bot implementation
 
-Bot::Bot(uint8_t movementDelay, uint8_t rotationDelay) :
-  Mover(movementDelay),
+Bot::Bot(uint8_t rotationDelay) :
+  Mover(),
   _rotationDelay(rotationDelay),
   _rotationTurn(5 * rotationDelay),
   _rotationMax(20 * rotationDelay) {
@@ -315,7 +298,7 @@ void Bot::draw(int8_t x, int8_t y) {
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
-  gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, botImage);
+  gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, botImage);
   if (isDazed()) {
     gb.display.drawImage(x + _dx + 2, y + _dy - _heightDelta - 6, dazedImage);
   }
@@ -326,11 +309,7 @@ void Bot::draw(int8_t x, int8_t y) {
 //-----------------------------------------------------------------------------
 // Player implementation
 
-#ifdef EMULATION_SETTINGS
-  Player::Player() : Bot(1, 2) {}
-#else
-  Player::Player() : Bot(2, 2) {}
-#endif
+Player::Player() : Bot(2) {}
 
 void Player::swapTiles() {
   Mover::swapTiles();
@@ -388,19 +367,16 @@ void Player::update() {
   if (_height < -50) {
     signalDeath("System crash");
   }
+}
 
-  //gb.display.printf("t1=%d, t2=%d, dt=%d\n", _tileIndex, _tileIndex2, _drawTileIndex);
+void Player::drawDebugInfo() {
+  gb.display.printf("m=%d,dt=%d,t1=%d,t2=%d\n", _movement, _drawTileIndex, _tileIndex, _tileIndex2);
 }
 
 //-----------------------------------------------------------------------------
 // Enemy implementation
 
-#ifdef EMULATION_SETTINGS
-  // Move faster
-  Enemy::Enemy() : Bot(1, 3) {}
-#else
-  Enemy::Enemy() : Bot(2, 3) {}
-#endif
+Enemy::Enemy() : Bot(3) {}
 
 void Enemy::init(int8_t moverIndex, int8_t targetIndex) {
   Bot::init(moverIndex);

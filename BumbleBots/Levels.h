@@ -33,7 +33,8 @@ const uint8_t maxNumPickups = 13;
 class Level {
   const LevelSpec *_levelSpec;
 
-  bool _playing;
+  bool _started;
+  bool _frozen;
   uint8_t _numPickupsCollected;
 
   Player _player;

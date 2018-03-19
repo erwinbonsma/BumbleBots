@@ -18,6 +18,8 @@ const int8_t offMapTileHeight = -64;
 
 const uint8_t numIsolines = 15;
 
+const ScreenPos tilesCenterPos = ScreenPos { .x = 8, .y = 28 };
+
 /* Each entry identifies a root of a isoline-tree. Roots are ordered from front to back of the map.
  *
  * x <= 0: Tree consists of a single tile, with index of tile = -x
@@ -250,6 +252,8 @@ void Tiles::init(const TilesSpec* tilesSpec) {
   }
 
   _offMapTile.init(offMapTileHeight);
+
+  _cameraPos = tilesCenterPos;
 }
 
 void Tiles::reset(const TilesSpec* tilesSpec) {
@@ -370,15 +374,25 @@ void Tiles::drawPartOfIsoline(int8_t elementIndex) {
 }
 
 void Tiles::draw(Player *player) {
-  // Let camera focus on player
-  TilePos targetTilePos = player->drawTilePos();
-  // When player is at the edge, do not fully center player (to not
-  // unnecessarily limit the number of visible tiles).
-  int8_t col = colOfAnyPos(targetTilePos);
-  int8_t row = rowOfAnyPos(targetTilePos);
-  ScreenPos targetPos = TilePosToScreenPos(col, row);
-  targetPos.x = min(38, max(-26, targetPos.x + player->dx()));
-  targetPos.y = min(40, max( 12, targetPos.y + player->dy()));
+  ScreenPos targetPos;
+  if (player) {
+    // Let camera focus on player
+    TilePos targetTilePos = player->drawTilePos();
+
+    // When player is at the edge, do not fully center player (to not
+    // unnecessarily limit the number of visible tiles).
+    int8_t col = colOfAnyPos(targetTilePos);
+    int8_t row = rowOfAnyPos(targetTilePos);
+
+    targetPos = TilePosToScreenPos(col, row);
+    targetPos.x = min(38, max(-26, targetPos.x + player->dx() + 8));
+    targetPos.y = min(40, max( 12, targetPos.y + player->dy()));
+  }
+  else {
+    // Focus on center of screen
+    targetPos = tilesCenterPos;
+  }
+
   // Move camera gradually, 1 pixel at most.
   _cameraPos.x += sign(targetPos.x - _cameraPos.x);
   _cameraPos.y += sign(targetPos.y - _cameraPos.y);

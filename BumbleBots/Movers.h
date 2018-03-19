@@ -24,9 +24,6 @@ class Mover {
   // Link to next mover on same tile (if any)
   int8_t _nextMoverIndex;
 
-  const uint8_t _movementDelay; // >=1, higher value means slower movement
-  const uint8_t _movementMax;
-
   int8_t _height;
   int8_t _dropSpeed;
   int8_t _flags;
@@ -76,7 +73,7 @@ protected:
   virtual void exitedTile();
 
 public:
-  Mover(uint8_t movementDelay);
+  Mover();
   virtual void init(int8_t moverIndex);
   virtual void reset();
 
@@ -132,7 +129,7 @@ protected:
   virtual const Color* getBotPalette(bool flipped);
 
 public:
-  Bot(uint8_t movementDelay, uint8_t rotationDelay);
+  Bot(uint8_t rotationDelay);
 
   virtual void reset();
 
@@ -156,6 +153,8 @@ public:
   MoverType moverType() { return TYPE_PLAYER; }
 
   void update();
+
+  void drawDebugInfo(); // TMP
 };
 
 //-----------------------------------------------------------------------------

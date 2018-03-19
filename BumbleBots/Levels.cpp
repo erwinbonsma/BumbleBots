@@ -28,7 +28,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .playerStartPos = makeTilePos(1, 1),
     .numEnemies = 0,
     .enemyStartPos = (const TilePos*)0,
-    .numPickups = 2, // TMP, was 13,
+    .numPickups = 13,
     .pickupStartPos = pickupStartPosLevel0,
     .tilesSpec = TilesSpec {
       .tiles = {
@@ -147,7 +147,8 @@ void Level::reset() {
     objects[i]->reset();
   }
 
-  _playing = false;
+  _started = false;
+  _frozen = false;
 }
 
 void Level::start() {
@@ -159,7 +160,7 @@ void Level::start() {
     tiles->putMoverOnTile(_enemies[i].index(), _levelSpec->enemyStartPos[i]);
   }
 
-  _playing = true;
+  _started = true;
 }
 
 void Level::freeze() {
@@ -169,7 +170,7 @@ void Level::freeze() {
     movers[i]->freeze();
   }
 
-  _playing = false;
+  _frozen = true;
 }
 
 bool Level::isCompleted() {
@@ -179,7 +180,7 @@ bool Level::isCompleted() {
 void Level::update() {
   tiles->update();
 
-  if (_playing) {
+  if (_started && !_frozen) {
     for (int8_t i = numMovers; --i >= 0; ) {
       movers[i]->update();
     }
@@ -187,6 +188,6 @@ void Level::update() {
 }
 
 void Level::draw() {
-  tiles->draw(&_player);
+  tiles->draw(_started ? &_player : 0);
 }
 
