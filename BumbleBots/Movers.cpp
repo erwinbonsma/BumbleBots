@@ -168,7 +168,7 @@ void Mover::moveStep() {
     // Halfway
     swapTiles();
   }
-  else if (relMov == 6 * _movementDelay) {
+  else if (relMov == 6 * _movementDelay + 1) {
     exitedTile();
   }
   else if (relMov == 0) {
