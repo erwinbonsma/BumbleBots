@@ -73,7 +73,7 @@ void loop() {
   }
 
   if (1) {
-    if (!_slowMotionEnabled || _slowMotionCount++ > 2) {
+    if (!_slowMotionEnabled || _slowMotionCount++ >= 2) {
       _slowMotionCount = 0;
 
       if (animation) {
@@ -92,7 +92,7 @@ void loop() {
       animation->draw();
     }
 
-    ((Player *)movers[0])->drawDebugInfo();
+    //((Player *)movers[0])->drawDebugInfo();
   }
 
   uint8_t cpuLoad = gb.getCpuLoad();

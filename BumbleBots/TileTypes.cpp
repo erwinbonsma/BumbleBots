@@ -11,7 +11,7 @@ TileType tileTypes[numTileTypes] = {
     .paletteIndex = 0,
     .height0 = 0,
     .flexibility = 0,
-    .flags = 0 // TILEFLAG_SPRITE_REPEAT
+    .flags = 0
   },
 
   // 1: Basic, normal flexibilty
