@@ -1,8 +1,6 @@
 #include <Gamebuino-Meta.h>
 
-#include "Animations.h"
-
-#include "Levels.h"
+#include "Game.h"
 #include "Globals.h"
 
 extern Level level;
@@ -28,7 +26,7 @@ Animation* Animation::update() {
 
 Animation* DieAnimation::init(const char *cause) {
   _cause = cause;
-  level.freeze();
+  game.level()->freeze();
 
   return Animation::init();
 }
@@ -36,8 +34,13 @@ Animation* DieAnimation::init(const char *cause) {
 Animation* DieAnimation::update() {
   Animation::update();
 
-  if (clock() == 80) {
-    return restartLevel();
+  if (clock() == 60) {
+    if (game.numLives() >= 0) {
+      return game.restartLevel();
+    }
+    else {
+      return game.gameOver();
+    }
   }
 
   return this;
@@ -53,10 +56,28 @@ void DieAnimation::draw() {
 }
 
 //-----------------------------------------------------------------------------
+// GameOverAnimation implementation
+
+Animation* GameOverAnimation::update() {
+  Animation::update();
+
+  if (clock() == 50) {
+    return game.init();
+  }
+
+  return this;
+}
+
+void GameOverAnimation::draw() {
+  gb.display.setColor(INDEX_RED);
+  gb.display.print("GAME OVER");
+}
+
+//-----------------------------------------------------------------------------
 // LevelDoneAnimation implementation
 
 Animation* LevelDoneAnimation::init() {
-  level.freeze();
+  game.level()->freeze();
 
   return Animation::init();
 }
@@ -65,9 +86,7 @@ Animation* LevelDoneAnimation::update() {
   Animation::update();
 
   if (clock() == 80) {
-    nextLevel();
-
-    return restartLevel();
+    return game.nextLevel();
   }
 
   return this;
@@ -82,7 +101,7 @@ void LevelDoneAnimation::draw() {
 // LevelStartAnimation implementation
 
 Animation* LevelStartAnimation::init() {
-  level.reset();
+  game.level()->reset();
 
   return Animation::init();
 }
@@ -91,7 +110,7 @@ Animation* LevelStartAnimation::update() {
   Animation::update();
 
   if (clock() == 80 || gb.buttons.held(BUTTON_A, 0)) {
-    level.start();
+    game.level()->start();
     return 0;
   }
 
@@ -100,7 +119,7 @@ Animation* LevelStartAnimation::update() {
 
 void LevelStartAnimation::draw() {
   gb.display.setColor(INDEX_LIGHTBLUE);
-  gb.display.printf("Level %d\n", (levelNum + 1));
+  gb.display.printf("Level %d\n", game.levelNum());
   if (clock() > 50) {
     gb.display.println("Ready to bumble?");
   }

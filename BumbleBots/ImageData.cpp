@@ -140,3 +140,14 @@ const uint8_t pickupData[] = {
   0x00, 0x44, 0x44, 0x00
 };
 Image pickupImage = Image(pickupData);
+
+const uint8_t liveIconData[] = {
+  4, 6, 1, 0, 1, (uint8_t)INDEX_BLACK, 1,
+  0x0c, 0xc0,
+  0xcc, 0xcc,
+  0xdc, 0xc1,
+  0xdd, 0x11,
+  0xdd, 0x11,
+  0x0d, 0x10
+};
+Image liveIconImage = Image(liveIconData);

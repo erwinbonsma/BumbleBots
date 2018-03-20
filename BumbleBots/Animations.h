@@ -37,6 +37,17 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+// GameOverAnimation declaration
+
+class GameOverAnimation : public Animation {
+
+public:
+  Animation* update();
+
+  void draw();
+};
+
+//-----------------------------------------------------------------------------
 // LevelDoneAnimation declaration
 
 class LevelDoneAnimation : public Animation {

@@ -3,3 +3,4 @@
 extern Image botImage;
 extern Image dazedImage;
 extern Image pickupImage;
+extern Image liveIconImage;
