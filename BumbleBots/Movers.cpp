@@ -12,6 +12,8 @@
 uint8_t numMovers = 0;
 Mover* movers[maxNumMovers];
 
+const uint16_t bumpSound[] = { 0x8041, 0x8005, 0x120, 0x110, 0x000 };
+
 bool isFall(int8_t fromTileIndex, int8_t destTileIndex) {
   return (
     tiles->tileAtIndex(fromTileIndex)->height() -
@@ -314,6 +316,11 @@ Player::Player() : Bot(2) {}
 void Player::swapTiles() {
   Mover::swapTiles();
   _swappedTiles = true;
+}
+
+void Player::bump() {
+  Bot::bump();
+  gb.sound.play(bumpSound);
 }
 
 void Player::update() {

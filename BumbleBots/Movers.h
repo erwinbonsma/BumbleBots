@@ -145,6 +145,7 @@ class Player : public Bot {
   bool _swappedTiles;
 
 protected:
+  void bump();
   void swapTiles();
 
 public:

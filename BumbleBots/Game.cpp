@@ -34,8 +34,14 @@ void Game::signalDeath(const char* cause) {
   _causeOfDeath = cause;
 }
 
+const uint16_t pickupCollectedSound[] = {
+  0x8141, 0x8005, 0x124, 0x130, 0x238, 0x000
+};
+
 void Game::signalPickupCollected() {
   _level.pickupCollected();
+
+  gb.sound.play(pickupCollectedSound);
 
   if (_level.isCompleted()) {
     _activeAnimation = _levelDoneAnimation.init();

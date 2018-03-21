@@ -24,9 +24,20 @@ Animation* Animation::update() {
 //-----------------------------------------------------------------------------
 // DieAnimation implementation
 
+const uint16_t dieSound[] = {
+//V:5     I:0     F#4-2  D#4-2  C4-6
+  0x8141, 0x8005, 0x250, 0x244, 0x638, 0x000
+};
+
+const uint16_t gameOverSound[] = {
+//V:9     I:0     F#3-4  D#3-4  C3-12
+  0x8241, 0x8005, 0x420, 0x414, 0xC08, 0x000
+};
+
 Animation* DieAnimation::init(const char *cause) {
   _cause = cause;
   game.level()->freeze();
+  gb.sound.play(dieSound);
 
   return Animation::init();
 }
@@ -35,6 +46,8 @@ Animation* DieAnimation::update() {
   Animation::update();
 
   if (clock() == 60) {
+    gb.sound.play(gameOverSound);
+
     if (game.numLives() >= 0) {
       return game.restartLevel();
     }
