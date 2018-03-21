@@ -42,6 +42,8 @@ public:
 class GameOverAnimation : public Animation {
 
 public:
+  Animation* init();
+
   Animation* update();
 
   void draw();

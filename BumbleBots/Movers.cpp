@@ -12,7 +12,13 @@
 uint8_t numMovers = 0;
 Mover* movers[maxNumMovers];
 
-const uint16_t bumpSound[] = { 0x8041, 0x8005, 0x120, 0x110, 0x000 };
+const Gamebuino_Meta::Sound_FX bumpSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,133,-10,0,150,10},
+};
+
+const Gamebuino_Meta::Sound_FX moveSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,30,0,0,100,1},
+};
 
 bool isFall(int8_t fromTileIndex, int8_t destTileIndex) {
   return (
@@ -316,11 +322,12 @@ Player::Player() : Bot(2) {}
 void Player::swapTiles() {
   Mover::swapTiles();
   _swappedTiles = true;
+  gb.sound.fx(moveSfx);
 }
 
 void Player::bump() {
   Bot::bump();
-  gb.sound.play(bumpSound);
+  gb.sound.fx(bumpSfx);
 }
 
 void Player::update() {

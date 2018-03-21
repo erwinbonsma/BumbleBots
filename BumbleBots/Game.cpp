@@ -34,14 +34,16 @@ void Game::signalDeath(const char* cause) {
   _causeOfDeath = cause;
 }
 
-const uint16_t pickupCollectedSound[] = {
-  0x8141, 0x8005, 0x124, 0x130, 0x238, 0x000
+const Gamebuino_Meta::Sound_FX pickupCollectedSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,50,3},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,89,3},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-1,0,63,3},
 };
 
 void Game::signalPickupCollected() {
   _level.pickupCollected();
 
-  gb.sound.play(pickupCollectedSound);
+  gb.sound.fx(pickupCollectedSfx);
 
   if (_level.isCompleted()) {
     _activeAnimation = _levelDoneAnimation.init();
