@@ -14,6 +14,8 @@ struct LevelSpec {
   const uint8_t numPickups;
   const TilePos *pickupStartPos;
 
+  const uint16_t timeLimitInCycles;
+
   const TilesSpec tilesSpec;
 };
 
@@ -36,10 +38,13 @@ class Level {
   bool _started;
   bool _frozen;
   uint8_t _numPickupsCollected;
+  uint16_t _cyclesRemaining;
 
   Player _player;
   Enemy _enemies[maxNumEnemies];
   Pickup _pickups[maxNumPickups];
+
+  void drawTimeBar();
 
 public:
   /* Initialises the level based on the given spec.

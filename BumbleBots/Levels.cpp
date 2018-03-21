@@ -30,6 +30,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .enemyStartPos = (const TilePos*)0,
     .numPickups = 13,
     .pickupStartPos = pickupStartPosLevel0,
+    .timeLimitInCycles = 1500,
     .tilesSpec = TilesSpec {
       .tiles = {
         0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7,
@@ -51,6 +52,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .enemyStartPos = enemyStartPosLevel1,
     .numPickups = 4,
     .pickupStartPos = pickupStartPosLevel1,
+    .timeLimitInCycles = 3000,
     .tilesSpec = TilesSpec {
       .tiles = {
         0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0,
@@ -106,6 +108,44 @@ const LevelSpec levelSpecs[numLevels] = {
 #endif
 };
 
+struct TimebarSpec {
+  uint8_t len;
+  uint8_t unit;
+  ColorIndex colorMain;
+  ColorIndex colorDark;
+};
+
+const TimebarSpec timebarSpecs[6] = {
+  {.len = 4, .unit =  1, .colorMain = INDEX_RED, .colorDark = INDEX_PURPLE},
+  {.len = 4, .unit =  2, .colorMain = INDEX_ORANGE, .colorDark = INDEX_BROWN},
+  {.len = 8, .unit =  4, .colorMain = INDEX_YELLOW, .colorDark = INDEX_ORANGE},
+  {.len = 8, .unit =  8, .colorMain = INDEX_LIGHTGREEN, .colorDark = INDEX_GREEN},
+  {.len = 8, .unit = 16, .colorMain = INDEX_LIGHTGREEN, .colorDark = INDEX_GREEN},
+  {.len = 8, .unit = 32, .colorMain = INDEX_LIGHTGREEN, .colorDark = INDEX_GREEN}
+};
+
+void Level::drawTimeBar() {
+  int8_t i = 0;
+  int8_t x = 78;
+  int16_t t = _cyclesRemaining;
+  while (t > 0) {
+    const TimebarSpec spec = timebarSpecs[i];
+    uint8_t len = min(spec.len, 1 + t / (spec.unit * 25));
+
+    if (len > 0) {
+      gb.display.setColor(spec.colorMain);
+      gb.display.fillRect(x - len + 1, 1, len, 2);
+
+      gb.display.setColor(spec.colorDark);
+      gb.display.drawFastHLine(x - len + 1, 3, len);
+    }
+
+    t -= spec.len * spec.unit * 25;
+    x -= spec.len;
+    i += 1;
+  }
+}
+
 void Level::init(const LevelSpec *levelSpec) {
   _levelSpec = levelSpec;
 
@@ -149,6 +189,8 @@ void Level::reset() {
 
   _started = false;
   _frozen = false;
+
+  _cyclesRemaining = _levelSpec->timeLimitInCycles;
 }
 
 void Level::start() {
@@ -185,9 +227,14 @@ void Level::update() {
       movers[i]->update();
     }
   }
+
+  if (--_cyclesRemaining == 0) {
+    signalDeath("Timed out");
+  }
 }
 
 void Level::draw() {
   tiles->draw(_started ? &_player : 0);
-}
 
+  drawTimeBar();
+}

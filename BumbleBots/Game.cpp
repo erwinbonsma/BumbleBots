@@ -62,7 +62,7 @@ void Game::draw() {
   }
 
   for (int8_t i = 0; i < _numLives; i++) {
-    gb.display.drawImage(i*6+1, 1, liveIconImage);
+    gb.display.drawImage(i * 5 + 1, 1, liveIconImage);
   }
 }
 
