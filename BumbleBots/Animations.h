@@ -69,6 +69,4 @@ public:
   Animation* init();
 
   Animation* update();
-
-  void draw();
 };

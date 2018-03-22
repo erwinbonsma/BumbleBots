@@ -30,12 +30,6 @@ const Gamebuino_Meta::Sound_FX dieSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-1,0,100,12},
 };
 
-const Gamebuino_Meta::Sound_FX gameOverSfx[] = {
-  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,89,12},
-  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,100,12},
-  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-2,0,113,20},
-};
-
 Animation* DieAnimation::init(const char *cause) {
   _cause = cause;
   game.level()->freeze();
@@ -61,6 +55,7 @@ Animation* DieAnimation::update() {
 
 void DieAnimation::draw() {
   gb.display.setColor(INDEX_RED);
+  gb.display.setCursor(0, 56);
   gb.display.print(_cause);
   for (uint8_t i = 0; i < clock(); i += 10) {
     gb.display.print(".");
@@ -70,6 +65,12 @@ void DieAnimation::draw() {
 
 //-----------------------------------------------------------------------------
 // GameOverAnimation implementation
+
+const Gamebuino_Meta::Sound_FX gameOverSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,89,12},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,100,12},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-2,0,113,20},
+};
 
 Animation* GameOverAnimation::init() {
   gb.sound.fx(gameOverSfx);
@@ -89,14 +90,30 @@ Animation* GameOverAnimation::update() {
 
 void GameOverAnimation::draw() {
   gb.display.setColor(INDEX_RED);
+  gb.display.setCursor(26, 28);
   gb.display.print("GAME OVER");
 }
 
 //-----------------------------------------------------------------------------
 // LevelDoneAnimation implementation
 
+const Gamebuino_Meta::Sound_FX levelDoneSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,89,8},
+  {Gamebuino_Meta::Sound_FX_Wave::NOISE,1,0,0,0,0,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,71,8},
+  {Gamebuino_Meta::Sound_FX_Wave::NOISE,1,0,0,0,0,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,-10,63,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,10,63,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,112,-4,-10,63,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,96,-4,10,63,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,80,-4,-10,63,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,64,-8,10,63,4},
+};
+
 Animation* LevelDoneAnimation::init() {
   game.level()->freeze();
+
+  gb.sound.fx(levelDoneSfx);
 
   return Animation::init();
 }
@@ -119,6 +136,13 @@ void LevelDoneAnimation::draw() {
 //-----------------------------------------------------------------------------
 // LevelStartAnimation implementation
 
+const Gamebuino_Meta::Sound_FX getReadySfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,50,3},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,4,0,0,100,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,47,6},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-2,0,50,7},
+};
+
 Animation* LevelStartAnimation::init() {
   game.level()->reset();
 
@@ -128,18 +152,12 @@ Animation* LevelStartAnimation::init() {
 Animation* LevelStartAnimation::update() {
   Animation::update();
 
-  if (clock() == 80 || gb.buttons.held(BUTTON_A, 0)) {
+  if (clock() == 60 || gb.buttons.held(BUTTON_A, 0)) {
+    gb.sound.fx(getReadySfx);
+
     game.level()->start();
     return 0;
   }
 
   return this;
-}
-
-void LevelStartAnimation::draw() {
-  gb.display.setColor(INDEX_LIGHTBLUE);
-  gb.display.printf("Level %d\n", game.levelNum());
-  if (clock() > 50) {
-    gb.display.println("Ready to bumble?");
-  }
 }
