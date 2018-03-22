@@ -7,8 +7,6 @@
 #include "TileTypes.h"
 #include "Palettes.h"
 
-#include <assert.h>
-
 Tiles _tiles = Tiles();
 
 // Exposed in Globals.h
@@ -178,12 +176,12 @@ int8_t Tile::moverOfType(MoverType moverType, int8_t excludeMover) {
 }
 
 void Tile::addObject(int8_t objectIndex) {
-  assert(_objectIndex == -1);
+  assertTrue(_objectIndex == -1);
   _objectIndex = objectIndex;
 }
 
 void Tile::removeObject(int8_t objectIndex) {
-  assert(_objectIndex == objectIndex);
+  assertTrue(_objectIndex == objectIndex);
   _objectIndex = -1;
 }
 
@@ -297,8 +295,14 @@ void Tiles::putMoverOnTile(int8_t moverIndex, int8_t tileIndex) {
 void Tiles::moveMoverToTile(int8_t moverIndex, int8_t tileIndex) {
   Mover* mover = movers[moverIndex];
 
-  assert(mover->_drawTileIndex >= 0); // Only move movers on the map
-  _units[mover->_drawTileIndex].removeMover(moverIndex);
+  if (isPosOnMap(posOfTile(mover->_drawTileIndex))) {
+    _units[mover->_drawTileIndex].removeMover(moverIndex);
+  }
+  else {
+    // Can happen when mover retreats before falling of the map
+    _offMapTile.removeMover(moverIndex);
+  }
+
   mover->_drawTileIndex = tileIndex;
   if (isPosOnMap(posOfTile(tileIndex))) {
     _units[tileIndex].addMover(moverIndex);

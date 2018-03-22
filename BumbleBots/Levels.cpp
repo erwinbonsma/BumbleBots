@@ -159,7 +159,7 @@ void Level::init(const LevelSpec *levelSpec) {
 
   // Create enemies
   for (uint8_t i = 0; i < _levelSpec->numEnemies; i++) {
-    assert(numMovers < maxNumMovers);
+    assertTrue(numMovers < maxNumMovers);
 
     _enemies[i].init(numMovers++, _player.index());
     movers[_enemies[i].index()] = &_enemies[i];
@@ -169,7 +169,7 @@ void Level::init(const LevelSpec *levelSpec) {
 
   // Create and place pick-ups
   for (uint8_t i = 0; i < _levelSpec->numPickups; i++) {
-    assert(numObjects < maxNumObjects);
+    assertTrue(numObjects < maxNumObjects);
 
     _pickups[i].init(numObjects++);
     objects[_pickups[i].index()] = &_pickups[i];
