@@ -1,7 +1,5 @@
 #include "Movers.h"
 
-#include <assert.h>
-
 #include "Globals.h"
 #include "ImageData.h"
 #include "Palettes.h"
@@ -61,12 +59,8 @@ bool Mover::canMove() {
 bool Mover::canStartMove() {
   return (
     canMove() &&
-    !isMoving()
-    // TODO: Enable this
-    // Mover must touch the ground.
-    // Using previous tile height, as tile height has already
-    // been updated, but mover's height not yet.
-    //&& _height == _prevTileHeight
+    !isMoving() &&
+    !isFalling()
   );
 }
 
@@ -234,9 +228,11 @@ void Mover::update() {
     // Wait with checking until mover is not on two tiles anymore
     _tileIndex2 != NO_TILE
   ) {
-    // TODO: destroy when falling
+    if (_height - tiles->tileAtIndex(_tileIndex)->height() < 5) {
+      // TODO: destroy when falling
 
-    clearFalling();
+      clearFalling();
+    }
   }
 }
 
@@ -374,9 +370,6 @@ void Player::update() {
 
   _swappedTiles = false;
   Bot::update();
-  //if (_swappedTiles) {
-  //  // TODO: Sound effect
-  //}
 
   if (_height < -50) {
     signalDeath("System crash");
