@@ -245,7 +245,7 @@ void Tiles::init(const TilesSpec* tilesSpec) {
     uint8_t tile = _tilesSpec->tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
 
-    int8_t height0 = tileType.height0 + 2 * (tile & 0xe0) >> 5;
+    int8_t height0 = tileType.height0 + 2 * ((tile & 0xe0) >> 5);
     _units[pos].init(height0);
   }
 

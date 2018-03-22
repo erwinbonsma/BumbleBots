@@ -12,6 +12,7 @@ const uint8_t H6 = 0xc0;
 const uint8_t H7 = 0xe0;
 
 const TilePos enemyStartPosLevel1[1] = { makeTilePos(6, 1) };
+const TilePos enemyStartPosLevel2[2] = { makeTilePos(4, 0), makeTilePos(4, 1) };
 
 const TilePos pickupStartPosLevel0[13] = {
   makeTilePos(0, 0), makeTilePos(0, 2), makeTilePos(0, 3), makeTilePos(0, 5), makeTilePos(0, 7),
@@ -20,6 +21,10 @@ const TilePos pickupStartPosLevel0[13] = {
 };
 const TilePos pickupStartPosLevel1[4] = {
   makeTilePos(0, 0), makeTilePos(0, 7), makeTilePos(7, 0), makeTilePos(7, 7)
+};
+const TilePos pickupStartPosLevel2[6] = {
+  makeTilePos(2, 2), makeTilePos(6, 2), makeTilePos(2, 6), makeTilePos(6, 6),
+  makeTilePos(0, 0), makeTilePos(7, 0)
 };
 
 const LevelSpec levelSpecs[numLevels] = {
@@ -63,6 +68,28 @@ const LevelSpec levelSpecs[numLevels] = {
         0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0,
         0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0,
         0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0
+      }
+    }
+  },
+
+  // Gutter and Stage
+  LevelSpec {
+    .playerStartPos = makeTilePos(3, 7),
+    .numEnemies = 2,
+    .enemyStartPos = enemyStartPosLevel2,
+    .numPickups = 6,
+    .pickupStartPos = pickupStartPosLevel2,
+    .timeLimitInCycles = 4500,
+    .tilesSpec = TilesSpec {
+      .tiles = {
+        0x07|H0, 0x04|H4, 0x05|H4, 0x06|H4, 0x04|H4, 0x05|H4, 0x06|H4, 0x07|H1,
+        0x02|H0, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1,
+        0x02|H0, 0x02|H1, 0x02|H2, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H2, 0x02|H1,
+        0x02|H0, 0x02|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H1,
+        0x02|H0, 0x02|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H1,
+        0x02|H0, 0x02|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H1,
+        0x02|H0, 0x02|H1, 0x02|H2, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H2, 0x02|H1,
+        0x03|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1
       }
     }
   },

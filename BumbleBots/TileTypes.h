@@ -24,9 +24,9 @@ struct ImageInfo {
   const int8_t dy;
 };
 
-const uint8_t numTileTypes = 3;
+const uint8_t numTileTypes = 9;
 extern TileType tileTypes[numTileTypes];
 
-const uint8_t numTileImages = 4;
+const uint8_t numTileImages = 5;
 extern ImageInfo tileImageInfo[numTileImages];
 extern Image tileImages[numTileImages];
