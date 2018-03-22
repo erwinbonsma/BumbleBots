@@ -7,6 +7,8 @@ Game game;
 Animation* Game::init() {
   _levelNum = 0;
   _numLives = 3;
+  _score = 0;
+  _displayScore = 0;
 
   _level.init(&levelSpecs[_levelNum]);
 
@@ -43,6 +45,7 @@ const Gamebuino_Meta::Sound_FX pickupCollectedSfx[] = {
 void Game::signalPickupCollected() {
   _level.pickupCollected();
 
+  addToScore(10);
   gb.sound.fx(pickupCollectedSfx);
 
   if (_level.isCompleted()) {
@@ -69,8 +72,16 @@ void Game::draw() {
     _activeAnimation->draw();
   }
 
-  for (int8_t i = 0; i < _numLives; i++) {
-    gb.display.drawImage(i * 5 + 1, 1, liveIconImage);
+  if (_displayScore < _score) {
+    _displayScore += 1;
+    gb.display.setColor(INDEX_YELLOW);
+    gb.display.setCursor(0, 0);
+    gb.display.printf("%d", _displayScore);
+  }
+  else {
+    for (int8_t i = 0; i < _numLives; i++) {
+      gb.display.drawImage(i * 5 + 1, 1, liveIconImage);
+    }
   }
 }
 

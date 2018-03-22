@@ -38,7 +38,7 @@ class Level {
   bool _started;
   bool _frozen;
   uint8_t _numPickupsCollected;
-  uint16_t _cyclesRemaining;
+  int16_t _cyclesRemaining;
 
   Player _player;
   Enemy _enemies[maxNumEnemies];
@@ -47,6 +47,9 @@ class Level {
   void drawTimeBar();
 
 public:
+  bool hasTimeLeft() { return _cyclesRemaining > 0; }
+  void decreaseTimeLeft() { _cyclesRemaining -= 25; }
+
   /* Initialises the level based on the given spec.
    *
    * This should be called once when entering a level.

@@ -110,6 +110,10 @@ const Gamebuino_Meta::Sound_FX levelDoneSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,64,-8,10,63,4},
 };
 
+const Gamebuino_Meta::Sound_FX timeScoreSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-64,0,50,1},
+};
+
 Animation* LevelDoneAnimation::init() {
   game.level()->freeze();
 
@@ -121,16 +125,19 @@ Animation* LevelDoneAnimation::init() {
 Animation* LevelDoneAnimation::update() {
   Animation::update();
 
-  if (clock() == 80) {
+  if (clock() == 50) {
+    if (game.level()->hasTimeLeft()) {
+      game.level()->decreaseTimeLeft();
+      gb.sound.fx(timeScoreSfx);
+      game.addToScore(1);
+      rewindClock();
+    }
+  }
+  else if (clock() == 60) {
     return game.nextLevel();
   }
 
   return this;
-}
-
-void LevelDoneAnimation::draw() {
-  gb.display.setColor(INDEX_GREEN);
-  gb.display.println("Level completed!");
 }
 
 //-----------------------------------------------------------------------------

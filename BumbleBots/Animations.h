@@ -7,6 +7,7 @@ class Animation {
 
 protected:
   uint8_t clock() const { return _clock; }
+  void rewindClock() { _clock--; }
 
 public:
   virtual Animation* init();
@@ -19,7 +20,7 @@ public:
    */
   virtual Animation* update();
 
-  virtual void draw() = 0;
+  virtual void draw() {};
 };
 
 //-----------------------------------------------------------------------------
@@ -57,8 +58,6 @@ public:
   Animation* init();
 
   Animation* update();
-
-  void draw();
 };
 
 //-----------------------------------------------------------------------------

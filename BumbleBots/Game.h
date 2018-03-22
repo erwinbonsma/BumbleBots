@@ -4,6 +4,9 @@
 class Game {
   int8_t _numLives;
   int8_t _levelNum;
+  int16_t _score;
+  int16_t _displayScore;
+
   Level _level;
 
   const char *_causeOfDeath;
@@ -20,6 +23,7 @@ public:
   int8_t numLives() { return _numLives; }
   int8_t levelNum() { return _levelNum + 1; }
   Level* level() { return &_level; }
+  void addToScore(uint8_t inc) { _score += inc; }
 
   void signalDeath(const char* cause);
   void signalPickupCollected();
