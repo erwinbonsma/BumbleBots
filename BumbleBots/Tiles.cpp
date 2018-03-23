@@ -204,10 +204,10 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
 
     // Draw top image (which has transparency)
     uint8_t imageIndex = tileType->topImageIndex;
-   int8_t dy = tileImageInfo[imageIndex].dy;
-   tileImages[imageIndex].setFrame(tileType->topFrameIndex);
-   gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
-   dy += tileImages[imageIndex].height();
+    int8_t dy = tileImageInfo[imageIndex].dy;
+    tileImages[imageIndex].setFrame(tileType->topFrameIndex);
+    gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
+    dy += tileImages[imageIndex].height();
 
     // Draw bottom image (without transparency)
     imageIndex = tileType->bottomImageIndex;
