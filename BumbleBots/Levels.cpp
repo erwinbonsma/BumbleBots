@@ -23,8 +23,8 @@ const TilePos pickupStartPosLevel1[4] = {
   makeTilePos(0, 0), makeTilePos(0, 7), makeTilePos(7, 0), makeTilePos(7, 7)
 };
 const TilePos pickupStartPosLevel2[6] = {
+  makeTilePos(0, 0), makeTilePos(7, 0),
   makeTilePos(2, 2), makeTilePos(6, 2), makeTilePos(2, 6), makeTilePos(6, 6),
-  makeTilePos(0, 0), makeTilePos(7, 0)
 };
 
 const LevelSpec levelSpecs[numLevels] = {
@@ -249,7 +249,7 @@ bool Level::isCompleted() {
 void Level::update() {
   tiles->update();
 
-  if (_started && !_frozen) {
+  if (_started) {
     for (int8_t i = numMovers; --i >= 0; ) {
       movers[i]->update();
     }
