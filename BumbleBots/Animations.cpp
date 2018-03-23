@@ -2,6 +2,7 @@
 
 #include "Game.h"
 #include "Globals.h"
+#include "ImageData.h"
 
 extern Level level;
 extern uint8_t levelNum;
@@ -41,7 +42,7 @@ Animation* DieAnimation::init(const char *cause) {
 Animation* DieAnimation::update() {
   Animation::update();
 
-  if (clock() == 60) {
+  if (clock() == 50) {
     if (game.numLives() >= 0) {
       return game.restartLevel();
     }
@@ -54,13 +55,9 @@ Animation* DieAnimation::update() {
 }
 
 void DieAnimation::draw() {
-  gb.display.setColor(INDEX_RED);
-  gb.display.setCursor(0, 56);
-  gb.display.print(_cause);
-  for (uint8_t i = 0; i < clock(); i += 10) {
-    gb.display.print(".");
-  }
-  gb.display.println();
+//  gb.display.setColor(INDEX_RED);
+//  gb.display.setCursor(0, 56);
+//  gb.display.print(_cause);
 }
 
 //-----------------------------------------------------------------------------
@@ -81,7 +78,7 @@ Animation* GameOverAnimation::init() {
 Animation* GameOverAnimation::update() {
   Animation::update();
 
-  if (clock() == 50) {
+  if (gb.buttons.held(BUTTON_A, 0)) {
     return game.init();
   }
 
@@ -89,9 +86,7 @@ Animation* GameOverAnimation::update() {
 }
 
 void GameOverAnimation::draw() {
-  gb.display.setColor(INDEX_RED);
-  gb.display.setCursor(26, 28);
-  gb.display.print("GAME OVER");
+  gb.display.drawImage(26, 22, gameOverImage);
 }
 
 //-----------------------------------------------------------------------------

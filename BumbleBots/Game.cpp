@@ -72,10 +72,13 @@ void Game::draw() {
     _activeAnimation->draw();
   }
 
-  if (_displayScore < _score) {
-    _displayScore += 1;
+  if (_displayScore < _score || _numLives < 0) {
+    // Display score when it is changing or when game is over
+    if (_displayScore < _score) {
+      _displayScore += 1;
+    }
     gb.display.setColor(INDEX_YELLOW);
-    gb.display.setCursor(0, 0);
+    gb.display.setCursor(1, 1);
     gb.display.printf("%d", _displayScore);
   }
   else {

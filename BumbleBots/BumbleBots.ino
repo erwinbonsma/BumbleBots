@@ -33,12 +33,12 @@ void loop() {
   while(!gb.update());
   gb.display.clear();
 
-  if (gb.buttons.held(BUTTON_A, 0)) {
-    slowMotion(true);
-  }
-  if (gb.buttons.held(BUTTON_B, 0)) {
-    slowMotion(false);
-  }
+//  if (gb.buttons.held(BUTTON_A, 0)) {
+//    slowMotion(true);
+//  }
+//  if (gb.buttons.held(BUTTON_B, 0)) {
+//    slowMotion(false);
+//  }
 
   if (1) {
     if (!_slowMotionEnabled || _slowMotionCount++ >= 2) {
@@ -47,8 +47,6 @@ void loop() {
       game.update();
     }
     game.draw();
-
-    //((Player *)movers[0])->drawDebugInfo();
   }
 
   uint8_t cpuLoad = gb.getCpuLoad();
