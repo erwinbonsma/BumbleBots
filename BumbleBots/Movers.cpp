@@ -174,10 +174,6 @@ bool Mover::canEnterTile(int8_t tileIndex) {
 void Mover::enteringTile(int8_t tileIndex) {
   _tileIndex2 = tileIndex;
 
-  if (isFall(_tileIndex, _tileIndex2)) {
-    setFalling();
-  }
-
   TilePos destPos = tiles->posOfTile(_tileIndex2);
   TilePos fromPos = tiles->posOfTile(_tileIndex);
 
@@ -205,6 +201,11 @@ void Mover::exitedTile() {
     tiles->moveMoverToTile(_moverIndex, _tileIndex);
     _movement -= 16 * sign(_movement);
   }
+
+  if (isFall(_tileIndex2, _tileIndex)) {
+    setFalling();
+  }
+
   _tileIndex2 = NO_TILE;
 }
 
@@ -226,7 +227,7 @@ void Mover::update() {
   if (
     isFalling() &&
     // Wait with checking until mover is not on two tiles anymore
-    _tileIndex2 != NO_TILE
+    _tileIndex2 == NO_TILE
   ) {
     if (_height - tiles->tileAtIndex(_tileIndex)->height() < 5) {
       // TODO: destroy when falling
@@ -355,6 +356,7 @@ void Player::update() {
     isMoving() &&
     desiredMovementDir != 0 &&
     !isDazed() &&
+    !isFalling() &&
     _movementDir * _movementInc != desiredMovementDir
   ) {
     // Reverse while moving
@@ -366,8 +368,6 @@ void Player::update() {
     }
   }
 
-  //gb.display.printf("%d, %d\n", isMoving(), _movement);
-
   _swappedTiles = false;
   Bot::update();
 
@@ -377,7 +377,8 @@ void Player::update() {
 }
 
 void Player::drawDebugInfo() {
-  gb.display.printf("m=%d,dt=%d,t1=%d,t2=%d\n", _movement, _drawTileIndex, _tileIndex, _tileIndex2);
+  gb.display.setCursor(20, 58);
+  gb.display.printf("%d/%d\n", isFalling(), canStartMove());
 }
 
 //-----------------------------------------------------------------------------
