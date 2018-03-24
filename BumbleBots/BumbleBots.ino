@@ -32,6 +32,7 @@ void setup() {
 void loop() {
   while(!gb.update());
   gb.display.clear();
+  gb.lights.clear();
 
 //  if (gb.buttons.held(BUTTON_A, 0)) {
 //    slowMotion(true);

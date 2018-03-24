@@ -152,24 +152,35 @@ const TimebarSpec timebarSpecs[6] = {
 };
 
 void Level::drawTimeBar() {
-  int8_t i = 0;
   int8_t x = 78;
   int16_t t = _cyclesRemaining;
+  const TimebarSpec *spec = timebarSpecs;
   while (t > 0) {
-    const TimebarSpec spec = timebarSpecs[i];
-    uint8_t len = min(spec.len, 1 + t / (spec.unit * 25));
+    uint8_t len = min(spec->len, 1 + t / (spec->unit * 25));
 
     if (len > 0) {
-      gb.display.setColor(spec.colorMain);
+      gb.display.setColor(spec->colorMain);
       gb.display.fillRect(x - len + 1, 1, len, 2);
 
-      gb.display.setColor(spec.colorDark);
+      gb.display.setColor(spec->colorDark);
       gb.display.drawFastHLine(x - len + 1, 3, len);
     }
 
-    t -= spec.len * spec.unit * 25;
-    x -= spec.len;
-    i += 1;
+    t -= spec->len * spec->unit * 25;
+    if (t <= 0) {
+      break;
+    }
+    x -= spec->len;
+    spec++;
+  }
+
+  // Flash lights when time is running out
+  if (spec->colorDark != INDEX_GREEN && !_frozen) {
+    uint8_t i = gb.frameCount % (spec->unit * 25);
+    if (i < 12) {
+      gb.lights.drawPixel(0, 3 - i / 3, spec->colorMain);
+      gb.lights.drawPixel(1, i / 3, spec->colorMain);
+    }
   }
 }
 
