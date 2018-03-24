@@ -101,7 +101,7 @@ const LevelSpec levelSpecs[numLevels] = {
   // Barsaman
   LevelSpec {
     .playerStartPos = makeTilePos(7, 7),
-    .numEnemies = 0,
+    .numEnemies = 2,
     .enemyStartPos = enemyStartPosLevel3,
     .numPickups = 3,
     .pickupStartPos = pickupStartPosLevel3,
