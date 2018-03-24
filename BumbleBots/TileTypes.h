@@ -1,3 +1,9 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include <Gamebuino-Meta.h>
 
 const uint8_t TILEFLAG_SPRITE_REPEAT = 0x01;
@@ -24,9 +30,9 @@ struct ImageInfo {
   const int8_t dy;
 };
 
-const uint8_t numTileTypes = 3;
+const uint8_t numTileTypes = 11;
 extern TileType tileTypes[numTileTypes];
 
-const uint8_t numTileImages = 4;
+const uint8_t numTileImages = 8;
 extern ImageInfo tileImageInfo[numTileImages];
 extern Image tileImages[numTileImages];

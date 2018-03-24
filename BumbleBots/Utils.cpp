@@ -1,3 +1,9 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include "Utils.h"
 
 // column Delta for heading
@@ -140,5 +146,28 @@ int16_t fastCos(int16_t value) {
   }
   else {
     return -(int16_t)fastCosTable[64 - value];
+  }
+}
+
+void assertFailed(const char *function, const char *file, int lineNo, const char *expression) {
+  if (SerialUSB) {
+    SerialUSB.println("=== ASSERT FAILED ===");
+    SerialUSB.println(function);
+    SerialUSB.println(file);
+    SerialUSB.println(lineNo, DEC);
+    SerialUSB.println(expression);
+    SerialUSB.flush();
+  }
+
+  while (1) {
+    if (gb.update()) {
+      gb.display.clear();
+      gb.display.setColor(RED);
+      gb.display.println("Assert failed:");
+      gb.display.println(function);
+      gb.display.println(file);
+      gb.display.println(lineNo, DEC);
+      gb.display.println(expression);
+    }
   }
 }

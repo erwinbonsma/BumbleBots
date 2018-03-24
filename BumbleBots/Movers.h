@@ -1,3 +1,9 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include <Gamebuino-Meta.h>
 
 #include "Utils.h"
@@ -99,7 +105,7 @@ class Bot : public Mover {
 
 protected:
   // Rotation
-  uint8_t _rotation;      // [0 .. rotationMax >
+  uint8_t _rotation;     // [0 .. rotationMax>
   int8_t _rotationDir;   // -1, 0, 1
 
   // Rotation speed
@@ -145,6 +151,7 @@ class Player : public Bot {
   bool _swappedTiles;
 
 protected:
+  void bump();
   void swapTiles();
 
 public:

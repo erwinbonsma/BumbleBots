@@ -1,3 +1,8 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
 
 const uint8_t maxNumMovers = 8;
 const uint8_t maxNumObjects = 16;
@@ -19,9 +24,6 @@ class Tiles;
 extern Tiles *const tiles;
 
 // Implemented in main
-class Animation;
-void signalDeath(const char* cause);
-void signalPickupCollected();
-Animation* restartLevel();
-void nextLevel();
 void slowMotion(bool enable);
+void signalDeath(const char* causeOfDeath);
+void signalPickupCollected();

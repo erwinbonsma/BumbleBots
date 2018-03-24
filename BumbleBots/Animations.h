@@ -1,3 +1,8 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
 
 //-----------------------------------------------------------------------------
 // Animation declaration
@@ -7,6 +12,7 @@ class Animation {
 
 protected:
   uint8_t clock() const { return _clock; }
+  void rewindClock() { _clock--; }
 
 public:
   virtual Animation* init();
@@ -19,7 +25,7 @@ public:
    */
   virtual Animation* update();
 
-  virtual void draw() = 0;
+  virtual void draw() {};
 };
 
 //-----------------------------------------------------------------------------
@@ -37,6 +43,19 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+// GameOverAnimation declaration
+
+class GameOverAnimation : public Animation {
+
+public:
+  Animation* init();
+
+  Animation* update();
+
+  void draw();
+};
+
+//-----------------------------------------------------------------------------
 // LevelDoneAnimation declaration
 
 class LevelDoneAnimation : public Animation {
@@ -44,8 +63,6 @@ public:
   Animation* init();
 
   Animation* update();
-
-  void draw();
 };
 
 //-----------------------------------------------------------------------------
@@ -56,6 +73,4 @@ public:
   Animation* init();
 
   Animation* update();
-
-  void draw();
 };

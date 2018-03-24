@@ -1,13 +1,17 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include "Tiles.h"
 
 #include "Globals.h"
-#include "ImageData.h"
+#include "Images.h"
 #include "Movers.h"
 #include "Objects.h"
 #include "TileTypes.h"
 #include "Palettes.h"
-
-#include <assert.h>
 
 Tiles _tiles = Tiles();
 
@@ -178,12 +182,12 @@ int8_t Tile::moverOfType(MoverType moverType, int8_t excludeMover) {
 }
 
 void Tile::addObject(int8_t objectIndex) {
-  assert(_objectIndex == -1);
+  assertTrue(_objectIndex == -1);
   _objectIndex = objectIndex;
 }
 
 void Tile::removeObject(int8_t objectIndex) {
-  assert(_objectIndex == objectIndex);
+  assertTrue(_objectIndex == objectIndex);
   _objectIndex = -1;
 }
 
@@ -206,10 +210,10 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
 
     // Draw top image (which has transparency)
     uint8_t imageIndex = tileType->topImageIndex;
-   int8_t dy = tileImageInfo[imageIndex].dy;
-   tileImages[imageIndex].setFrame(tileType->topFrameIndex);
-   gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
-   dy += tileImages[imageIndex].height();
+    int8_t dy = tileImageInfo[imageIndex].dy;
+    tileImages[imageIndex].setFrame(tileType->topFrameIndex);
+    gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
+    dy += tileImages[imageIndex].height();
 
     // Draw bottom image (without transparency)
     imageIndex = tileType->bottomImageIndex;
@@ -247,7 +251,7 @@ void Tiles::init(const TilesSpec* tilesSpec) {
     uint8_t tile = _tilesSpec->tiles[pos];
     TileType tileType = tileTypes[tile & 0x1f];
 
-    int8_t height0 = tileType.height0 + 2 * (tile & 0xe0) >> 5;
+    int8_t height0 = tileType.height0 + 2 * ((tile & 0xe0) >> 5);
     _units[pos].init(height0);
   }
 
@@ -297,8 +301,14 @@ void Tiles::putMoverOnTile(int8_t moverIndex, int8_t tileIndex) {
 void Tiles::moveMoverToTile(int8_t moverIndex, int8_t tileIndex) {
   Mover* mover = movers[moverIndex];
 
-  assert(mover->_drawTileIndex >= 0); // Only move movers on the map
-  _units[mover->_drawTileIndex].removeMover(moverIndex);
+  if (isPosOnMap(posOfTile(mover->_drawTileIndex))) {
+    _units[mover->_drawTileIndex].removeMover(moverIndex);
+  }
+  else {
+    // Can happen when mover retreats before falling of the map
+    _offMapTile.removeMover(moverIndex);
+  }
+
   mover->_drawTileIndex = tileIndex;
   if (isPosOnMap(posOfTile(tileIndex))) {
     _units[tileIndex].addMover(moverIndex);

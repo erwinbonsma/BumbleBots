@@ -1,9 +1,13 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include "Movers.h"
 
-#include <assert.h>
-
 #include "Globals.h"
-#include "ImageData.h"
+#include "Images.h"
 #include "Palettes.h"
 #include "Tiles.h"
 #include "Objects.h"
@@ -11,6 +15,14 @@
 // Exposed in Globals.h
 uint8_t numMovers = 0;
 Mover* movers[maxNumMovers];
+
+const Gamebuino_Meta::Sound_FX bumpSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,133,-10,0,150,10},
+};
+
+const Gamebuino_Meta::Sound_FX moveSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,30,0,0,100,1},
+};
 
 bool isFall(int8_t fromTileIndex, int8_t destTileIndex) {
   return (
@@ -53,12 +65,8 @@ bool Mover::canMove() {
 bool Mover::canStartMove() {
   return (
     canMove() &&
-    !isMoving()
-    // TODO: Enable this
-    // Mover must touch the ground.
-    // Using previous tile height, as tile height has already
-    // been updated, but mover's height not yet.
-    //&& _height == _prevTileHeight
+    !isMoving() &&
+    !isFalling()
   );
 }
 
@@ -172,10 +180,6 @@ bool Mover::canEnterTile(int8_t tileIndex) {
 void Mover::enteringTile(int8_t tileIndex) {
   _tileIndex2 = tileIndex;
 
-  if (isFall(_tileIndex, _tileIndex2)) {
-    setFalling();
-  }
-
   TilePos destPos = tiles->posOfTile(_tileIndex2);
   TilePos fromPos = tiles->posOfTile(_tileIndex);
 
@@ -203,6 +207,11 @@ void Mover::exitedTile() {
     tiles->moveMoverToTile(_moverIndex, _tileIndex);
     _movement -= 16 * sign(_movement);
   }
+
+  if (isFall(_tileIndex2, _tileIndex)) {
+    setFalling();
+  }
+
   _tileIndex2 = NO_TILE;
 }
 
@@ -224,11 +233,13 @@ void Mover::update() {
   if (
     isFalling() &&
     // Wait with checking until mover is not on two tiles anymore
-    _tileIndex2 != NO_TILE
+    _tileIndex2 == NO_TILE
   ) {
-    // TODO: destroy when falling
+    if (_height - tiles->tileAtIndex(_tileIndex)->height() < 5) {
+      // TODO: destroy when falling
 
-    clearFalling();
+      clearFalling();
+    }
   }
 }
 
@@ -248,6 +259,7 @@ void Bot::reset() {
 
   _rotation = 0;
   _rotationDir = 0;
+  _dazed = 0;
 }
 
 Heading Bot::heading() {
@@ -314,6 +326,12 @@ Player::Player() : Bot(2) {}
 void Player::swapTiles() {
   Mover::swapTiles();
   _swappedTiles = true;
+  gb.sound.fx(moveSfx);
+}
+
+void Player::bump() {
+  Bot::bump();
+  gb.sound.fx(bumpSfx);
 }
 
 void Player::update() {
@@ -345,6 +363,7 @@ void Player::update() {
     isMoving() &&
     desiredMovementDir != 0 &&
     !isDazed() &&
+    !isFalling() &&
     _movementDir * _movementInc != desiredMovementDir
   ) {
     // Reverse while moving
@@ -356,13 +375,8 @@ void Player::update() {
     }
   }
 
-  //gb.display.printf("%d, %d\n", isMoving(), _movement);
-
   _swappedTiles = false;
   Bot::update();
-  //if (_swappedTiles) {
-  //  // TODO: Sound effect
-  //}
 
   if (_height < -50) {
     signalDeath("System crash");
@@ -370,7 +384,8 @@ void Player::update() {
 }
 
 void Player::drawDebugInfo() {
-  gb.display.printf("m=%d,dt=%d,t1=%d,t2=%d\n", _movement, _drawTileIndex, _tileIndex, _tileIndex2);
+  gb.display.setCursor(20, 58);
+  gb.display.printf("%d/%d\n", isFalling(), canStartMove());
 }
 
 //-----------------------------------------------------------------------------

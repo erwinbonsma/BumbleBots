@@ -1,3 +1,9 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include <Gamebuino-Meta.h>
 
 #include <assert.h>
@@ -100,5 +106,13 @@ int16_t fastCos(int16_t value);
 inline int8_t sign(int8_t value) {
   return (value > 0) - (value < 0);
 }
+
+void assertFailed(const char *function, const char *file, int lineNo, const char *expression);
+
+#define assertTrue(condition) \
+if (!(condition)) { \
+  assertFailed(__func__, __FILE__, __LINE__, #condition); \
+}
+
 
 #endif

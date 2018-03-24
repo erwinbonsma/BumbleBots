@@ -1,3 +1,9 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include <Gamebuino-Meta.h>
 
 #include "Utils.h"
@@ -14,13 +20,16 @@ struct LevelSpec {
   const uint8_t numPickups;
   const TilePos *pickupStartPos;
 
+  // Negative value: Restore pick-ups on level reset
+  const int16_t timeLimitInCycles;
+
   const TilesSpec tilesSpec;
 };
 
 #ifdef TEST_LEVELS
-  const uint8_t numLevels = 4;
+  const uint8_t numLevels = 6;
 #else
-  const uint8_t numLevels = 2;
+  const uint8_t numLevels = 4;
 #endif
 extern const LevelSpec levelSpecs[numLevels];
 
@@ -36,12 +45,21 @@ class Level {
   bool _started;
   bool _frozen;
   uint8_t _numPickupsCollected;
+  int16_t _cyclesRemaining;
 
   Player _player;
   Enemy _enemies[maxNumEnemies];
   Pickup _pickups[maxNumPickups];
 
+  void drawTimeBar();
+
+  void initMovers();
+  void initObjects();
+
 public:
+  bool hasTimeLeft() { return _cyclesRemaining > 0; }
+  void decreaseTimeLeft() { _cyclesRemaining -= 25; }
+
   /* Initialises the level based on the given spec.
    *
    * This should be called once when entering a level.

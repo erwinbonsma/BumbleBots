@@ -1,3 +1,9 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include "Palettes.h"
 
 const Color LBLUE = LIGHTBLUE;
@@ -15,5 +21,5 @@ const Color palettes[numPalettes][16] = {
   // Flipped enemy
   { BLACK,  DGRAY,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  YELLOW, ORANGE, RED,    LGREEN, BEIGE,  BROWN,  PINK,   BEIGE },
   // Checker tile
-  { BLACK,  DBLUE,  PURPLE, GREEN,  BROWN,  BLACK,  DGRAY,  GRAY,   RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,  BEIGE }
+  { BLACK,  DBLUE,  PURPLE, GREEN,  BROWN,  BLACK,  DGRAY,  GRAY,   RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,   BEIGE }
 };
