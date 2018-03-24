@@ -99,7 +99,7 @@ class Bot : public Mover {
 
 protected:
   // Rotation
-  uint8_t _rotation;      // [0 .. rotationMax >
+  uint8_t _rotation;     // [0 .. rotationMax>
   int8_t _rotationDir;   // -1, 0, 1
 
   // Rotation speed

@@ -253,6 +253,7 @@ void Bot::reset() {
 
   _rotation = 0;
   _rotationDir = 0;
+  _dazed = 0;
 }
 
 Heading Bot::heading() {
