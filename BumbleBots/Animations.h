@@ -1,3 +1,8 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
 
 //-----------------------------------------------------------------------------
 // Animation declaration

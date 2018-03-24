@@ -1,3 +1,9 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include "TileTypes.h"
 
 TileType tileTypes[numTileTypes] = {

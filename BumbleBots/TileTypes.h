@@ -1,3 +1,9 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
+
 #include <Gamebuino-Meta.h>
 
 const uint8_t TILEFLAG_SPRITE_REPEAT = 0x01;

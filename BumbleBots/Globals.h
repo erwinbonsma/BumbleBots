@@ -1,3 +1,8 @@
+/*
+ * Bumble Bots, a Gamebuino game
+ *
+ * Copyright 2018, Erwin Bonsma
+ */
 
 const uint8_t maxNumMovers = 8;
 const uint8_t maxNumObjects = 16;
