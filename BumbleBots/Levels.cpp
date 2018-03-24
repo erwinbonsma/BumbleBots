@@ -13,6 +13,7 @@ const uint8_t H7 = 0xe0;
 
 const TilePos enemyStartPosLevel1[1] = { makeTilePos(6, 1) };
 const TilePos enemyStartPosLevel2[2] = { makeTilePos(4, 0), makeTilePos(4, 1) };
+const TilePos enemyStartPosLevel3[3] = { makeTilePos(7, 0), makeTilePos(0, 7) };
 
 const TilePos pickupStartPosLevel0[13] = {
   makeTilePos(0, 0), makeTilePos(0, 2), makeTilePos(0, 3), makeTilePos(0, 5), makeTilePos(0, 7),
@@ -25,6 +26,9 @@ const TilePos pickupStartPosLevel1[4] = {
 const TilePos pickupStartPosLevel2[6] = {
   makeTilePos(0, 0), makeTilePos(7, 0),
   makeTilePos(2, 2), makeTilePos(6, 2), makeTilePos(2, 6), makeTilePos(6, 6),
+};
+const TilePos pickupStartPosLevel3[3] = {
+  makeTilePos(0, 0), makeTilePos(4, 0), makeTilePos(0, 4)
 };
 
 const LevelSpec levelSpecs[numLevels] = {
@@ -90,6 +94,28 @@ const LevelSpec levelSpecs[numLevels] = {
         0x02|H0, 0x02|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H1,
         0x02|H0, 0x02|H1, 0x02|H2, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H2, 0x02|H1,
         0x03|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1
+      }
+    }
+  },
+
+  // Barsaman
+  LevelSpec {
+    .playerStartPos = makeTilePos(7, 7),
+    .numEnemies = 0,
+    .enemyStartPos = enemyStartPosLevel3,
+    .numPickups = 3,
+    .pickupStartPos = pickupStartPosLevel3,
+    .timeLimitInCycles = 3000,
+    .tilesSpec = TilesSpec {
+      .tiles = {
+        0x09|H7, 0x08|H6, 0x08|H5, 0x08|H3, 0x09|H6, 0x08|H4, 0x08|H3, 0x08|H2,
+        0x08|H2, 0x08|H3, 0x08|H4, 0x08|H2, 0x08|H5, 0x08|H3, 0x08|H3, 0x08|H2,
+        0x08|H4, 0x08|H5, 0x08|H5, 0x08|H3, 0x08|H5, 0x08|H2, 0x08|H3, 0x08|H1,
+        0x08|H5, 0x08|H2, 0x08|H4, 0x08|H2, 0x08|H4, 0x08|H3, 0x08|H2, 0x08|H1,
+        0x09|H6, 0x08|H2, 0x08|H4, 0x08|H2, 0x08|H1, 0x08|H1, 0x08|H1, 0x08|H1,
+        0x08|H3, 0x08|H2, 0x08|H4, 0x08|H3, 0x08|H1, 0x08|H0, 0x08|H0, 0x08|H0,
+        0x08|H2, 0x08|H2, 0x08|H2, 0x08|H2, 0x08|H1, 0x08|H0, 0x08|H0, 0x08|H0,
+        0x08|H1, 0x08|H3, 0x08|H2, 0x08|H1, 0x08|H1, 0x08|H0, 0x08|H0, 0x08|H0
       }
     }
   },
