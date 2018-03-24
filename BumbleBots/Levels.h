@@ -14,7 +14,8 @@ struct LevelSpec {
   const uint8_t numPickups;
   const TilePos *pickupStartPos;
 
-  const uint16_t timeLimitInCycles;
+  // Negative value: Restore pick-ups on level reset
+  const int16_t timeLimitInCycles;
 
   const TilesSpec tilesSpec;
 };
@@ -45,6 +46,9 @@ class Level {
   Pickup _pickups[maxNumPickups];
 
   void drawTimeBar();
+
+  void initMovers();
+  void initObjects();
 
 public:
   bool hasTimeLeft() { return _cyclesRemaining > 0; }

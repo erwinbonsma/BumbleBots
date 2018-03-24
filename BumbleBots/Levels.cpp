@@ -210,11 +210,7 @@ void Level::drawTimeBar() {
   }
 }
 
-void Level::init(const LevelSpec *levelSpec) {
-  _levelSpec = levelSpec;
-
-  tiles->init(&_levelSpec->tilesSpec);
-
+void Level::initMovers() {
   numMovers = 0;
 
   // Create player
@@ -228,7 +224,9 @@ void Level::init(const LevelSpec *levelSpec) {
     _enemies[i].init(numMovers++, _player.index());
     movers[_enemies[i].index()] = &_enemies[i];
   }
+}
 
+void Level::initObjects() {
   numObjects = 0;
 
   // Create and place pick-ups
@@ -243,7 +241,21 @@ void Level::init(const LevelSpec *levelSpec) {
   _numPickupsCollected = 0;
 }
 
+void Level::init(const LevelSpec *levelSpec) {
+  _levelSpec = levelSpec;
+
+  tiles->init(&_levelSpec->tilesSpec);
+
+  initMovers();
+  initObjects();
+}
+
 void Level::reset() {
+  if (_levelSpec->timeLimitInCycles < 0) {
+    // Restore pick-ups
+    initObjects();
+  }
+
   tiles->reset(&_levelSpec->tilesSpec);
 
   // Reset all objects
@@ -254,7 +266,7 @@ void Level::reset() {
   _started = false;
   _frozen = false;
 
-  _cyclesRemaining = _levelSpec->timeLimitInCycles;
+  _cyclesRemaining = abs(_levelSpec->timeLimitInCycles);
 }
 
 void Level::start() {
