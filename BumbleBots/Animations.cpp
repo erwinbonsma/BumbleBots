@@ -2,7 +2,7 @@
 
 #include "Game.h"
 #include "Globals.h"
-#include "ImageData.h"
+#include "Images.h"
 
 extern Level level;
 extern uint8_t levelNum;

@@ -1,5 +1,4 @@
-// Source "Assets/Bots.png"
-#include "ImageData.h"
+#include "Images.h"
 
 const uint8_t botImageData[] = {
   8, 10, 10, 0, 0, (uint8_t)INDEX_BLACK, 1,

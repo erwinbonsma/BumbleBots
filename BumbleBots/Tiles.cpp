@@ -1,7 +1,7 @@
 #include "Tiles.h"
 
 #include "Globals.h"
-#include "ImageData.h"
+#include "Images.h"
 #include "Movers.h"
 #include "Objects.h"
 #include "TileTypes.h"

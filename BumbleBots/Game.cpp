@@ -1,6 +1,6 @@
 #include "Game.h"
 
-#include "ImageData.h"
+#include "Images.h"
 
 Game game;
 
