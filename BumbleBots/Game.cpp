@@ -77,7 +77,15 @@ void Game::draw() {
     if (_displayScore < _score) {
       _displayScore += 1;
     }
-    gb.display.setColor(INDEX_YELLOW);
+    uint8_t numDigits = 1;
+    uint16_t s = _displayScore / 10;
+    while (s > 0) {
+      s /= 10;
+      numDigits++;
+    }
+    gb.display.setColor(INDEX_DARKBLUE);
+    gb.display.fillRect(0, 0, numDigits * 4 + 1, 7);
+    gb.display.setColor(INDEX_LIGHTBLUE);
     gb.display.setCursor(1, 1);
     gb.display.printf("%d", _displayScore);
   }
