@@ -65,14 +65,14 @@ public:
 //-----------------------------------------------------------------------------
 // TileSpec declaration
 
-struct TilesSpec {
-  /* 1D array for 2D map
-   *
-   * bits:
-   * 7..5 : height (0..7)
-   * 4..0 : tileType (0..31)
+class TilesSpec {
+public:
+  /* Returns base height of tile at given position. This is the height without
+   * a wave applied.
    */
-  const uint8_t tiles[maxCols * maxRows];
+  virtual int8_t baselineHeightAt(TilePos pos) const = 0;
+
+  virtual TileType* tileTypeAt(TilePos pos) const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ class Tiles {
 public:
   Tiles();
   void init(const TilesSpec* tilesSpec);
-  void reset(const TilesSpec* tilesSpec);
+  void reset();
 
   ScreenPos cameraPos() const {
     return _cameraPos;
@@ -132,5 +132,9 @@ public:
   void attenuateWaves() { _waveStrengthDelta = -2; }
 
   void update();
+
+  /* Draws the tiles. The player is passed to enable update of the camera
+   * position based on the player position.
+   */
   void draw(Player *player);
 };

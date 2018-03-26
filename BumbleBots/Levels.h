@@ -11,19 +11,42 @@
 #include "Movers.h"
 #include "Objects.h"
 
+//-----------------------------------------------------------------------------
+// LevelTilesSpec declaration
+
+class LevelTilesSpec : public TilesSpec {
+  /* 1D array for 2D map
+   *
+   * bits:
+   * 7..5 : height (0..7)
+   * 4..0 : tileType (0..31)
+   */
+  const uint8_t* _tiles;
+
+public:
+  LevelTilesSpec(const uint8_t* tiles);
+
+  int8_t baselineHeightAt(TilePos pos) const;
+
+  TileType* tileTypeAt(TilePos pos) const;
+};
+
+//-----------------------------------------------------------------------------
+// LevelSpec declaration
+
 struct LevelSpec {
   const TilePos playerStartPos;
 
   const uint8_t numEnemies;
-  const TilePos *enemyStartPos;
+  const TilePos* enemyStartPos;
 
   const uint8_t numPickups;
-  const TilePos *pickupStartPos;
+  const TilePos* pickupStartPos;
 
   // Negative value: Restore pick-ups on level reset
   const int16_t timeLimitInCycles;
 
-  const TilesSpec tilesSpec;
+  const LevelTilesSpec tilesSpec;
 };
 
 #ifdef TEST_LEVELS

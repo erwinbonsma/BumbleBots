@@ -248,11 +248,7 @@ void Tiles::init(const TilesSpec* tilesSpec) {
   _tilesSpec = tilesSpec;
 
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
-    uint8_t tile = _tilesSpec->tiles[pos];
-    TileType tileType = tileTypes[tile & 0x1f];
-
-    int8_t height0 = tileType.height0 + 2 * ((tile & 0xe0) >> 5);
-    _units[pos].init(height0);
+    _units[pos].init(tilesSpec->baselineHeightAt(pos));
   }
 
   _offMapTile.init(offMapTileHeight);
@@ -260,9 +256,7 @@ void Tiles::init(const TilesSpec* tilesSpec) {
   _cameraPos = tilesCenterPos;
 }
 
-void Tiles::reset(const TilesSpec* tilesSpec) {
-  _tilesSpec = tilesSpec;
-
+void Tiles::reset() {
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
     _units[pos].reset();
   }
@@ -340,12 +334,11 @@ void Tiles::update() {
   uint8_t t = (gb.frameCount % _wave.period()) * (256 / _wave.period());
 
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
-    uint8_t tile = _tilesSpec->tiles[pos];
-    TileType tileType = tileTypes[tile & 0x1f];
+    uint8_t flexibility = _tilesSpec->tileTypeAt(pos)->flexibility;
 
-    if (tileType.flexibility) {
+    if (flexibility) {
       int16_t waveHeight = _wave.eval(pos, t);
-      int8_t actualHeight = ((int32_t)waveHeight * tileType.flexibility * _waveStrength) >> 15;
+      int8_t actualHeight = ((int32_t)waveHeight * flexibility * _waveStrength) >> 15;
 
       _units[pos].setWave(actualHeight);
     }
@@ -363,9 +356,7 @@ void Tiles::update() {
 void Tiles::drawPartOfIsoline(int8_t elementIndex) {
   if (elementIndex <= 0) {
     TilePos pos = (TilePos)-elementIndex;
-    uint8_t tile = _tilesSpec->tiles[pos];
-    TileType tileType = tileTypes[tile & 0x1f];
-    _units[pos].draw(pos, &tileType);
+    _units[pos].draw(pos, _tilesSpec->tileTypeAt(pos));
   }
   else {
     const IsolinePair *pair = &isolineTreePairs[elementIndex - 1];

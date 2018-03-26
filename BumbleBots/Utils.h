@@ -13,6 +13,7 @@
 
 const uint8_t maxCols = 8;
 const uint8_t maxRows = 8;
+const uint8_t maxTiles = maxCols * maxRows;
 
 typedef int8_t Heading;
 const int8_t NORTH_EAST = 0;
