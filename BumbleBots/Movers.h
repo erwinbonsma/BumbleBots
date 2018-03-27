@@ -4,6 +4,9 @@
  * Copyright 2018, Erwin Bonsma
  */
 
+#ifndef __MOVERS_INCLUDED
+#define __MOVERS_INCLUDED
+
 #include <Gamebuino-Meta.h>
 
 #include "Utils.h"
@@ -196,3 +199,5 @@ public:
   void update();
 //  void draw(int8_t x, int8_t y); // TMP
 };
+
+#endif

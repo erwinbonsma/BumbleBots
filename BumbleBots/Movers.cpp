@@ -171,7 +171,6 @@ void Mover::moveStep() {
 
 bool Mover::canEnterTile(int8_t tileIndex) {
   return (
-    !isPosOnMap(tiles->posOfTile(tileIndex)) ||
     tiles->tileAtIndex(tileIndex)->height() <=
     tiles->tileAtIndex(_tileIndex)->height()
   );

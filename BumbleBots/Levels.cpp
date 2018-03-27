@@ -270,7 +270,7 @@ void Level::initObjects() {
 void Level::init(const LevelSpec *levelSpec) {
   _levelSpec = levelSpec;
 
-  tiles->init(&_levelSpec->tilesSpec);
+  tiles->init(&_levelSpec->tilesSpec, -64);
 
   initMovers();
   initObjects();

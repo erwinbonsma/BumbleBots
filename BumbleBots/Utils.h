@@ -4,12 +4,10 @@
  * Copyright 2018, Erwin Bonsma
  */
 
-#include <Gamebuino-Meta.h>
-
-#include <assert.h>
-
 #ifndef __UTILS_INCLUDED
 #define __UTILS_INCLUDED
+
+#include <Gamebuino-Meta.h>
 
 const uint8_t maxCols = 8;
 const uint8_t maxRows = 8;
@@ -114,6 +112,5 @@ void assertFailed(const char *function, const char *file, int lineNo, const char
 if (!(condition)) { \
   assertFailed(__func__, __FILE__, __LINE__, #condition); \
 }
-
 
 #endif

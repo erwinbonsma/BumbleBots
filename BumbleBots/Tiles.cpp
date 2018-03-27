@@ -18,8 +18,6 @@ Tiles _tiles = Tiles();
 // Exposed in Globals.h
 Tiles *const tiles = &_tiles;
 
-const int8_t offMapTileHeight = -64;
-
 const uint8_t numIsolines = 15;
 
 const ScreenPos tilesCenterPos = ScreenPos { .x = 8, .y = 28 };
@@ -244,7 +242,7 @@ Tiles::Tiles() :
   _wave.setAmplitude(1);
 }
 
-void Tiles::init(const TilesSpec* tilesSpec) {
+void Tiles::init(const TilesSpec* tilesSpec, int8_t offMapTileHeight) {
   _tilesSpec = tilesSpec;
 
   for (TilePos pos = maxTilePos; --pos >= 0; ) {

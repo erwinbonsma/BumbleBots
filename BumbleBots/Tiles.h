@@ -4,6 +4,9 @@
  * Copyright 2018, Erwin Bonsma
  */
 
+#ifndef __TILES_INCLUDED
+#define __TILES_INCLUDED
+
 #include "Utils.h"
 
 #include "Waves.h"
@@ -97,7 +100,7 @@ class Tiles {
 
 public:
   Tiles();
-  void init(const TilesSpec* tilesSpec);
+  void init(const TilesSpec* tilesSpec, int8_t offMapTileHeight);
   void reset();
 
   ScreenPos cameraPos() const {
@@ -138,3 +141,5 @@ public:
    */
   void draw(Player *player);
 };
+
+#endif
