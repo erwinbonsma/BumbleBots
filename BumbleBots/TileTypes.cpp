@@ -6,6 +6,8 @@
 
 #include "TileTypes.h"
 
+#include "Palettes.h"
+
 TileType tileTypes[numTileTypes] = {
   // 0: Basic, fixed, light
   TileType {
@@ -27,7 +29,7 @@ TileType tileTypes[numTileTypes] = {
     .bottomImageIndex = 1,
     .bottomFrameIndex = 0,
 
-    .paletteIndex = 4,
+    .paletteIndex = PALETTE_DARK_CHECKERED_TILE,
     .height0 = 0,
     .flexibility = 2,
     .flags = TILEFLAG_CHECKERED
@@ -40,7 +42,7 @@ TileType tileTypes[numTileTypes] = {
     .bottomImageIndex = 3,
     .bottomFrameIndex = 0,
 
-    .paletteIndex = 4,
+    .paletteIndex = PALETTE_DARK_CHECKERED_TILE,
     .height0 = 0,
     .flexibility = 0,
     .flags = TILEFLAG_CHECKERED
@@ -53,7 +55,7 @@ TileType tileTypes[numTileTypes] = {
     .bottomImageIndex = 1,
     .bottomFrameIndex = 0,
 
-    .paletteIndex = 4,
+    .paletteIndex = PALETTE_DARK_CHECKERED_TILE,
     .height0 = 0,
     .flexibility = 3,
     .flags = TILEFLAG_CHECKERED
@@ -148,7 +150,33 @@ TileType tileTypes[numTileTypes] = {
     .height0 = 0,
     .flexibility = 8,
     .flags = TILEFLAG_CHECKERED
-  }
+  },
+
+  // N - 2: Level menu 1
+  TileType {
+    .topImageIndex = 2,
+    .topFrameIndex = 0,
+    .bottomImageIndex = 3,
+    .bottomFrameIndex = 0,
+
+    .paletteIndex = PALETTE_LEVELMENU_TILE1,
+    .height0 = 0,
+    .flexibility = 0,
+    .flags = 0
+  },
+
+  // N - 1: Level menu 2
+  TileType {
+    .topImageIndex = 2,
+    .topFrameIndex = 0,
+    .bottomImageIndex = 3,
+    .bottomFrameIndex = 0,
+
+    .paletteIndex = PALETTE_LEVELMENU_TILE2,
+    .height0 = 0,
+    .flexibility = 0,
+    .flags = 0
+  },
 };
 
 ImageInfo tileImageInfo[numTileImages] = {

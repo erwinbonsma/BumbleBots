@@ -9,6 +9,7 @@
 #include "Utils.h"
 #include "Globals.h"
 #include "TileTypes.h"
+#include "Palettes.h"
 
 //const uint8_t zeroDigitTop = {
 //  // Zero, top
@@ -21,10 +22,7 @@
 //  { 12, 3, 2, 3, 1, 4, 7, 5, 10, 4, 7, 1, 5}
 //}
 
-//-----------------------------------------------------------------------------
-// MenuTilesSpec implementation
-
-int8_t MenuTilesSpec::levelAt(TilePos pos) const {
+int8_t levelAt(TilePos pos) {
   assertTrue(isPosOnMap(pos));
 
   int8_t digitCol = colOfPos(pos) / 2;
@@ -32,6 +30,9 @@ int8_t MenuTilesSpec::levelAt(TilePos pos) const {
 
   return 15 - digitCol - 4 * digitRow;
 }
+
+//-----------------------------------------------------------------------------
+// MenuTilesSpec implementation
 
 void MenuTilesSpec::init(int8_t maxLevelCompleted, int8_t maxLevelUnlocked) {
   _maxLevelCompleted = maxLevelCompleted;
@@ -43,7 +44,8 @@ int8_t MenuTilesSpec::baselineHeightAt(TilePos pos) const {
 }
 
 TileType* MenuTilesSpec::tileTypeAt(TilePos pos) const {
-  return &tileTypes[0];
+  int8_t level = levelAt(pos);
+  return &tileTypes[(level + level / 4) % 2 ? TILETYPE_MENU1 : TILETYPE_MENU2];
 }
 
 //-----------------------------------------------------------------------------

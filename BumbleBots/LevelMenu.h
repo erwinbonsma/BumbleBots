@@ -14,8 +14,6 @@ class MenuTilesSpec : public TilesSpec {
   int8_t _maxLevelCompleted;
   int8_t _maxLevelUnlocked;
 
-  int8_t levelAt(TilePos pos) const;
-
 public:
   void init(int8_t maxLevelCompleted, int8_t maxLevelUnlocked);
 
