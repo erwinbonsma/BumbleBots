@@ -42,14 +42,14 @@ void Pickup::draw(int8_t x, int8_t y) {
 const uint8_t menuDigitsSpecsStart[] = {
   0, 13,
   30, 37,
-  0, 13,
-  0, 13,
-  0, 13,
-  0, 13,
-  0, 13,
-  0, 13,
-  0, 13,
-  0, 13,
+  50, 61,
+  76, 87,
+  102, 115,
+  128, 139,
+  152, 159,
+  76, 176,
+  185, 159,
+  185, 115,
 };
 
 const uint8_t menuDigitSpecs[] = {
@@ -62,6 +62,33 @@ const uint8_t menuDigitSpecs[] = {
   // One, bottom
   12, 3, 2, 3, 1, 4, 7, 5, 10, 4, 7, 1, 5,
   // Two, top
+  17, 3, 12, 4, 11, 4, 3, 5, 2, 1, 2,
+  // Two, bottom
+  3, 3, 2, 7, 2, 4, 3, 4, 4, 4, 11, 4, 7, 1, 5,
+  // Three, top
+  17, 3, 12, 4, 11, 4, 4, 4, 2, 1, 2,
+  // Three, bottom
+  12, 3, 2, 3, 4, 4, 4, 4, 1, 4, 6, 5, 6, 1, 5,
+  // Four, top
+  17, 3, 9, 4, 10, 1, 4, 3, 4, 4, 2, 1, 2,
+  // Four, bottom
+  3, 3, 5, 4, 9, 4, 9, 4, 7, 4, 6, 1, 5,
+  // Five, top
+  17, 3, 9, 7, 7, 1, 3, 4, 7, 1, 5,
+  // Five, bottom
+  3, 3, 5, 4, 2, 3, 4, 4, 4, 9, 6, 5, 12,
+  // Six, top
+  17, 3, 9, 4, 10, 1, 20,
+  // Six, bottom
+  3, 3, 2, 7, 2, 4, 3, 4, 4, 4, 1, 4, 6, 5, 6, 1, 5,
+  // Seven, top => Three, top
+  // Seven, bottom
+  25, 3, 9, 4, 7, 4, 6, 1, 5,
+  // Eight, top
+  17, 3, 9, 7, 7, 1, 3, 4, 4, 4, 2, 1, 2,
+  // Eight, bottom => Six, bottom
+  // Nine, top => Eight, top
+  // Nine, bottom => Four, bottom
 };
 
 struct TileLineSpec {
