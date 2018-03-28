@@ -6,6 +6,8 @@
 
 #include "TileTypes.h"
 
+#include "Palettes.h"
+
 TileType tileTypes[numTileTypes] = {
   // 0: Basic, fixed, light
   TileType {
@@ -27,7 +29,7 @@ TileType tileTypes[numTileTypes] = {
     .bottomImageIndex = 1,
     .bottomFrameIndex = 0,
 
-    .paletteIndex = 4,
+    .paletteIndex = PALETTE_DARK_CHECKERED_TILE,
     .height0 = 0,
     .flexibility = 2,
     .flags = TILEFLAG_CHECKERED
@@ -40,7 +42,7 @@ TileType tileTypes[numTileTypes] = {
     .bottomImageIndex = 3,
     .bottomFrameIndex = 0,
 
-    .paletteIndex = 4,
+    .paletteIndex = PALETTE_DARK_CHECKERED_TILE,
     .height0 = 0,
     .flexibility = 0,
     .flags = TILEFLAG_CHECKERED
@@ -53,7 +55,7 @@ TileType tileTypes[numTileTypes] = {
     .bottomImageIndex = 1,
     .bottomFrameIndex = 0,
 
-    .paletteIndex = 4,
+    .paletteIndex = PALETTE_DARK_CHECKERED_TILE,
     .height0 = 0,
     .flexibility = 3,
     .flags = TILEFLAG_CHECKERED
@@ -148,7 +150,33 @@ TileType tileTypes[numTileTypes] = {
     .height0 = 0,
     .flexibility = 8,
     .flags = TILEFLAG_CHECKERED
-  }
+  },
+
+  // N - 2: Level menu 1
+  TileType {
+    .topImageIndex = 2,
+    .topFrameIndex = 0,
+    .bottomImageIndex = 8,
+    .bottomFrameIndex = 0,
+
+    .paletteIndex = PALETTE_LEVELMENU_TILE1,
+    .height0 = 0,
+    .flexibility = 0,
+    .flags = 0
+  },
+
+  // N - 1: Level menu 2
+  TileType {
+    .topImageIndex = 2,
+    .topFrameIndex = 0,
+    .bottomImageIndex = 8,
+    .bottomFrameIndex = 0,
+
+    .paletteIndex = PALETTE_LEVELMENU_TILE2,
+    .height0 = 0,
+    .flexibility = 0,
+    .flags = 0
+  },
 };
 
 ImageInfo tileImageInfo[numTileImages] = {
@@ -192,6 +220,11 @@ ImageInfo tileImageInfo[numTileImages] = {
     .dx = 2,
     .dy = 0
   },
+  // 8
+  ImageInfo {
+    .dx = 0,
+    .dy = 0
+  },
 };
 
 const uint8_t data_0[] = {
@@ -224,6 +257,7 @@ const uint8_t data_2[] = {
 
 const uint8_t data_3[] = {
   16, 10, 1, 0, 0, 0xFF, 1,
+  // Basic fixed, bottom
   0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x77,
   0x67, 0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x55,
   0x66, 0x67, 0x77, 0x77, 0x77, 0x77, 0x55, 0x55,
@@ -336,6 +370,16 @@ const uint8_t data_7[] = {
   0x00, 0x06, 0x56, 0x55, 0x55, 0x00, 0x00
 };
 
+const uint8_t data_8[] = {
+  16, 5, 1, 0, 0, 0xFF, 1,
+  // Level menu tile, bottom
+  0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x77,
+  0x07, 0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x00,
+  0x00, 0x07, 0x77, 0x77, 0x77, 0x77, 0x00, 0x00,
+  0x00, 0x00, 0x07, 0x77, 0x77, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00
+};
+
 Image tileImages[numTileImages] = {
   Image(data_0),
   Image(data_1),
@@ -345,4 +389,5 @@ Image tileImages[numTileImages] = {
   Image(data_5),
   Image(data_6),
   Image(data_7),
+  Image(data_8),
 };

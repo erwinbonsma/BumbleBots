@@ -4,15 +4,14 @@
  * Copyright 2018, Erwin Bonsma
  */
 
-#include <Gamebuino-Meta.h>
-
-#include <assert.h>
-
 #ifndef __UTILS_INCLUDED
 #define __UTILS_INCLUDED
 
+#include <Gamebuino-Meta.h>
+
 const uint8_t maxCols = 8;
 const uint8_t maxRows = 8;
+const uint8_t maxTiles = maxCols * maxRows;
 
 typedef int8_t Heading;
 const int8_t NORTH_EAST = 0;
@@ -28,9 +27,11 @@ const MoverType TYPE_PLAYER = MoverType::Player;
 const MoverType TYPE_ENEMY = MoverType::Enemy;
 
 enum class ObjectType : int8_t {
-  Pickup
+  Pickup,
+  MenuDigit
 };
 const ObjectType TYPE_PICKUP = ObjectType::Pickup;
+const ObjectType TYPE_MENUDIGIT = ObjectType::MenuDigit;
 
 /* Valid values: 0..maxCols * maxRows - 1
  * Using signed to enable more efficient iteration (and support for off-map positions)
@@ -83,12 +84,6 @@ TilePos makeAnyTilePos(int8_t col, int8_t row);
 int8_t colOfAnyPos(TilePos pos);
 int8_t rowOfAnyPos(TilePos pos);
 
-
-struct ScreenPos {
-  int8_t x;
-  int8_t y;
-};
-
 // Exclusive
 const TilePos maxTilePos = maxCols * maxRows;
 
@@ -97,6 +92,17 @@ extern const int8_t colDelta[];
 
 // row Delta for heading
 extern const int8_t rowDelta[];
+
+struct ScreenPos {
+  int8_t x;
+  int8_t y;
+};
+
+class LoopHandler {
+public:
+  virtual void update() = 0;
+  virtual void draw() = 0;
+};
 
 float smoothClamp(float value);
 float smoothStep(float value);
@@ -113,6 +119,5 @@ void assertFailed(const char *function, const char *file, int lineNo, const char
 if (!(condition)) { \
   assertFailed(__func__, __FILE__, __LINE__, #condition); \
 }
-
 
 #endif

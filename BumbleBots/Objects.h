@@ -4,9 +4,15 @@
  * Copyright 2018, Erwin Bonsma
  */
 
+#ifndef __OBJECTS_INCLUDED
+#define __OBJECTS_INCLUDED
+
 #include <Gamebuino-Meta.h>
 
 #include "Utils.h"
+
+//-----------------------------------------------------------------------------
+// Object declaration
 
 class Object {
   friend class Tiles;
@@ -28,9 +34,12 @@ public:
 
   virtual ObjectType objectType() = 0;
 
-  virtual void visit(int8_t moverIndex) = 0;
+  virtual void visit(int8_t moverIndex) {}
   virtual void draw(int8_t x, int8_t y) = 0;
 };
+
+//-----------------------------------------------------------------------------
+// Pickup declaration
 
 class Pickup : public Object {
 public:
@@ -40,3 +49,20 @@ public:
   void draw(int8_t x, int8_t y);
 };
 
+//-----------------------------------------------------------------------------
+// MenuDigit declaration
+
+class MenuDigit : public Object {
+  // Index in the array specifying how to draw this (part of) the digit
+  uint8_t _specsStartIndex;
+  ColorIndex _color;
+
+public:
+  void init(int8_t objectIndex, uint8_t digit, bool topPart, ColorIndex color);
+
+  ObjectType objectType() { return TYPE_MENUDIGIT; }
+
+  void draw(int8_t x, int8_t y);
+};
+
+#endif

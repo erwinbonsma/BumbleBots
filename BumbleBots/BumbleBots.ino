@@ -7,6 +7,7 @@
 #include <Gamebuino-Meta.h>
 
 #include "Game.h"
+#include "LevelMenu.h"
 
 bool _slowMotionEnabled = false;
 uint8_t _slowMotionCount = 0;
@@ -42,12 +43,25 @@ void signalPickupCollected() {
   game.signalPickupCollected();
 }
 
+LevelMenu levelMenu;
+LoopHandler* loopHandler;
+
+void showLevelMenu() {
+  levelMenu.init();
+  loopHandler = &levelMenu;
+}
+
+void startGameAtLevel(uint8_t levelNum) {
+  game.init(levelNum);
+  loopHandler = &game;
+}
+
 void setup() {
   gb.begin();
 
   gb.setFrameRate(25);
 
-  game.init();
+  showLevelMenu();
 }
 
 void loop() {
@@ -60,9 +74,9 @@ void loop() {
   if (!_slowMotionEnabled || _slowMotionCount++ >= 2) {
     _slowMotionCount = 0;
 
-    game.update();
+    loopHandler->update();
   }
-  game.draw();
+  loopHandler->draw();
 
-  //displayCpuLoad();
+  displayCpuLoad();
 }

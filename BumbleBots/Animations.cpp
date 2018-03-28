@@ -85,7 +85,8 @@ Animation* GameOverAnimation::update() {
   Animation::update();
 
   if (gb.buttons.held(BUTTON_A, 0)) {
-    return game.init();
+    showLevelMenu();
+    return 0;
   }
 
   return this;

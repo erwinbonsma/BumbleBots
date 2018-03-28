@@ -130,11 +130,6 @@ void Mover::updateDxDy() {
   }
 }
 
-TilePos Mover::drawTilePos() {
-  return (TilePos)_drawTileIndex;
-}
-
-
 void Mover::moveStep() {
   _movement += _movementInc;
   int8_t relMov = (_movement * _movementInc + 16) % 16;
@@ -171,7 +166,6 @@ void Mover::moveStep() {
 
 bool Mover::canEnterTile(int8_t tileIndex) {
   return (
-    !isPosOnMap(tiles->posOfTile(tileIndex)) ||
     tiles->tileAtIndex(tileIndex)->height() <=
     tiles->tileAtIndex(_tileIndex)->height()
   );

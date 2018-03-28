@@ -5,7 +5,7 @@
  */
 
 const uint8_t maxNumMovers = 8;
-const uint8_t maxNumObjects = 16;
+const uint8_t maxNumObjects = 64;
 
 //#define EMULATION_SETTINGS
 
@@ -27,3 +27,5 @@ extern Tiles *const tiles;
 void slowMotion(bool enable);
 void signalDeath(const char* causeOfDeath);
 void signalPickupCollected();
+void startGameAtLevel(uint8_t levelNum);
+void showLevelMenu();
