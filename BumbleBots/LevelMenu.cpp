@@ -59,10 +59,10 @@ void LevelMenu::addDigits() {
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
     uint8_t level = levelAt(pos);
     bool topPart = (rowOfPos(pos) % 2) == 0;
-    int8_t digit = (colOfPos(pos) % 2) == 0 ? level / 10 : level % 10;
+    int8_t digit = (colOfPos(pos) % 2) == 0 ? (level + 1) / 10 : (level + 1) % 10;
     ColorIndex digitColor =
       (level > _tilesSpec.maxLevelCompleted())
-      ? INDEX_GRAY
+      ? INDEX_DARKGRAY
       : (_tilesSpec.tileTypeIndexAt(pos) == TILETYPE_MENU1)
         ? INDEX_PINK
         : INDEX_LIGHTGREEN;

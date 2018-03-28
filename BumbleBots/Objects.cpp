@@ -49,7 +49,7 @@ const uint8_t menuDigitsSpecsStart[] = {
   152, 159,
   76, 176,
   185, 159,
-  185, 115,
+  185, 115
 };
 
 const uint8_t menuDigitSpecs[] = {
@@ -128,13 +128,8 @@ void MenuDigit::draw(int8_t x, int8_t y) {
 
   gb.display.setColor(_color);
   while (1) {
-    while (drawLenRemaining == 0) {
-      drawLenRemaining = menuDigitSpecs[++specIndex];
-      draw = !draw;
-    }
-
-    assertTrue(drawLenRemaining > 0);
-    assertTrue(lineLenRemaining > 0);
+    //assertTrue(drawLenRemaining > 0);
+    //assertTrue(lineLenRemaining > 0);
 
     uint8_t drawLen = min(drawLenRemaining, lineLenRemaining);
     if (draw) {
@@ -151,6 +146,11 @@ void MenuDigit::draw(int8_t x, int8_t y) {
       }
       lineLenRemaining = tileLineSpecs[lineIndex].len;
       dx = tileLineSpecs[lineIndex].dx;
+    }
+
+    if (drawLenRemaining == 0) {
+      drawLenRemaining = menuDigitSpecs[++specIndex];
+      draw = !draw;
     }
   }
 }

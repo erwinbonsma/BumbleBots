@@ -35,6 +35,6 @@ const uint8_t TILETYPE_MENU1 = numTileTypes - 2;
 const uint8_t TILETYPE_MENU2 = numTileTypes - 1;
 extern TileType tileTypes[numTileTypes];
 
-const uint8_t numTileImages = 8;
+const uint8_t numTileImages = 9;
 extern ImageInfo tileImageInfo[numTileImages];
 extern Image tileImages[numTileImages];
