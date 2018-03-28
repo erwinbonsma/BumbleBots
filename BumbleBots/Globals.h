@@ -5,7 +5,7 @@
  */
 
 const uint8_t maxNumMovers = 8;
-const uint8_t maxNumObjects = 16;
+const uint8_t maxNumObjects = 64;
 
 //#define EMULATION_SETTINGS
 

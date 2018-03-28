@@ -4,23 +4,14 @@
  * Copyright 2018, Erwin Bonsma
  */
 
+#include <Gamebuino-Meta.h>
+
 #include "LevelMenu.h"
 
 #include "Utils.h"
 #include "Globals.h"
 #include "TileTypes.h"
 #include "Palettes.h"
-
-//const uint8_t zeroDigitTop = {
-//  // Zero, top
-//  { 17, 3, 9, 7, 7, 1, 3, 4, 4, 4, 2, 1, 2},
-//  // Zero, bottom
-//  { 3, 3, 2, 4, 5, 4, 4, 3, 4, 4, 1, 4, 6, 5, 6, 1, 5 },
-//  // One, top
-//  { 29, 7, 7, 5, 6, 1, 9 },
-//  // One, bottom
-//  { 12, 3, 2, 3, 1, 4, 7, 5, 10, 4, 7, 1, 5}
-//}
 
 int8_t levelAt(TilePos pos) {
   assertTrue(isPosOnMap(pos));
@@ -43,9 +34,13 @@ int8_t MenuTilesSpec::baselineHeightAt(TilePos pos) const {
   return levelAt(pos) <= _maxLevelUnlocked ? 0 : 4;
 }
 
-TileType* MenuTilesSpec::tileTypeAt(TilePos pos) const {
+uint8_t MenuTilesSpec::tileTypeIndexAt(TilePos pos) const {
   int8_t level = levelAt(pos);
-  return &tileTypes[(level + level / 4) % 2 ? TILETYPE_MENU1 : TILETYPE_MENU2];
+  return (level + level / 4) % 2 ? TILETYPE_MENU1 : TILETYPE_MENU2;
+}
+
+TileType* MenuTilesSpec::tileTypeAt(TilePos pos) const {
+  return &tileTypes[tileTypeIndexAt(pos)];
 }
 
 //-----------------------------------------------------------------------------
@@ -60,11 +55,30 @@ void LevelMenu::initPlayer() {
 }
 
 void LevelMenu::addDigits() {
-  // TODO
+  numObjects = 0;
+  for (TilePos pos = maxTilePos; --pos >= 0; ) {
+    uint8_t level = levelAt(pos);
+    bool topPart = (rowOfPos(pos) % 2) == 0;
+    int8_t digit = (colOfPos(pos) % 2) == 0 ? level / 10 : level % 10;
+    ColorIndex digitColor =
+      (level > _tilesSpec.maxLevelCompleted())
+      ? INDEX_GRAY
+      : (_tilesSpec.tileTypeIndexAt(pos) == TILETYPE_MENU1)
+        ? INDEX_PINK
+        : INDEX_LIGHTGREEN;
+
+    int8_t i = numObjects++;
+    _digitsParts[i].init(i, digit, topPart, digitColor);
+    objects[i] = &_digitsParts[i];
+
+    if (1) {
+      tiles->putObjectOnTile(i, pos);
+    }
+  }
 }
 
 void LevelMenu::init() {
-  _tilesSpec.init(2, 4); // TODO: Use actual values
+  _tilesSpec.init(8, 10); // TODO: Use actual values
   tiles->init(&_tilesSpec, 16);
   tiles->reset();
 

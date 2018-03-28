@@ -6,6 +6,7 @@
 
 #include "Tiles.h"
 #include "Movers.h"
+#include "Objects.h"
 
 //-----------------------------------------------------------------------------
 // MenuTilesSpec declaration
@@ -15,10 +16,14 @@ class MenuTilesSpec : public TilesSpec {
   int8_t _maxLevelUnlocked;
 
 public:
+  int8_t maxLevelCompleted() { return _maxLevelCompleted; }
+  int8_t maxLevelUnlocked() { return _maxLevelUnlocked; }
+
   void init(int8_t maxLevelCompleted, int8_t maxLevelUnlocked);
 
   int8_t baselineHeightAt(TilePos pos) const;
 
+  uint8_t tileTypeIndexAt(TilePos pos) const;
   TileType* tileTypeAt(TilePos pos) const;
 };
 
@@ -28,6 +33,7 @@ public:
 class LevelMenu {
   MenuTilesSpec _tilesSpec;
   Player _player;
+  MenuDigit _digitsParts[maxTiles];
 
   void initPlayer();
   void addDigits();

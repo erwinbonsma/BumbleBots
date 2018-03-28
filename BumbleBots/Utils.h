@@ -27,9 +27,11 @@ const MoverType TYPE_PLAYER = MoverType::Player;
 const MoverType TYPE_ENEMY = MoverType::Enemy;
 
 enum class ObjectType : int8_t {
-  Pickup
+  Pickup,
+  MenuDigit
 };
 const ObjectType TYPE_PICKUP = ObjectType::Pickup;
+const ObjectType TYPE_MENUDIGIT = ObjectType::MenuDigit;
 
 /* Valid values: 0..maxCols * maxRows - 1
  * Using signed to enable more efficient iteration (and support for off-map positions)

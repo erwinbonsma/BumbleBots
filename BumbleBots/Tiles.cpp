@@ -222,14 +222,14 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
     gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
   }
 
+  if (_objectIndex >= 0) {
+    objects[_objectIndex]->draw(pos.x + 4, pos.y - 2);
+  }
+
   int8_t moverIndex = _moverIndex;
   while (moverIndex >= 0) {
     movers[moverIndex]->draw(pos.x + 4, pos.y - 2);
     moverIndex = movers[moverIndex]->_nextMoverIndex;
-  }
-
-  if (_objectIndex >= 0) {
-    objects[_objectIndex]->draw(pos.x + 4, pos.y - 2);
   }
 }
 
