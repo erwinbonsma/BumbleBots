@@ -27,3 +27,5 @@ extern Tiles *const tiles;
 void slowMotion(bool enable);
 void signalDeath(const char* causeOfDeath);
 void signalPickupCollected();
+void startGameAtLevel(uint8_t levelNum);
+void showLevelMenu();

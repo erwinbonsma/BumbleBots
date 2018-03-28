@@ -71,7 +71,8 @@ protected:
   void updateDxDy();
 
   // Tile that the mover is on for drawing purposes
-  TilePos drawTilePos();
+  TilePos drawTilePos() { return (TilePos)_drawTileIndex; }
+
   // The offset of the mover's screen position wrt to its drawTile
   int8_t dx() { return _dx; }
   int8_t dy() { return _dy; }
@@ -87,6 +88,7 @@ public:
   virtual void reset();
 
   int8_t index() { return _moverIndex; }
+  TilePos tilePos() { return (TilePos)_tileIndex; }
 
   virtual MoverType moverType() = 0;
 

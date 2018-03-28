@@ -7,7 +7,7 @@
 #include "Levels.h"
 #include "Animations.h"
 
-class Game {
+class Game : public LoopHandler {
   int8_t _numLives;
   int8_t _levelNum;
   int16_t _score;
@@ -36,7 +36,7 @@ public:
 
   /* Starts a new game.
    */
-  Animation* init();
+  Animation* init(uint8_t startLevel);
 
   /* Initiates Game Over animation
    */

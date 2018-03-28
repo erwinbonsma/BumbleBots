@@ -10,6 +10,7 @@
 
 #include "Utils.h"
 #include "Globals.h"
+#include "Levels.h"
 #include "TileTypes.h"
 #include "Palettes.h"
 
@@ -78,7 +79,7 @@ void LevelMenu::addDigits() {
 }
 
 void LevelMenu::init() {
-  _tilesSpec.init(8, 10); // TODO: Use actual values
+  _tilesSpec.init(numLevels - 1, numLevels - 1); // TODO: Base on stored progress
   tiles->init(&_tilesSpec, 16);
   tiles->reset();
 
@@ -91,6 +92,10 @@ void LevelMenu::init() {
 
 void LevelMenu::update() {
   _player.update();
+
+  if (gb.buttons.held(BUTTON_A, 0)) {
+    startGameAtLevel(levelAt(_player.tilePos()));
+  }
 }
 
 void LevelMenu::draw() {

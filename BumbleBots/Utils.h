@@ -84,12 +84,6 @@ TilePos makeAnyTilePos(int8_t col, int8_t row);
 int8_t colOfAnyPos(TilePos pos);
 int8_t rowOfAnyPos(TilePos pos);
 
-
-struct ScreenPos {
-  int8_t x;
-  int8_t y;
-};
-
 // Exclusive
 const TilePos maxTilePos = maxCols * maxRows;
 
@@ -98,6 +92,17 @@ extern const int8_t colDelta[];
 
 // row Delta for heading
 extern const int8_t rowDelta[];
+
+struct ScreenPos {
+  int8_t x;
+  int8_t y;
+};
+
+class LoopHandler {
+public:
+  virtual void update() = 0;
+  virtual void draw() = 0;
+};
 
 float smoothClamp(float value);
 float smoothStep(float value);

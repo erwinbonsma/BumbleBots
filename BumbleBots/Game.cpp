@@ -10,8 +10,8 @@
 
 Game game;
 
-Animation* Game::init() {
-  _levelNum = 0;
+Animation* Game::init(uint8_t startLevel) {
+  _levelNum = startLevel;
   _numLives = 3;
   _score = 0;
   _displayScore = 0;

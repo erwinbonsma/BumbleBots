@@ -30,7 +30,7 @@ public:
 //-----------------------------------------------------------------------------
 // LevelMenu declaration
 
-class LevelMenu {
+class LevelMenu : public LoopHandler {
   MenuTilesSpec _tilesSpec;
   Player _player;
   MenuDigit _digitsParts[maxTiles];

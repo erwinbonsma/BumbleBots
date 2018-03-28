@@ -130,11 +130,6 @@ void Mover::updateDxDy() {
   }
 }
 
-TilePos Mover::drawTilePos() {
-  return (TilePos)_drawTileIndex;
-}
-
-
 void Mover::moveStep() {
   _movement += _movementInc;
   int8_t relMov = (_movement * _movementInc + 16) % 16;
