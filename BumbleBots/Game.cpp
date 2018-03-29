@@ -7,14 +7,18 @@
 #include "Game.h"
 
 #include "Images.h"
+#include "ProgressTracker.h"
 
 Game game;
 
 Animation* Game::init(uint8_t startLevel) {
+  _startLevel = startLevel;
   _levelNum = startLevel;
   _numLives = 3;
   _score = 0;
+  _levelStartScore = 0;
   _displayScore = 0;
+  _hiScore = progressTracker.hiScore();
 
   _level.init(&levelSpecs[_levelNum]);
 
@@ -27,14 +31,19 @@ Animation* Game::restartLevel() {
 }
 
 Animation* Game::nextLevel() {
+  progressTracker.levelDone(_levelNum, _levelStartScore - _score);
+
   _levelNum = (_levelNum + 1 ) % numLevels;
   _level.init(&levelSpecs[_levelNum]);
+  _levelStartScore = 0;
 
   return restartLevel();
 }
 
 Animation* Game::gameOver() {
-  _activeAnimation = _gameOverAnimation.init();
+  bool hiScore = progressTracker.gameDone(_levelNum - _startLevel, _score);
+
+  _activeAnimation = _gameOverAnimation.init(hiScore);
   return _activeAnimation;
 }
 
@@ -72,6 +81,27 @@ void Game::update() {
   }
 }
 
+void Game::drawScore() {
+  if (_displayScore < _score) {
+    _displayScore += 1;
+  }
+
+  uint8_t numDigits = 1;
+  uint16_t s = _displayScore / 10;
+  while (s > 0) {
+    s /= 10;
+    numDigits++;
+  }
+
+  bool newHi = _displayScore > _hiScore;
+
+  gb.display.setColor(newHi ? INDEX_GREEN : INDEX_DARKBLUE);
+  gb.display.fillRect(0, 0, numDigits * 4 + 1, 7);
+  gb.display.setColor(newHi ? INDEX_LIGHTGREEN : INDEX_LIGHTBLUE);
+  gb.display.setCursor(1, 1);
+  gb.display.printf("%d", _displayScore);
+}
+
 void Game::draw() {
   _level.draw();
   if (_activeAnimation) {
@@ -80,20 +110,7 @@ void Game::draw() {
 
   if (_displayScore < _score || _numLives < 0) {
     // Display score when it is changing or when game is over
-    if (_displayScore < _score) {
-      _displayScore += 1;
-    }
-    uint8_t numDigits = 1;
-    uint16_t s = _displayScore / 10;
-    while (s > 0) {
-      s /= 10;
-      numDigits++;
-    }
-    gb.display.setColor(INDEX_DARKBLUE);
-    gb.display.fillRect(0, 0, numDigits * 4 + 1, 7);
-    gb.display.setColor(INDEX_LIGHTBLUE);
-    gb.display.setCursor(1, 1);
-    gb.display.printf("%d", _displayScore);
+    drawScore();
   }
   else {
     for (int8_t i = 0; i < _numLives; i++) {

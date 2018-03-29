@@ -12,14 +12,10 @@
 // MenuTilesSpec declaration
 
 class MenuTilesSpec : public TilesSpec {
-  int8_t _maxLevelCompleted;
   int8_t _maxLevelUnlocked;
 
 public:
-  int8_t maxLevelCompleted() { return _maxLevelCompleted; }
-  int8_t maxLevelUnlocked() { return _maxLevelUnlocked; }
-
-  void init(int8_t maxLevelCompleted, int8_t maxLevelUnlocked);
+  void init(int8_t maxLevelUnlocked);
 
   int8_t baselineHeightAt(TilePos pos) const;
 
@@ -37,6 +33,7 @@ class LevelMenu : public LoopHandler {
 
   void initPlayer();
   void addDigits();
+  void drawTitle();
 
 public:
   void init();

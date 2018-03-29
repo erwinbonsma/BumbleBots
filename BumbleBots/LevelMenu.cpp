@@ -13,6 +13,7 @@
 #include "Levels.h"
 #include "TileTypes.h"
 #include "Palettes.h"
+#include "ProgressTracker.h"
 
 int8_t levelAt(TilePos pos) {
   assertTrue(isPosOnMap(pos));
@@ -26,8 +27,7 @@ int8_t levelAt(TilePos pos) {
 //-----------------------------------------------------------------------------
 // MenuTilesSpec implementation
 
-void MenuTilesSpec::init(int8_t maxLevelCompleted, int8_t maxLevelUnlocked) {
-  _maxLevelCompleted = maxLevelCompleted;
+void MenuTilesSpec::init(int8_t maxLevelUnlocked) {
   _maxLevelUnlocked = maxLevelUnlocked;
 }
 
@@ -62,7 +62,7 @@ void LevelMenu::addDigits() {
     bool topPart = (rowOfPos(pos) % 2) == 0;
     int8_t digit = (colOfPos(pos) % 2) == 0 ? (level + 1) / 10 : (level + 1) % 10;
     ColorIndex digitColor =
-      (level > _tilesSpec.maxLevelCompleted())
+      !progressTracker.levelCompleted(level)
       ? INDEX_DARKGRAY
       : (_tilesSpec.tileTypeIndexAt(pos) == TILETYPE_MENU1)
         ? INDEX_PINK
@@ -78,8 +78,20 @@ void LevelMenu::addDigits() {
   }
 }
 
+void LevelMenu::drawTitle() {
+  const char* title = levelSpecs[levelAt(_player.tilePos())].title;
+  uint8_t w = gb.display.getFontWidth() * strlen(title);
+
+  gb.display.setColor(INDEX_BLUE);
+  gb.display.fillRoundRect(40 - w/2 - 2, 0, w + 3, gb.display.getFontHeight() + 2, 1);
+
+  gb.display.setColor(INDEX_WHITE);
+  gb.display.setCursor(40 - w/2, 1);
+  gb.display.print(title);
+}
+
 void LevelMenu::init() {
-  _tilesSpec.init(numLevels - 1, numLevels - 1); // TODO: Base on stored progress
+  _tilesSpec.init(progressTracker.maxStartLevel());
   tiles->init(&_tilesSpec, 16);
   tiles->reset();
 
@@ -101,6 +113,5 @@ void LevelMenu::update() {
 void LevelMenu::draw() {
   tiles->draw(&_player);
 
-  // TO DO: Show selected level
+  drawTitle();
 }
-

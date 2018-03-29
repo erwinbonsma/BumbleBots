@@ -83,8 +83,8 @@ const uint8_t tilesLevel3[maxTiles] = {
 };
 
 const LevelSpec levelSpecs[numLevels] = {
-  // 0: Going Down
   LevelSpec {
+    .title = "Going Down",
     .playerStartPos = makeTilePos(1, 1),
     .numEnemies = 0,
     .enemyStartPos = (const TilePos*)0,
@@ -94,8 +94,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .tilesSpec = LevelTilesSpec(tilesLevel0)
   },
 
-  // Ride the Waves
   LevelSpec {
+    .title = "Ride the Waves",
     .playerStartPos = makeTilePos(2, 5),
     .numEnemies = 1,
     .enemyStartPos = enemyStartPosLevel1,
@@ -105,8 +105,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .tilesSpec = LevelTilesSpec(tilesLevel1)
   },
 
-  // Gutter and Stage
   LevelSpec {
+    .title = "Gutter and Stage",
     .playerStartPos = makeTilePos(3, 7),
     .numEnemies = 2,
     .enemyStartPos = enemyStartPosLevel2,
@@ -116,8 +116,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .tilesSpec = LevelTilesSpec(tilesLevel2)
   },
 
-  // Barsaman
   LevelSpec {
+    .title = "Barsaman",
     .playerStartPos = makeTilePos(7, 7),
     .numEnemies = 2,
     .enemyStartPos = enemyStartPosLevel3,
@@ -330,7 +330,7 @@ void Level::update() {
     }
   }
 
-  if (--_cyclesRemaining == 0) {
+  if (!_frozen && --_cyclesRemaining == 0) {
     signalDeath("Timed out");
   }
 }

@@ -8,10 +8,14 @@
 #include "Animations.h"
 
 class Game : public LoopHandler {
-  int8_t _numLives;
-  int8_t _levelNum;
-  int16_t _score;
-  int16_t _displayScore;
+  uint8_t _startLevel;
+  int8_t _numLives; // Signed to easily check game over
+  uint8_t _levelNum;
+
+  uint16_t _score;
+  uint16_t _hiScore; // Hi-score at start of game. Not updated during game
+  uint16_t _displayScore;
+  uint16_t _levelStartScore;
 
   Level _level;
 
@@ -25,9 +29,11 @@ class Game : public LoopHandler {
   // The active animation, if any
   Animation *_activeAnimation;
 
+  void drawScore();
+
 public:
   int8_t numLives() { return _numLives; }
-  int8_t levelNum() { return _levelNum + 1; }
+  uint8_t levelNum() { return _levelNum + 1; }
   Level* level() { return &_level; }
   void addToScore(uint8_t inc) { _score += inc; }
 
