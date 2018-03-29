@@ -8,6 +8,7 @@
 
 #include "Game.h"
 #include "LevelMenu.h"
+#include "ProgressTracker.h"
 
 bool _slowMotionEnabled = false;
 uint8_t _slowMotionCount = 0;
@@ -58,8 +59,9 @@ void startGameAtLevel(uint8_t levelNum) {
 
 void setup() {
   gb.begin();
-
   gb.setFrameRate(25);
+
+  progressTracker.init();
 
   showLevelMenu();
 }

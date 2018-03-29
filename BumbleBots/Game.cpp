@@ -7,13 +7,16 @@
 #include "Game.h"
 
 #include "Images.h"
+#include "ProgressTracker.h"
 
 Game game;
 
 Animation* Game::init(uint8_t startLevel) {
+  _startLevel = startLevel;
   _levelNum = startLevel;
   _numLives = 3;
   _score = 0;
+  _levelStartScore = 0;
   _displayScore = 0;
 
   _level.init(&levelSpecs[_levelNum]);
@@ -27,13 +30,18 @@ Animation* Game::restartLevel() {
 }
 
 Animation* Game::nextLevel() {
+  progressTracker.levelDone(_levelNum, _levelStartScore - _score);
+
   _levelNum = (_levelNum + 1 ) % numLevels;
   _level.init(&levelSpecs[_levelNum]);
+  _levelStartScore = 0;
 
   return restartLevel();
 }
 
 Animation* Game::gameOver() {
+  progressTracker.gameDone(_levelNum - _startLevel, _score);
+
   _activeAnimation = _gameOverAnimation.init();
   return _activeAnimation;
 }
