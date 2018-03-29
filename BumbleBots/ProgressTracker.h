@@ -26,7 +26,8 @@ public:
   // Returns true iff this is a new level hi
   bool levelDone(uint8_t levelIndex, uint16_t levelScore);
 
-  void gameDone(uint8_t levelRun, uint16_t finalScore);
+  // Returns true iff this is a new hi-score
+  bool gameDone(uint8_t levelRun, uint16_t finalScore);
 };
 
 extern ProgressTracker progressTracker;

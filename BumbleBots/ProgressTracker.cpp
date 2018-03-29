@@ -16,8 +16,8 @@
 const uint8_t VMAJOR = 1;
 const uint8_t VMINOR = 0;
 
-const uint8_t SAVEINDEX_VMAJOR = 0;
-const uint8_t SAVEINDEX_VMINOR = 1;
+const uint8_t SAVEINDEX_VMAJOR = 1;
+const uint8_t SAVEINDEX_VMINOR = 0;
 const uint8_t SAVEINDEX_HISCORE = 2;
 const uint8_t SAVEINDEX_MAXLEVELRUN = 3;
 const uint8_t SAVEINDEX_LEVELHI_L0 = 4;
@@ -113,16 +113,19 @@ bool ProgressTracker::levelDone(uint8_t level, uint16_t levelScore) {
   return false;
 }
 
-void ProgressTracker::gameDone(uint8_t levelRun, uint16_t finalScore) {
-  uint16_t oldHi = gb.save.get(SAVEINDEX_HISCORE);
-  if (finalScore > oldHi) {
-    gb.save.set(SAVEINDEX_HISCORE, (int32_t)finalScore);
-  }
-
+bool ProgressTracker::gameDone(uint8_t levelRun, uint16_t finalScore) {
   uint8_t oldRun = gb.save.get(SAVEINDEX_MAXLEVELRUN);
   if (levelRun > oldRun) {
     gb.save.set(SAVEINDEX_MAXLEVELRUN, (int32_t)levelRun);
   }
+
+  uint16_t oldHi = gb.save.get(SAVEINDEX_HISCORE);
+  if (finalScore > oldHi) {
+    gb.save.set(SAVEINDEX_HISCORE, (int32_t)finalScore);
+    return true;
+  }
+
+  return false;
 }
 
 ProgressTracker progressTracker;

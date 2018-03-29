@@ -41,9 +41,9 @@ Animation* Game::nextLevel() {
 }
 
 Animation* Game::gameOver() {
-  progressTracker.gameDone(_levelNum - _startLevel, _score);
+  bool hiScore = progressTracker.gameDone(_levelNum - _startLevel, _score);
 
-  _activeAnimation = _gameOverAnimation.init();
+  _activeAnimation = _gameOverAnimation.init(hiScore);
   return _activeAnimation;
 }
 
@@ -100,10 +100,6 @@ void Game::drawScore() {
   gb.display.setColor(newHi ? INDEX_LIGHTGREEN : INDEX_LIGHTBLUE);
   gb.display.setCursor(1, 1);
   gb.display.printf("%d", _displayScore);
-
-  if (_numLives < 0) {
-    gb.display.printf(" New Hi!");
-  }
 }
 
 void Game::draw() {

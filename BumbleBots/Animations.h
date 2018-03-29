@@ -46,9 +46,10 @@ public:
 // GameOverAnimation declaration
 
 class GameOverAnimation : public Animation {
+  bool _hiScore;
 
 public:
-  Animation* init();
+  Animation* init(bool hiScore);
 
   Animation* update();
 

@@ -75,7 +75,9 @@ const Gamebuino_Meta::Sound_FX gameOverSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-2,0,113,20},
 };
 
-Animation* GameOverAnimation::init() {
+Animation* GameOverAnimation::init(bool hiScore) {
+  _hiScore = hiScore;
+
   gb.sound.fx(gameOverSfx);
 
   return Animation::init();
@@ -93,7 +95,12 @@ Animation* GameOverAnimation::update() {
 }
 
 void GameOverAnimation::draw() {
-  gb.display.drawImage(26, 22, gameOverImage);
+  if (!_hiScore || clock() % 32 < 16) {
+    gb.display.drawImage(26, 22, gameOverImage);
+  }
+  else {
+    gb.display.drawImage(26, 13, bestGameEverImage);
+  }
 }
 
 //-----------------------------------------------------------------------------
