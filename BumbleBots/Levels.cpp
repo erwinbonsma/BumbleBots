@@ -330,7 +330,7 @@ void Level::update() {
     }
   }
 
-  if (--_cyclesRemaining == 0) {
+  if (!_frozen && --_cyclesRemaining == 0) {
     signalDeath("Timed out");
   }
 }
