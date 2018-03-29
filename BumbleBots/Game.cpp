@@ -18,6 +18,7 @@ Animation* Game::init(uint8_t startLevel) {
   _score = 0;
   _levelStartScore = 0;
   _displayScore = 0;
+  _hiScore = progressTracker.hiScore();
 
   _level.init(&levelSpecs[_levelNum]);
 
@@ -80,6 +81,31 @@ void Game::update() {
   }
 }
 
+void Game::drawScore() {
+  if (_displayScore < _score) {
+    _displayScore += 1;
+  }
+
+  uint8_t numDigits = 1;
+  uint16_t s = _displayScore / 10;
+  while (s > 0) {
+    s /= 10;
+    numDigits++;
+  }
+
+  bool newHi = _displayScore > _hiScore;
+
+  gb.display.setColor(newHi ? INDEX_GREEN : INDEX_DARKBLUE);
+  gb.display.fillRect(0, 0, numDigits * 4 + 1, 7);
+  gb.display.setColor(newHi ? INDEX_LIGHTGREEN : INDEX_LIGHTBLUE);
+  gb.display.setCursor(1, 1);
+  gb.display.printf("%d", _displayScore);
+
+  if (_numLives < 0) {
+    gb.display.printf(" New Hi!");
+  }
+}
+
 void Game::draw() {
   _level.draw();
   if (_activeAnimation) {
@@ -88,20 +114,7 @@ void Game::draw() {
 
   if (_displayScore < _score || _numLives < 0) {
     // Display score when it is changing or when game is over
-    if (_displayScore < _score) {
-      _displayScore += 1;
-    }
-    uint8_t numDigits = 1;
-    uint16_t s = _displayScore / 10;
-    while (s > 0) {
-      s /= 10;
-      numDigits++;
-    }
-    gb.display.setColor(INDEX_DARKBLUE);
-    gb.display.fillRect(0, 0, numDigits * 4 + 1, 7);
-    gb.display.setColor(INDEX_LIGHTBLUE);
-    gb.display.setCursor(1, 1);
-    gb.display.printf("%d", _displayScore);
+    drawScore();
   }
   else {
     for (int8_t i = 0; i < _numLives; i++) {

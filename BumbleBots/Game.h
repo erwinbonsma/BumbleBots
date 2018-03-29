@@ -13,6 +13,7 @@ class Game : public LoopHandler {
   uint8_t _levelNum;
 
   uint16_t _score;
+  uint16_t _hiScore; // Hi-score at start of game. Not updated during game
   uint16_t _displayScore;
   uint16_t _levelStartScore;
 
@@ -27,6 +28,8 @@ class Game : public LoopHandler {
 
   // The active animation, if any
   Animation *_activeAnimation;
+
+  void drawScore();
 
 public:
   int8_t numLives() { return _numLives; }
