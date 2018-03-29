@@ -35,6 +35,8 @@ public:
 // LevelSpec declaration
 
 struct LevelSpec {
+  const char* title;
+
   const TilePos playerStartPos;
 
   const uint8_t numEnemies;

@@ -37,6 +37,7 @@ class LevelMenu : public LoopHandler {
 
   void initPlayer();
   void addDigits();
+  void drawTitle();
 
 public:
   void init();

@@ -78,6 +78,18 @@ void LevelMenu::addDigits() {
   }
 }
 
+void LevelMenu::drawTitle() {
+  const char* title = levelSpecs[levelAt(_player.tilePos())].title;
+  uint8_t w = gb.display.getFontWidth() * strlen(title);
+
+  gb.display.setColor(INDEX_BLUE);
+  gb.display.fillRoundRect(40 - w/2 - 2, 0, w + 3, gb.display.getFontHeight() + 2, 1);
+
+  gb.display.setColor(INDEX_WHITE);
+  gb.display.setCursor(40 - w/2, 1);
+  gb.display.print(title);
+}
+
 void LevelMenu::init() {
   _tilesSpec.init(numLevels - 1, numLevels - 1); // TODO: Base on stored progress
   tiles->init(&_tilesSpec, 16);
@@ -101,6 +113,6 @@ void LevelMenu::update() {
 void LevelMenu::draw() {
   tiles->draw(&_player);
 
-  // TO DO: Show selected level
+  drawTitle();
 }
 
