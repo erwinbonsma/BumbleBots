@@ -9,6 +9,7 @@
 #include "Globals.h"
 #include "Images.h"
 #include "Movers.h"
+#include "Palettes.h"
 #include "Tiles.h"
 
 // Exposed in Globals.h
@@ -34,6 +35,58 @@ void Pickup::visit(int8_t moverIndex) {
 
 void Pickup::draw(int8_t x, int8_t y) {
   gb.display.drawImage(x, y - 1, pickupImage);
+}
+
+//-----------------------------------------------------------------------------
+// Teleport implementation
+
+void Teleport::init(int8_t objectIndex, int8_t destTileIndex, uint8_t paletteIndex) {
+  Object::init(objectIndex);
+
+  _destTileIndex = destTileIndex;
+  _paletteIndex = paletteIndex;
+}
+
+void Teleport::reset() {
+  _coolDownCount = 0;
+}
+
+const Gamebuino_Meta::Sound_FX teleportSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,50,38,3},
+  {Gamebuino_Meta::Sound_FX_Wave::NOISE,1,0,0,0,0,6},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,0,50,38,3},
+};
+
+void Teleport::visit(int8_t moverIndex) {
+  Mover* mover = movers[moverIndex];
+  if (mover->isMoving()) {
+    mover->clearTeleported();
+  }
+  else if (!mover->didTeleport()) {
+    Tile* destTile = tiles->tileAtIndex(_destTileIndex);
+
+    tiles->moveMoverToTile(moverIndex, _destTileIndex);
+    mover->_tileIndex = _destTileIndex;
+    mover->setTeleported();
+    mover->setFalling();
+    mover->setHeight(destTile->height() + 16);
+
+    _coolDownCount = 24;
+    gb.sound.fx(teleportSfx);
+  }
+}
+
+void Teleport::draw(int8_t x, int8_t y) {
+  gb.display.colorIndex = (Color *)palettes[_paletteIndex];
+  gb.display.drawImage(x, y + 4, teleportImage);
+
+  if (_coolDownCount > 0) {
+    _coolDownCount--;
+    teleportPuffsImage.setFrame(2 - _coolDownCount / 8);
+    gb.display.drawImage(x + 2, y, teleportPuffsImage);
+  }
+
+  gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
 }
 
 //-----------------------------------------------------------------------------

@@ -28,9 +28,11 @@ const MoverType TYPE_ENEMY = MoverType::Enemy;
 
 enum class ObjectType : int8_t {
   Pickup,
+  Teleport,
   MenuDigit
 };
 const ObjectType TYPE_PICKUP = ObjectType::Pickup;
+const ObjectType TYPE_TELEPORT = ObjectType::Teleport;
 const ObjectType TYPE_MENUDIGIT = ObjectType::MenuDigit;
 
 /* Valid values: 0..maxCols * maxRows - 1

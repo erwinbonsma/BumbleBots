@@ -50,6 +50,25 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+// Teleport declaration
+
+class Teleport : public Object {
+  uint8_t _paletteIndex;
+  int8_t _destTileIndex;
+
+  uint8_t _coolDownCount;
+
+public:
+  void init(int8_t objectIndex, int8_t destTileIndex, uint8_t paletteIndex);
+
+  ObjectType objectType() { return TYPE_TELEPORT; }
+
+  void reset();
+  void visit(int8_t moverIndex);
+  void draw(int8_t x, int8_t y);
+};
+
+//-----------------------------------------------------------------------------
 // MenuDigit declaration
 
 class MenuDigit : public Object {

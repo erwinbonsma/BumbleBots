@@ -7,6 +7,7 @@
 #include "Levels.h"
 
 #include "Globals.h"
+#include "Palettes.h"
 #include "TileTypes.h"
 
 //-----------------------------------------------------------------------------
@@ -24,6 +25,7 @@ const uint8_t H7 = 0xe0;
 const TilePos enemyStartPosLevel1[1] = { makeTilePos(6, 1) };
 const TilePos enemyStartPosLevel2[2] = { makeTilePos(4, 0), makeTilePos(4, 1) };
 const TilePos enemyStartPosLevel3[3] = { makeTilePos(7, 0), makeTilePos(0, 7) };
+const TilePos enemyStartPosLevel4[1] = { makeTilePos(1, 1) };
 
 const TilePos pickupStartPosLevel0[13] = {
   makeTilePos(0, 0), makeTilePos(0, 2), makeTilePos(0, 3), makeTilePos(0, 5), makeTilePos(0, 7),
@@ -39,6 +41,34 @@ const TilePos pickupStartPosLevel2[6] = {
 };
 const TilePos pickupStartPosLevel3[3] = {
   makeTilePos(0, 0), makeTilePos(4, 0), makeTilePos(0, 4)
+};
+const TilePos pickupStartPosLevel4[6] = {
+  makeTilePos(3, 0), makeTilePos(0, 3),
+  makeTilePos(3, 5), makeTilePos(5, 3),
+  makeTilePos(3, 7), makeTilePos(7, 3)
+};
+
+const TeleportPairSpec teleportSpecsLevel4[4] = {
+  TeleportPairSpec {
+    .pos1 = makeTilePos(3, 3),
+    .pos2 = makeTilePos(0, 7),
+    .paletteIndex = PALETTE_TELEPORT1
+  },
+  TeleportPairSpec {
+    .pos1 = makeTilePos(3, 4),
+    .pos2 = makeTilePos(7, 7),
+    .paletteIndex = PALETTE_TELEPORT2
+  },
+  TeleportPairSpec {
+    .pos1 = makeTilePos(4, 3),
+    .pos2 = makeTilePos(0, 0),
+    .paletteIndex = PALETTE_TELEPORT3
+  },
+  TeleportPairSpec {
+    .pos1 = makeTilePos(4, 4),
+    .pos2 = makeTilePos(7, 0),
+    .paletteIndex = PALETTE_TELEPORT4
+  }
 };
 
 const uint8_t tilesLevel0[maxTiles] = {
@@ -81,6 +111,16 @@ const uint8_t tilesLevel3[maxTiles] = {
   0x08|H2, 0x08|H2, 0x08|H2, 0x08|H2, 0x08|H1, 0x08|H0, 0x08|H0, 0x08|H0,
   0x08|H1, 0x08|H3, 0x08|H2, 0x08|H1, 0x08|H1, 0x08|H0, 0x08|H0, 0x08|H0
 };
+const uint8_t tilesLevel4[maxTiles] = {
+  0x00|H4, 0x00|H4, 0x00|H4, 0x00|H3, 0x00|H2, 0x00|H2, 0x00|H2, 0x00|H2,
+  0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H2, 0x00|H2, 0x00|H2, 0x00|H2,
+  0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H2, 0x00|H2, 0x00|H2, 0x00|H2,
+  0x00|H3, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H2, 0x00|H1, 0x00|H2, 0x00|H1,
+  0x00|H2, 0x00|H2, 0x00|H2, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H2, 0x00|H2, 0x00|H2, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H2, 0x00|H2, 0x00|H2, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H2, 0x00|H2, 0x00|H2, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0
+};
 
 const LevelSpec levelSpecs[numLevels] = {
   LevelSpec {
@@ -90,6 +130,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .enemyStartPos = (const TilePos*)0,
     .numPickups = 13,
     .pickupStartPos = pickupStartPosLevel0,
+    .numTeleportPairs = 0,
+    .teleportSpecs = (const TeleportPairSpec*)0,
     .timeLimitInCycles = 1500,
     .tilesSpec = LevelTilesSpec(tilesLevel0)
   },
@@ -101,6 +143,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .enemyStartPos = enemyStartPosLevel1,
     .numPickups = 4,
     .pickupStartPos = pickupStartPosLevel1,
+    .numTeleportPairs = 0,
+    .teleportSpecs = (const TeleportPairSpec*)0,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel1)
   },
@@ -112,6 +156,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .enemyStartPos = enemyStartPosLevel2,
     .numPickups = 6,
     .pickupStartPos = pickupStartPosLevel2,
+    .numTeleportPairs = 0,
+    .teleportSpecs = (const TeleportPairSpec*)0,
     .timeLimitInCycles = 4500,
     .tilesSpec = LevelTilesSpec(tilesLevel2)
   },
@@ -123,8 +169,23 @@ const LevelSpec levelSpecs[numLevels] = {
     .enemyStartPos = enemyStartPosLevel3,
     .numPickups = 3,
     .pickupStartPos = pickupStartPosLevel3,
+    .numTeleportPairs = 0,
+    .teleportSpecs = (const TeleportPairSpec*)0,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel3)
+  },
+
+  LevelSpec {
+    .title = "Telerium",
+    .playerStartPos = makeTilePos(5, 5),
+    .numEnemies = 1,
+    .enemyStartPos = enemyStartPosLevel4,
+    .numPickups = 6,
+    .pickupStartPos = pickupStartPosLevel4,
+    .numTeleportPairs = 4,
+    .teleportSpecs = teleportSpecsLevel4,
+    .timeLimitInCycles = 3000,
+    .tilesSpec = LevelTilesSpec(tilesLevel4)
   },
 
 #ifdef TEST_LEVELS
@@ -252,10 +313,7 @@ void Level::initMovers() {
   }
 }
 
-void Level::initObjects() {
-  numObjects = 0;
-
-  // Create and place pick-ups
+void Level::initPickups() {
   for (uint8_t i = 0; i < _levelSpec->numPickups; i++) {
     assertTrue(numObjects < maxNumObjects);
 
@@ -265,6 +323,32 @@ void Level::initObjects() {
     tiles->putObjectOnTile(_pickups[i].index(), _levelSpec->pickupStartPos[i]);
   }
   _numPickupsCollected = 0;
+}
+
+void Level::initTeleports() {
+  uint8_t j = 0;
+  for (uint8_t i = 0; i < _levelSpec->numTeleportPairs; i++) {
+    TeleportPairSpec spec = _levelSpec->teleportSpecs[i];
+
+    assertTrue(numObjects < maxNumObjects);
+    _teleports[j].init(numObjects++, spec.pos2, spec.paletteIndex);
+    objects[_teleports[j].index()] = &_teleports[j];
+    tiles->putObjectOnTile(_teleports[j].index(), spec.pos1);
+    j++;
+
+    assertTrue(numObjects < maxNumObjects);
+    _teleports[j].init(numObjects++, spec.pos1, spec.paletteIndex);
+    objects[_teleports[j].index()] = &_teleports[j];
+    tiles->putObjectOnTile(_teleports[j].index(), spec.pos2);
+    j++;
+  }
+}
+
+void Level::initObjects() {
+  numObjects = 0;
+
+  initPickups();
+  initTeleports();
 }
 
 void Level::init(const LevelSpec *levelSpec) {
