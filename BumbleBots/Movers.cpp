@@ -91,8 +91,11 @@ void Mover::updateHeight() {
     _height = tileHeight;
     _dropSpeed = 6;
   }
+}
 
-  _heightDelta = _height - tiles->tileAtIndex(_drawTileIndex)->height();
+void Mover::setHeight(int8_t height) {
+  _height = height;
+  updateHeight();
 }
 
 void Mover::updateDxDy() {
@@ -304,9 +307,11 @@ void Bot::draw(int8_t x, int8_t y) {
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
-  gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, botImage);
+  int8_t heightDelta = _height - tiles->tileAtIndex(_drawTileIndex)->height();
+
+  gb.display.drawImage(x + _dx + 1, y + _dy - heightDelta - 1, botImage);
   if (isDazed()) {
-    gb.display.drawImage(x + _dx + 2, y + _dy - _heightDelta - 6, dazedImage);
+    gb.display.drawImage(x + _dx + 2, y + _dy - heightDelta - 6, dazedImage);
   }
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
@@ -442,11 +447,17 @@ void Enemy::turnStep() {
 bool Enemy::isBlocked(int8_t tileIndex) {
   Tile* destTile = tiles->tileAtIndex(tileIndex);
 
+  // (Most) objects block
+  int8_t objectIndex = destTile->object();
+  if (objectIndex >= 0) {
+    Object* object = objects[objectIndex];
+    if (object->objectType() != TYPE_TELEPORT) {
+      return true;
+    }
+  }
+
+  // Fear big falls
   return (
-    // Objects block
-    destTile->object() >= 0
-  ) || (
-    // Fear big falls
     tiles->tileAtIndex(_tileIndex)->height() -
     destTile->height()
   ) > 10;

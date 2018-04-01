@@ -32,6 +32,15 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+// TeleportPairSpec declaration
+
+struct TeleportPairSpec {
+  const TilePos pos1;
+  const TilePos pos2;
+  const uint8_t paletteIndex;
+};
+
+//-----------------------------------------------------------------------------
 // LevelSpec declaration
 
 struct LevelSpec {
@@ -45,6 +54,9 @@ struct LevelSpec {
   const uint8_t numPickups;
   const TilePos* pickupStartPos;
 
+  const uint8_t numTeleportPairs;
+  const TeleportPairSpec* teleportSpecs;
+
   // Negative value: Restore pick-ups on level reset
   const int16_t timeLimitInCycles;
 
@@ -52,14 +64,15 @@ struct LevelSpec {
 };
 
 #ifdef TEST_LEVELS
-  const uint8_t numLevels = 6;
+  const uint8_t numLevels = 7;
 #else
-  const uint8_t numLevels = 4;
+  const uint8_t numLevels = 5;
 #endif
 extern const LevelSpec levelSpecs[numLevels];
 
 const uint8_t maxNumEnemies = 6;
 const uint8_t maxNumPickups = 13;
+const uint8_t maxNumTeleports = 8;
 
 //-----------------------------------------------------------------------------
 // Level declaration
@@ -75,10 +88,13 @@ class Level {
   Player _player;
   Enemy _enemies[maxNumEnemies];
   Pickup _pickups[maxNumPickups];
+  Teleport _teleports[maxNumTeleports];
 
   void drawTimeBar();
 
   void initMovers();
+  void initPickups();
+  void initTeleports();
   void initObjects();
 
 public:

@@ -18,22 +18,22 @@ class Tile;
 
 const int8_t MOVERFLAG_FALLING = 0x01;
 const int8_t MOVERFLAG_FROZEN = 0x02;
+const int8_t MOVERFLAG_TELEPORTED = 0x04;
 
 class Mover {
   friend class Tile;
   friend class Tiles;
   friend class Player;
   friend class Enemy;
+  friend class Teleport;
 
   int8_t _moverIndex;
-  int8_t _drawTileIndex;
   int8_t _tileIndex;
   int8_t _tileIndex2;
 
   // Link to next mover on same tile (if any)
   int8_t _nextMoverIndex;
 
-  int8_t _height;
   int8_t _dropSpeed;
   int8_t _flags;
 
@@ -46,11 +46,9 @@ protected:
 
   int8_t _dx;
   int8_t _dy;
+  int8_t _height;
+  int8_t _drawTileIndex;
 
-  // Delta wrt to drawTile
-  int8_t _heightDelta;
-
-  bool isMoving() { return _movementDir; }
   virtual bool canMove();
   // Returns true iff Bot can initiate a new move or turn during update
   virtual bool canStartMove();
@@ -92,12 +90,20 @@ public:
 
   virtual MoverType moverType() = 0;
 
+  bool isMoving() { return _movementDir; }
+
   void freeze() { _flags |= MOVERFLAG_FROZEN; }
   bool isFrozen() { return _flags & MOVERFLAG_FROZEN; }
 
   void setFalling() { _flags |= MOVERFLAG_FALLING; }
   void clearFalling() { _flags &= ~MOVERFLAG_FALLING; }
   bool isFalling() { return _flags & MOVERFLAG_FALLING; }
+
+  void setTeleported() { _flags |= MOVERFLAG_TELEPORTED; }
+  void clearTeleported() { _flags &= ~MOVERFLAG_TELEPORTED; }
+  bool didTeleport() { return _flags & MOVERFLAG_TELEPORTED; }
+
+  void setHeight(int8_t height);
 
   virtual void update();
   virtual void draw(int8_t x, int8_t y) = 0;
