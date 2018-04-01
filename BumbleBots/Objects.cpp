@@ -51,6 +51,12 @@ void Teleport::reset() {
   _coolDownCount = 0;
 }
 
+const Gamebuino_Meta::Sound_FX teleportSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,50,38,3},
+  {Gamebuino_Meta::Sound_FX_Wave::NOISE,1,0,0,0,0,6},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,0,50,38,3},
+};
+
 void Teleport::visit(int8_t moverIndex) {
   Mover* mover = movers[moverIndex];
   if (mover->isMoving()) {
@@ -66,7 +72,7 @@ void Teleport::visit(int8_t moverIndex) {
     mover->setHeight(destTile->height() + 16);
 
     _coolDownCount = 24;
-    // TODO: sound effect
+    gb.sound.fx(teleportSfx);
   }
 }
 
