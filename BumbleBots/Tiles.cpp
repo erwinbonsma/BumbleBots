@@ -180,7 +180,7 @@ int8_t Tile::moverOfType(MoverType moverType, int8_t excludeMover) {
 }
 
 void Tile::addObject(int8_t objectIndex) {
-  assertTrue(_objectIndex == -1);
+  assertTrue(_objectIndex == -1 || _objectIndex == objectIndex);
   _objectIndex = objectIndex;
 }
 

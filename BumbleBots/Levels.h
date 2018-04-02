@@ -35,8 +35,8 @@ public:
 // TeleportPairSpec declaration
 
 struct TeleportPairSpec {
-  const TilePos pos1;
-  const TilePos pos2;
+  const int8_t tile1;
+  const int8_t tile2;
   const uint8_t paletteIndex;
 };
 
@@ -64,9 +64,9 @@ struct LevelSpec {
 };
 
 #ifdef TEST_LEVELS
-  const uint8_t numLevels = 7;
+  const uint8_t numLevels = 8;
 #else
-  const uint8_t numLevels = 5;
+  const uint8_t numLevels = 6;
 #endif
 extern const LevelSpec levelSpecs[numLevels];
 

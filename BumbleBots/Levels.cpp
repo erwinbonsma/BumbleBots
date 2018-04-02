@@ -47,26 +47,30 @@ const TilePos pickupStartPosLevel4[6] = {
   makeTilePos(3, 5), makeTilePos(5, 3),
   makeTilePos(3, 7), makeTilePos(7, 3)
 };
+const TilePos pickupStartPosLevel5[8] = {
+  makeTilePos(0, 0), makeTilePos(0, 7), makeTilePos(7, 0), makeTilePos(7, 7),
+  makeTilePos(1, 4), makeTilePos(4, 1), makeTilePos(5, 6), makeTilePos(6, 3)
+};
 
 const TeleportPairSpec teleportSpecsLevel4[4] = {
   TeleportPairSpec {
-    .pos1 = makeTilePos(3, 3),
-    .pos2 = makeTilePos(0, 7),
+    .tile1 = makeTilePos(3, 3),
+    .tile2 = makeTilePos(0, 7),
     .paletteIndex = PALETTE_TELEPORT1
   },
   TeleportPairSpec {
-    .pos1 = makeTilePos(3, 4),
-    .pos2 = makeTilePos(7, 7),
+    .tile1 = makeTilePos(3, 4),
+    .tile2 = makeTilePos(7, 7),
     .paletteIndex = PALETTE_TELEPORT2
   },
   TeleportPairSpec {
-    .pos1 = makeTilePos(4, 3),
-    .pos2 = makeTilePos(0, 0),
+    .tile1 = makeTilePos(4, 3),
+    .tile2 = makeTilePos(0, 0),
     .paletteIndex = PALETTE_TELEPORT3
   },
   TeleportPairSpec {
-    .pos1 = makeTilePos(4, 4),
-    .pos2 = makeTilePos(7, 0),
+    .tile1 = makeTilePos(4, 4),
+    .tile2 = makeTilePos(7, 0),
     .paletteIndex = PALETTE_TELEPORT4
   }
 };
@@ -121,18 +125,19 @@ const uint8_t tilesLevel4[maxTiles] = {
   0x00|H2, 0x00|H2, 0x00|H2, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
   0x00|H2, 0x00|H2, 0x00|H2, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0
 };
+const uint8_t* tilesLevel5 = tilesLevel1;
 
 const LevelSpec levelSpecs[numLevels] = {
   LevelSpec {
     .title = "Going Down",
     .playerStartPos = makeTilePos(1, 1),
     .numEnemies = 0,
-    .enemyStartPos = (const TilePos*)0,
+    .enemyStartPos = nullptr,
     .numPickups = 13,
     .pickupStartPos = pickupStartPosLevel0,
     .numTeleportPairs = 0,
-    .teleportSpecs = (const TeleportPairSpec*)0,
-    .timeLimitInCycles = 1500,
+    .teleportSpecs = nullptr,
+    .timeLimitInCycles = 2000,
     .tilesSpec = LevelTilesSpec(tilesLevel0)
   },
 
@@ -144,7 +149,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numPickups = 4,
     .pickupStartPos = pickupStartPosLevel1,
     .numTeleportPairs = 0,
-    .teleportSpecs = (const TeleportPairSpec*)0,
+    .teleportSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel1)
   },
@@ -157,7 +162,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numPickups = 6,
     .pickupStartPos = pickupStartPosLevel2,
     .numTeleportPairs = 0,
-    .teleportSpecs = (const TeleportPairSpec*)0,
+    .teleportSpecs = nullptr,
     .timeLimitInCycles = 4500,
     .tilesSpec = LevelTilesSpec(tilesLevel2)
   },
@@ -170,7 +175,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numPickups = 3,
     .pickupStartPos = pickupStartPosLevel3,
     .numTeleportPairs = 0,
-    .teleportSpecs = (const TeleportPairSpec*)0,
+    .teleportSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel3)
   },
@@ -186,6 +191,19 @@ const LevelSpec levelSpecs[numLevels] = {
     .teleportSpecs = teleportSpecsLevel4,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel4)
+  },
+
+  LevelSpec {
+    .title = "Aquatic Race",
+    .playerStartPos = makeTilePos(3, 3),
+    .numEnemies = 0,
+    .enemyStartPos = nullptr,
+    .numPickups = 8,
+    .pickupStartPos = pickupStartPosLevel5,
+    .numTeleportPairs = 0,
+    .teleportSpecs = nullptr,
+    .timeLimitInCycles = -1000,
+    .tilesSpec = LevelTilesSpec(tilesLevel5)
   },
 
 #ifdef TEST_LEVELS
@@ -331,15 +349,15 @@ void Level::initTeleports() {
     TeleportPairSpec spec = _levelSpec->teleportSpecs[i];
 
     assertTrue(numObjects < maxNumObjects);
-    _teleports[j].init(numObjects++, spec.pos2, spec.paletteIndex);
+    _teleports[j].init(numObjects++, spec.tile2, spec.paletteIndex);
     objects[_teleports[j].index()] = &_teleports[j];
-    tiles->putObjectOnTile(_teleports[j].index(), spec.pos1);
+    tiles->putObjectOnTile(_teleports[j].index(), spec.tile1);
     j++;
 
     assertTrue(numObjects < maxNumObjects);
-    _teleports[j].init(numObjects++, spec.pos1, spec.paletteIndex);
+    _teleports[j].init(numObjects++, spec.tile1, spec.paletteIndex);
     objects[_teleports[j].index()] = &_teleports[j];
-    tiles->putObjectOnTile(_teleports[j].index(), spec.pos2);
+    tiles->putObjectOnTile(_teleports[j].index(), spec.tile2);
     j++;
   }
 }
