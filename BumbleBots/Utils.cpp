@@ -149,6 +149,20 @@ int16_t fastCos(int16_t value) {
   }
 }
 
+namespace Gamebuino_Meta {
+  extern FX_Channel fx_channel; // Declared in src/utility/Sound/Sound.cpp
+}
+
+/* Inspects Gamebuino internals to determine if a sound effect started via
+ * gb.sound.fx is still playing.
+ */
+bool isFxPlaying() {
+  return (
+    Gamebuino_Meta::fx_channel.handler != nullptr &&
+    Gamebuino_Meta::fx_channel.handler->_current_Sound_FX_time != UINT32_MAX
+  );
+}
+
 void assertFailed(const char *function, const char *file, int lineNo, const char *expression) {
   if (SerialUSB) {
     SerialUSB.println("=== ASSERT FAILED ===");
