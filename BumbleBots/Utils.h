@@ -115,6 +115,8 @@ inline int8_t sign(int8_t value) {
   return (value > 0) - (value < 0);
 }
 
+bool isFxPlaying();
+
 void assertFailed(const char *function, const char *file, int lineNo, const char *expression);
 
 #define assertTrue(condition) \

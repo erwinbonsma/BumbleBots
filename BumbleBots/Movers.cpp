@@ -324,8 +324,13 @@ Player::Player() : Bot(2) {}
 
 void Player::swapTiles() {
   Mover::swapTiles();
+
   _swappedTiles = true;
-  gb.sound.fx(moveSfx);
+
+  if (!isFxPlaying()) {
+    // Do not let ambient move sound cut off a more important sound effect
+    gb.sound.fx(moveSfx);
+  }
 }
 
 void Player::bump() {

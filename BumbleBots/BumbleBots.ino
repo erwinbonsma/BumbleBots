@@ -72,6 +72,9 @@ void loop() {
   gb.lights.clear();
 
   //checkSlowMotionButtons();
+  if (gb.buttons.held(BUTTON_MENU, 0) && loopHandler != &levelMenu) {
+    showLevelMenu();
+  }
 
   if (!_slowMotionEnabled || _slowMotionCount++ >= 2) {
     _slowMotionCount = 0;
@@ -80,5 +83,5 @@ void loop() {
   }
   loopHandler->draw();
 
-  displayCpuLoad();
+  //displayCpuLoad();
 }
