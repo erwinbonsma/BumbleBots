@@ -83,5 +83,5 @@ void loop() {
   }
   loopHandler->draw();
 
-  displayCpuLoad();
+  //displayCpuLoad();
 }
