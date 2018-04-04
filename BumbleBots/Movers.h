@@ -31,7 +31,7 @@ class Mover {
   // Link to next mover on same tile (if any)
   int8_t _nextMoverIndex;
 
-  int8_t _dropSpeed;
+  int8_t _fallingSpeed;
 
 protected:
 

@@ -54,7 +54,7 @@ void Mover::reset() {
   _movementInc = 1;
 
   _height = 40;
-  _dropSpeed = 6;
+  _fallingSpeed = 6;
   _flags = 0;
 }
 
@@ -84,12 +84,12 @@ void Mover::updateHeight() {
 
   if (_height > tileHeight) {
     // Gradual fall
-    _height = max(tileHeight, _height - _dropSpeed/4);
-    _dropSpeed += 1;
+    _height = max(tileHeight, _height - _fallingSpeed/4);
+    _fallingSpeed += 1;
   }
   else {
     _height = tileHeight;
-    _dropSpeed = 6;
+    _fallingSpeed = 6;
   }
 }
 
