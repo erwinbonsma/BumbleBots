@@ -26,6 +26,7 @@ const TilePos enemyStartPosLevel1[1] = { makeTilePos(6, 1) };
 const TilePos enemyStartPosLevel2[2] = { makeTilePos(4, 0), makeTilePos(4, 1) };
 const TilePos enemyStartPosLevel3[3] = { makeTilePos(7, 0), makeTilePos(0, 7) };
 const TilePos enemyStartPosLevel4[1] = { makeTilePos(1, 1) };
+const TilePos enemyStartPosTestLevel0[1] = { makeTilePos(7, 1) };
 
 const TilePos pickupStartPosLevel0[13] = {
   makeTilePos(0, 0), makeTilePos(0, 2), makeTilePos(0, 3), makeTilePos(0, 5), makeTilePos(0, 7),
@@ -73,6 +74,13 @@ const TeleportPairSpec teleportSpecsLevel4[4] = {
     .tile2 = makeTilePos(7, 0),
     .paletteIndex = PALETTE_TELEPORT4
   }
+};
+
+const TilePos boxStartPosTestLevel0[17] = {
+  makeTilePos(1, 0), makeTilePos(1, 1), makeTilePos(1, 2), makeTilePos(1, 3), makeTilePos(1, 4), makeTilePos(1, 5), makeTilePos(1, 6),
+  makeTilePos(2, 0), makeTilePos(2, 1), makeTilePos(2, 2), makeTilePos(2, 3), makeTilePos(2, 4),
+  makeTilePos(6, 0), makeTilePos(6, 1), makeTilePos(6, 2),
+  makeTilePos(6, 5), makeTilePos(7, 5)
 };
 
 const uint8_t tilesLevel0[maxTiles] = {
@@ -126,6 +134,16 @@ const uint8_t tilesLevel4[maxTiles] = {
   0x00|H2, 0x00|H2, 0x00|H2, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0
 };
 const uint8_t* tilesLevel5 = tilesLevel1;
+const uint8_t tilesTestLevel0[maxTiles] = {
+  0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
+  0x00|H7, 0x00|H7, 0x00|H3, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x07|H0
+};
 
 const LevelSpec levelSpecs[numLevels] = {
   LevelSpec {
@@ -137,6 +155,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel0,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
     .timeLimitInCycles = 2000,
     .tilesSpec = LevelTilesSpec(tilesLevel0)
   },
@@ -150,6 +170,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel1,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel1)
   },
@@ -163,6 +185,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel2,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
     .timeLimitInCycles = 4500,
     .tilesSpec = LevelTilesSpec(tilesLevel2)
   },
@@ -176,6 +200,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel3,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel3)
   },
@@ -189,6 +215,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel4,
     .numTeleportPairs = 4,
     .teleportSpecs = teleportSpecsLevel4,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel4)
   },
@@ -202,47 +230,27 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel5,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
     .timeLimitInCycles = -1000,
     .tilesSpec = LevelTilesSpec(tilesLevel5)
   },
 
 #ifdef TEST_LEVELS
-  // Testing level: falling
+  // Testing level: falling & boxes
   LevelSpec {
+    .title = "Test Boxes",
     .playerStartPos = makeTilePos(2, 5),
-    .numEnemies = 1,
-    .enemyStartPos = enemyStartPosLevel1,
-    .tilesSpec = TilesSpec {
-      .tiles = {
-        0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
-        0x00|H7, 0x00|H7, 0x00|H3, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x02|H3
-      }
-    }
-  },
-
-  // Testing level: drawing
-  LevelSpec {
-    .playerStartPos = makeTilePos(2, 5),
-    .numEnemies = 1,
-    .enemyStartPos = enemyStartPosLevel1,
-    .tilesSpec = TilesSpec {
-      .tiles = {
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H4, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H4, 0x00|H0,
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H2, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H2, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H4, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H4, 0x00|H0,
-        0x00|H0, 0x00|H4, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x02|H0
-      }
-    }
+    .numEnemies = 0,
+    .enemyStartPos = enemyStartPosTestLevel0,
+    .numPickups = 4,
+    .pickupStartPos = pickupStartPosLevel1,
+    .numTeleportPairs = 0,
+    .teleportSpecs = nullptr,
+    .numBoxes = 17,
+    .boxStartPos = boxStartPosTestLevel0,
+    .timeLimitInCycles = 3000,
+    .tilesSpec = LevelTilesSpec(tilesTestLevel0)
   }
 #endif
 };
@@ -315,13 +323,13 @@ void Level::drawTimeBar() {
   }
 }
 
-void Level::initMovers() {
-  numMovers = 0;
-
+void Level::initPlayer() {
   // Create player
   _player.init(numMovers++);
   movers[_player.index()] = &_player;
+}
 
+void Level::initEnemies() {
   // Create enemies
   for (uint8_t i = 0; i < _levelSpec->numEnemies; i++) {
     assertTrue(numMovers < maxNumMovers);
@@ -329,6 +337,24 @@ void Level::initMovers() {
     _enemies[i].init(numMovers++, _player.index());
     movers[_enemies[i].index()] = &_enemies[i];
   }
+}
+
+void Level::initBoxes() {
+  // Create boxes
+  for (uint8_t i = 0; i < _levelSpec->numBoxes; i++) {
+    assertTrue(numMovers < maxNumMovers);
+
+    _boxes[i].init(numMovers++);
+    movers[_boxes[i].index()] = &_boxes[i];
+  }
+}
+
+void Level::initMovers() {
+  numMovers = 0;
+
+  initPlayer();
+  initEnemies();
+  initBoxes();
 }
 
 void Level::initPickups() {
@@ -391,6 +417,16 @@ void Level::reset() {
     objects[i]->reset();
   }
 
+  // Destroy all movers (so they are not yet updated)
+  for (int8_t i = numMovers; --i >= 0; ) {
+    movers[i]->destroy();
+  }
+
+  for (int8_t i = _levelSpec->numBoxes; --i >= 0; ) {
+    _boxes[i].reset();
+    tiles->putMoverOnTile(_boxes[i].index(), _levelSpec->boxStartPos[i]);
+  }
+
   _started = false;
   _frozen = false;
 
@@ -426,9 +462,10 @@ bool Level::isCompleted() {
 void Level::update() {
   tiles->update();
 
-  if (_started) {
-    for (int8_t i = numMovers; --i >= 0; ) {
-      movers[i]->update();
+  for (int8_t i = numMovers; --i >= 0; ) {
+    Mover* mover = movers[i];
+    if (!mover->isDestroyed()) {
+      mover->update();
     }
   }
 

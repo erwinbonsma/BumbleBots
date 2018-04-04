@@ -11,6 +11,8 @@
 #include "Movers.h"
 #include "Objects.h"
 
+#define TEST_LEVELS
+
 //-----------------------------------------------------------------------------
 // LevelTilesSpec declaration
 
@@ -57,6 +59,9 @@ struct LevelSpec {
   const uint8_t numTeleportPairs;
   const TeleportPairSpec* teleportSpecs;
 
+  const uint8_t numBoxes;
+  const TilePos* boxStartPos;
+
   // Negative value: Restore pick-ups on level reset
   const int16_t timeLimitInCycles;
 
@@ -64,7 +69,7 @@ struct LevelSpec {
 };
 
 #ifdef TEST_LEVELS
-  const uint8_t numLevels = 8;
+  const uint8_t numLevels = 7;
 #else
   const uint8_t numLevels = 6;
 #endif
@@ -73,6 +78,7 @@ extern const LevelSpec levelSpecs[numLevels];
 const uint8_t maxNumEnemies = 6;
 const uint8_t maxNumPickups = 13;
 const uint8_t maxNumTeleports = 8;
+const uint8_t maxNumBoxes = 17;
 
 //-----------------------------------------------------------------------------
 // Level declaration
@@ -89,10 +95,15 @@ class Level {
   Enemy _enemies[maxNumEnemies];
   Pickup _pickups[maxNumPickups];
   Teleport _teleports[maxNumTeleports];
+  Box _boxes[maxNumBoxes];
 
   void drawTimeBar();
 
+  void initPlayer();
+  void initEnemies();
+  void initBoxes();
   void initMovers();
+
   void initPickups();
   void initTeleports();
   void initObjects();

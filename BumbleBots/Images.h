@@ -7,6 +7,7 @@
 #include <Gamebuino-Meta.h>
 
 extern Image botImage;
+extern Image boxImage;
 extern Image dazedImage;
 extern Image pickupImage;
 extern Image teleportImage;

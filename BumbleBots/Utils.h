@@ -21,10 +21,12 @@ const int8_t NORTH_EAST = 0;
 
 enum class MoverType : int8_t {
   Player,
-  Enemy
+  Enemy,
+  Box
 };
 const MoverType TYPE_PLAYER = MoverType::Player;
 const MoverType TYPE_ENEMY = MoverType::Enemy;
+const MoverType TYPE_BOX = MoverType::Box;
 
 enum class ObjectType : int8_t {
   Pickup,
