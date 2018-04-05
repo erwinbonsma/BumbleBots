@@ -24,6 +24,11 @@ const Gamebuino_Meta::Sound_FX moveSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,30,0,0,100,1},
 };
 
+const Gamebuino_Meta::Sound_FX crushSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,150,0,127,142,1},
+  {Gamebuino_Meta::Sound_FX_Wave::NOISE,0,48,64,0,256,2},
+};
+
 bool isFall(int8_t fromTileIndex, int8_t destTileIndex) {
   return (
     tiles->tileAtIndex(fromTileIndex)->height() -
@@ -249,6 +254,8 @@ void Mover::update() {
       }
       if (destroyableIndex != -1) {
         movers[destroyableIndex]->destroy();
+
+        gb.sound.fx(crushSfx);
       }
 
       clearFalling();
