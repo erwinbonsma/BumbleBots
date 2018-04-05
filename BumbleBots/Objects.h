@@ -69,6 +69,31 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+// Gap declaration
+
+enum GapState {
+  GAP_EMPTY,
+  GAP_FILLING,
+  GAP_FILLED
+};
+
+class Gap : public Object {
+  uint8_t _paletteIndex;
+  GapState _state;
+
+public:
+  void init(int8_t objectIndex, uint8_t paletteIndex);
+
+  ObjectType objectType() { return TYPE_GAP; }
+
+  void fill() { _state = GAP_FILLED; }
+
+  void reset();
+  void visit(int8_t moverIndex);
+  void draw(int8_t x, int8_t y);
+};
+
+//-----------------------------------------------------------------------------
 // MenuDigit declaration
 
 class MenuDigit : public Object {

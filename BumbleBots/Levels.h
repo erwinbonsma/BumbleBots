@@ -43,6 +43,14 @@ struct TeleportPairSpec {
 };
 
 //-----------------------------------------------------------------------------
+// GapSpec declaration
+
+struct GapSpec {
+  const TilePos pos;
+  const uint8_t paletteIndex;
+};
+
+//-----------------------------------------------------------------------------
 // LevelSpec declaration
 
 struct LevelSpec {
@@ -62,6 +70,9 @@ struct LevelSpec {
   const uint8_t numBoxes;
   const TilePos* boxStartPos;
 
+  const uint8_t numGaps;
+  const GapSpec* gapSpecs;
+
   // Negative value: Restore pick-ups on level reset
   const int16_t timeLimitInCycles;
 
@@ -69,9 +80,9 @@ struct LevelSpec {
 };
 
 #ifdef TEST_LEVELS
-  const uint8_t numLevels = 7;
+  const uint8_t numLevels = 8;
 #else
-  const uint8_t numLevels = 6;
+  const uint8_t numLevels = 7;
 #endif
 extern const LevelSpec levelSpecs[numLevels];
 
@@ -79,6 +90,7 @@ const uint8_t maxNumEnemies = 6;
 const uint8_t maxNumPickups = 13;
 const uint8_t maxNumTeleports = 8;
 const uint8_t maxNumBoxes = 17;
+const uint8_t maxNumGaps = 4;
 
 //-----------------------------------------------------------------------------
 // Level declaration
@@ -93,9 +105,11 @@ class Level {
 
   Player _player;
   Enemy _enemies[maxNumEnemies];
+  Box _boxes[maxNumBoxes];
+
   Pickup _pickups[maxNumPickups];
   Teleport _teleports[maxNumTeleports];
-  Box _boxes[maxNumBoxes];
+  Gap _gaps[maxNumGaps];
 
   void drawTimeBar();
 
@@ -106,6 +120,7 @@ class Level {
 
   void initPickups();
   void initTeleports();
+  void initGaps();
   void initObjects();
 
 public:

@@ -49,6 +49,7 @@ protected:
   int8_t _dx;
   int8_t _dy;
   int8_t _height;
+  int8_t _heightDelta;
   int8_t _drawTileIndex;
 
   virtual bool canMove();
@@ -107,6 +108,8 @@ public:
   void clearDropping() { _flags &= ~MOVERFLAG_DROPPING; }
   bool isDropping() { return _flags & MOVERFLAG_DROPPING; }
 
+  void virtual startDrop() = 0;
+
   void setTeleported() { _flags |= MOVERFLAG_TELEPORTED; }
   void clearTeleported() { _flags &= ~MOVERFLAG_TELEPORTED; }
   bool didTeleport() { return _flags & MOVERFLAG_TELEPORTED; }
@@ -117,7 +120,7 @@ public:
   void setHeight(int8_t height);
   int8_t height() { return _height; }
 
-  void destroy();
+  virtual void destroy();
 
   virtual bool canEnterTile(int8_t tileIndex);
 
@@ -177,11 +180,14 @@ class Player : public Bot {
   int8_t _nextRotationDir;
   bool _swappedTiles;
 
+  int8_t _drop;
+
 protected:
   void bump();
 
   void enteringTile(int8_t tileIndex);
   void swapTiles();
+  void updateHeight();
 
 public:
   Player();
@@ -189,6 +195,9 @@ public:
   bool canEnterTile(int8_t tileIndex);
   MoverType moverType() { return TYPE_PLAYER; }
 
+  void startDrop() { _drop = 1; }
+
+  void reset();
   void update();
 
   void drawDebugInfo(); // TMP
@@ -220,8 +229,12 @@ public:
   Enemy();
 
   void init(int8_t moverIndex, int8_t targetIndex);
+  void reset();
+  void destroy();
 
   MoverType moverType() { return TYPE_ENEMY; }
+
+  void startDrop() { assertTrue(0); }
 
   void update();
 //  void draw(int8_t x, int8_t y); // TMP
@@ -233,6 +246,7 @@ public:
 class Box : public Mover {
 
   Heading _heading;
+  int8_t _drop;
 
   void setForceFall() { _flags |= MOVERFLAG_FORCEFALL; }
   void clearForceFall() { _flags &= ~MOVERFLAG_FORCEFALL; }
@@ -251,7 +265,10 @@ protected:
 public:
   MoverType moverType() { return TYPE_BOX; }
 
+  void reset();
+
   void push(Heading heading);
+  void startDrop() { _drop = 1; }
 
   void draw(int8_t x, int8_t y);
 };

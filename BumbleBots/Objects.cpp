@@ -90,6 +90,42 @@ void Teleport::draw(int8_t x, int8_t y) {
 }
 
 //-----------------------------------------------------------------------------
+// Gap implementation
+
+void Gap::init(int8_t objectIndex, uint8_t paletteIndex) {
+  Object::init(objectIndex);
+
+  _paletteIndex = paletteIndex;
+}
+
+void Gap::reset() {
+  Object::reset();
+
+  _state = GAP_EMPTY;
+}
+
+void Gap::visit(int8_t moverIndex) {
+  if (
+    _state == GAP_EMPTY &&
+    !movers[moverIndex]->isMoving()
+  ) {
+    // Initiate drop
+    _state == GAP_FILLING;
+    movers[moverIndex]->startDrop();
+
+    // TODO: Sound effect
+  }
+}
+
+void Gap::draw(int8_t x, int8_t y) {
+  gb.display.colorIndex = (Color *)palettes[(_state == GAP_FILLED) ? PALETTE_GAP_FILLED : _paletteIndex];
+
+  gb.display.drawImage(x, y + 4, gapImage);
+
+  gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
+}
+
+//-----------------------------------------------------------------------------
 // MenuDigit implementation
 
 const uint8_t menuDigitsSpecsStart[] = {

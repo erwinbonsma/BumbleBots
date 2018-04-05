@@ -29,7 +29,7 @@ TileType tileTypes[numTileTypes] = {
     .bottomImageIndex = 1,
     .bottomFrameIndex = 0,
 
-    .paletteIndex = PALETTE_DARK_CHECKERED_TILE,
+    .paletteIndex = PALETTE_DARK_TILE,
     .height0 = 0,
     .flexibility = 2,
     .flags = TILEFLAG_CHECKERED
@@ -42,7 +42,7 @@ TileType tileTypes[numTileTypes] = {
     .bottomImageIndex = 3,
     .bottomFrameIndex = 0,
 
-    .paletteIndex = PALETTE_DARK_CHECKERED_TILE,
+    .paletteIndex = PALETTE_DARK_TILE,
     .height0 = 0,
     .flexibility = 0,
     .flags = TILEFLAG_CHECKERED
@@ -55,7 +55,7 @@ TileType tileTypes[numTileTypes] = {
     .bottomImageIndex = 1,
     .bottomFrameIndex = 0,
 
-    .paletteIndex = PALETTE_DARK_CHECKERED_TILE,
+    .paletteIndex = PALETTE_DARK_TILE,
     .height0 = 0,
     .flexibility = 3,
     .flags = TILEFLAG_CHECKERED
@@ -134,6 +134,32 @@ TileType tileTypes[numTileTypes] = {
     .bottomFrameIndex = 0,
 
     .paletteIndex = 0,
+    .height0 = 0,
+    .flexibility = 0,
+    .flags = 0
+  },
+
+  // 10: Basic, fixed, dark
+  TileType {
+    .topImageIndex = 2,
+    .topFrameIndex = 0,
+    .bottomImageIndex = 3,
+    .bottomFrameIndex = 0,
+
+    .paletteIndex = PALETTE_DARK_TILE,
+    .height0 = 0,
+    .flexibility = 0,
+    .flags = 0
+  },
+
+  // 11: Basic, fixed, blue
+  TileType {
+    .topImageIndex = 2,
+    .topFrameIndex = 0,
+    .bottomImageIndex = 3,
+    .bottomFrameIndex = 0,
+
+    .paletteIndex = PALETTE_BLUE_TILE,
     .height0 = 0,
     .flexibility = 0,
     .flags = 0
@@ -228,11 +254,11 @@ ImageInfo tileImageInfo[numTileImages] = {
 };
 
 const uint8_t data_0[] = {
-  13, 4, 1, 0, 0, (uint8_t)INDEX_LIGHTBLUE, 1,
-  0xcc, 0xcc, 0xcc, 0x7c, 0xcc, 0xcc, 0xcc,
-  0xcc, 0xcc, 0x77, 0x77, 0x7c, 0xcc, 0xcc,
-  0xcc, 0x77, 0x77, 0x77, 0x77, 0x7c, 0xcc,
-  0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x7c
+  13, 4, 1, 0, 0, (uint8_t)INDEX_PINK, 1,
+  0xee, 0xee, 0xee, 0x7e, 0xee, 0xee, 0xe0,
+  0xee, 0xee, 0x77, 0x77, 0x7e, 0xee, 0xe0,
+  0xee, 0x77, 0x77, 0x77, 0x77, 0x7e, 0xe0,
+  0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x70
 };
 
 const uint8_t data_1[] = {
@@ -248,11 +274,11 @@ const uint8_t data_1[] = {
 
 // Note: dx differs compared to data_0, so cannot be merged with current scheme
 const uint8_t data_2[] = {
-  13, 4, 1, 0, 0, (uint8_t)INDEX_LIGHTBLUE, 1,
-  0xcc, 0xcc, 0xcc, 0x7c, 0xcc, 0xcc, 0xcc,
-  0xcc, 0xcc, 0x77, 0x77, 0x7c, 0xcc, 0xcc,
-  0xcc, 0x77, 0x77, 0x77, 0x77, 0x7c, 0xcc,
-  0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x7c
+  13, 4, 1, 0, 0, (uint8_t)INDEX_PINK, 1,
+  0xee, 0xee, 0xee, 0x7e, 0xee, 0xee, 0xe0,
+  0xee, 0xee, 0x77, 0x77, 0x7e, 0xee, 0xe0,
+  0xee, 0x77, 0x77, 0x77, 0x77, 0x7e, 0xe0,
+  0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x70
 };
 
 const uint8_t data_3[] = {
