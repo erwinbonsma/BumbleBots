@@ -733,10 +733,14 @@ void Box::updateHeight() {
 
   if (_drop > 0) {
     _drop++;
+
     if (_drop == 20) {
       Gap* gap = (Gap *)objects[tiles->tileAtIndex(_tileIndex)->object()];
       gap->fill();
       destroy();
+    }
+    else {
+      _heightDelta -= min(5, _drop / 4);
     }
   }
 }

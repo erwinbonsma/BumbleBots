@@ -104,16 +104,21 @@ void Gap::reset() {
   _state = GAP_EMPTY;
 }
 
+const Gamebuino_Meta::Sound_FX dropSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,80,0,24,142,25},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,160,-20,127,179,4},
+};
+
 void Gap::visit(int8_t moverIndex) {
   if (
     _state == GAP_EMPTY &&
     !movers[moverIndex]->isMoving()
   ) {
     // Initiate drop
-    _state == GAP_FILLING;
+    _state = GAP_FILLING;
     movers[moverIndex]->startDrop();
 
-    // TODO: Sound effect
+    gb.sound.fx(dropSfx);
   }
 }
 
