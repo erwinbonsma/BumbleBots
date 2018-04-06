@@ -165,6 +165,19 @@ TileType tileTypes[numTileTypes] = {
     .flags = 0
   },
 
+  // 12: Off-map (to create maps smaller than 8x8)
+  TileType {
+    .topImageIndex = 9,
+    .topFrameIndex = 0,
+    .bottomImageIndex = 9,
+    .bottomFrameIndex = 0,
+
+    .paletteIndex = PALETTE_DEFAULT,
+    .height0 = -100,
+    .flexibility = 0,
+    .flags = 0
+  },
+
   // X: TMP Basic, high flexibilty
   TileType {
     .topImageIndex = 0,
@@ -406,6 +419,10 @@ const uint8_t data_8[] = {
   0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00
 };
 
+const uint8_t data_9[] = {
+  0, 0, 1, 0, 0, 0xFF, 1
+};
+
 Image tileImages[numTileImages] = {
   Image(data_0),
   Image(data_1),
@@ -416,4 +433,5 @@ Image tileImages[numTileImages] = {
   Image(data_6),
   Image(data_7),
   Image(data_8),
+  Image(data_9)
 };
