@@ -671,6 +671,9 @@ void Enemy::update() {
 void Box::reset() {
   Mover::reset();
 
+  // Do not let boxes fall on level start. Let them behave as objects
+  _height = 0;
+
   _heading = NORTH_EAST;
   _drop = 0;
 }
