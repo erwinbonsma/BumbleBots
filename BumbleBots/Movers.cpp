@@ -764,5 +764,5 @@ void Box::push(Heading heading) {
 }
 
 void Box::draw(int8_t x, int8_t y) {
-  gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, boxImage);
+  gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, boxImage);
 }
