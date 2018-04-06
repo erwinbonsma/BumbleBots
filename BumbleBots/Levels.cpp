@@ -26,6 +26,8 @@ const TilePos enemyStartPosLevel1[1] = { makeTilePos(6, 1) };
 const TilePos enemyStartPosLevel2[2] = { makeTilePos(4, 0), makeTilePos(4, 1) };
 const TilePos enemyStartPosLevel3[3] = { makeTilePos(7, 0), makeTilePos(0, 7) };
 const TilePos enemyStartPosLevel4[1] = { makeTilePos(1, 1) };
+const TilePos enemyStartPosLevel6[1] = { makeTilePos(0, 0) };
+const TilePos enemyStartPosTestLevel0[1] = { makeTilePos(7, 1) };
 
 const TilePos pickupStartPosLevel0[13] = {
   makeTilePos(0, 0), makeTilePos(0, 2), makeTilePos(0, 3), makeTilePos(0, 5), makeTilePos(0, 7),
@@ -51,6 +53,13 @@ const TilePos pickupStartPosLevel5[8] = {
   makeTilePos(0, 0), makeTilePos(0, 7), makeTilePos(7, 0), makeTilePos(7, 7),
   makeTilePos(1, 4), makeTilePos(4, 1), makeTilePos(5, 6), makeTilePos(6, 3)
 };
+const TilePos pickupStartPosLevel6[4] = {
+  makeTilePos(1, 1), makeTilePos(6, 1),
+  makeTilePos(1, 6), makeTilePos(6, 6)
+};
+const TilePos pickupStartPosLevel7[1] = {
+  makeTilePos(0, 2)
+};
 
 const TeleportPairSpec teleportSpecsLevel4[4] = {
   TeleportPairSpec {
@@ -73,6 +82,66 @@ const TeleportPairSpec teleportSpecsLevel4[4] = {
     .tile2 = makeTilePos(7, 0),
     .paletteIndex = PALETTE_TELEPORT4
   }
+};
+const TeleportPairSpec teleportSpecsLevel7[4] = {
+  TeleportPairSpec {
+    .tile1 = makeTilePos(4, 2),
+    .tile2 = makeTilePos(6, 3),
+    .paletteIndex = PALETTE_TELEPORT1
+  },
+  TeleportPairSpec {
+    .tile1 = makeTilePos(6, 2),
+    .tile2 = makeTilePos(0, 3),
+    .paletteIndex = PALETTE_TELEPORT2
+  },
+  TeleportPairSpec {
+    .tile1 = makeTilePos(2, 3),
+    .tile2 = makeTilePos(4, 4),
+    .paletteIndex = PALETTE_TELEPORT3
+  },
+  TeleportPairSpec {
+    .tile1 = makeTilePos(4, 3),
+    .tile2 = makeTilePos(2, 4),
+    .paletteIndex = PALETTE_TELEPORT4
+  }
+};
+
+const GapSpec gapSpecsLevel6[4] = {
+  GapSpec {
+    .pos = makeTilePos(2, 1),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(3, 1),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(1, 2),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(2, 2),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  }
+};
+const GapSpec gapSpecsLevel7[1] = {
+  GapSpec {
+    .pos = makeTilePos(2, 2),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  }
+};
+
+const TilePos boxStartPosLevel6[4] = {
+  makeTilePos(2, 4), makeTilePos(2, 5), makeTilePos(4, 3), makeTilePos(6, 3)
+};
+const TilePos boxStartPosLevel7[1] = {
+  makeTilePos(3, 5)
+};
+const TilePos boxStartPosTestLevel0[17] = {
+  makeTilePos(1, 0), makeTilePos(1, 1), makeTilePos(1, 2), makeTilePos(1, 3), makeTilePos(1, 4), makeTilePos(1, 5), makeTilePos(1, 6),
+  makeTilePos(2, 0), makeTilePos(2, 1), makeTilePos(2, 2), makeTilePos(2, 3), makeTilePos(2, 4),
+  makeTilePos(6, 0), makeTilePos(6, 1), makeTilePos(6, 2),
+  makeTilePos(6, 5), makeTilePos(7, 5)
 };
 
 const uint8_t tilesLevel0[maxTiles] = {
@@ -126,6 +195,36 @@ const uint8_t tilesLevel4[maxTiles] = {
   0x00|H2, 0x00|H2, 0x00|H2, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0
 };
 const uint8_t* tilesLevel5 = tilesLevel1;
+const uint8_t tilesLevel6[maxTiles] = {
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
+  0x0b|H0, 0x00|H1, 0x00|H1, 0x00|H1, 0x00|H1, 0x0a|H2, 0x00|H1, 0x0b|H0,
+  0x0b|H0, 0x00|H1, 0x00|H1, 0x00|H1, 0x00|H1, 0x0a|H2, 0x00|H1, 0x0b|H0,
+  0x0b|H0, 0x0a|H2, 0x0a|H2, 0x00|H1, 0x00|H1, 0x00|H1, 0x00|H1, 0x0b|H0,
+  0x0b|H0, 0x00|H1, 0x00|H1, 0x00|H1, 0x00|H1, 0x0a|H2, 0x00|H1, 0x0b|H0,
+  0x0b|H0, 0x00|H1, 0x00|H1, 0x00|H1, 0x00|H1, 0x0a|H2, 0x00|H1, 0x0b|H0,
+  0x0b|H0, 0x00|H1, 0x0a|H2, 0x0a|H2, 0x00|H1, 0x00|H1, 0x00|H1, 0x0b|H0,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
+};
+const uint8_t tilesLevel7[maxTiles] = {
+  0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0,
+  0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0,
+  0x02|H7, 0x02|H7, 0x02|H7, 0x02|H7, 0x02|H7, 0x02|H7, 0x02|H7, 0x0c|H0,
+  0x02|H5, 0x02|H5, 0x02|H5, 0x02|H5, 0x02|H5, 0x02|H5, 0x02|H5, 0x0c|H0,
+  0x02|H3, 0x03|H1, 0x02|H2, 0x02|H2, 0x02|H2, 0x03|H1, 0x02|H3, 0x0c|H0,
+  0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x0c|H0,
+  0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x0c|H0,
+  0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0,
+};
+const uint8_t tilesTestLevel0[maxTiles] = {
+  0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
+  0x00|H7, 0x00|H7, 0x00|H3, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
+  0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x07|H0
+};
 
 const LevelSpec levelSpecs[numLevels] = {
   LevelSpec {
@@ -137,6 +236,10 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel0,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
+    .numGaps = 0,
+    .gapSpecs = nullptr,
     .timeLimitInCycles = 2000,
     .tilesSpec = LevelTilesSpec(tilesLevel0)
   },
@@ -150,6 +253,10 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel1,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
+    .numGaps = 0,
+    .gapSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel1)
   },
@@ -163,6 +270,10 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel2,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
+    .numGaps = 0,
+    .gapSpecs = nullptr,
     .timeLimitInCycles = 4500,
     .tilesSpec = LevelTilesSpec(tilesLevel2)
   },
@@ -176,6 +287,10 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel3,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
+    .numGaps = 0,
+    .gapSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel3)
   },
@@ -189,6 +304,10 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel4,
     .numTeleportPairs = 4,
     .teleportSpecs = teleportSpecsLevel4,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
+    .numGaps = 0,
+    .gapSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel4)
   },
@@ -202,47 +321,65 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = pickupStartPosLevel5,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
+    .numBoxes = 0,
+    .boxStartPos = nullptr,
+    .numGaps = 0,
+    .gapSpecs = nullptr,
     .timeLimitInCycles = -1000,
     .tilesSpec = LevelTilesSpec(tilesLevel5)
   },
 
-#ifdef TEST_LEVELS
-  // Testing level: falling
   LevelSpec {
-    .playerStartPos = makeTilePos(2, 5),
+    .title = "Mind the Gap",
+    .playerStartPos = makeTilePos(4, 4),
     .numEnemies = 1,
-    .enemyStartPos = enemyStartPosLevel1,
-    .tilesSpec = TilesSpec {
-      .tiles = {
-        0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
-        0x00|H7, 0x00|H7, 0x00|H3, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x02|H3
-      }
-    }
+    .enemyStartPos = enemyStartPosLevel6,
+    .numPickups = 4,
+    .pickupStartPos = pickupStartPosLevel6,
+    .numTeleportPairs = 0,
+    .teleportSpecs = nullptr,
+    .numBoxes = 4,
+    .boxStartPos = boxStartPosLevel6,
+    .numGaps = 4,
+    .gapSpecs = gapSpecsLevel6,
+    .timeLimitInCycles = 3000,
+    .tilesSpec = LevelTilesSpec(tilesLevel6)
   },
 
-  // Testing level: drawing
   LevelSpec {
+    .title = "Going Up",
+    .playerStartPos = makeTilePos(3, 6),
+    .numEnemies = 0,
+    .enemyStartPos = nullptr,
+    .numPickups = 1,
+    .pickupStartPos = pickupStartPosLevel7,
+    .numTeleportPairs = 4,
+    .teleportSpecs = teleportSpecsLevel7,
+    .numBoxes = 1,
+    .boxStartPos = boxStartPosLevel7,
+    .numGaps = 1,
+    .gapSpecs = gapSpecsLevel7,
+    .timeLimitInCycles = 3000,
+    .tilesSpec = LevelTilesSpec(tilesLevel7)
+  },
+
+#ifdef TEST_LEVELS
+  // Testing level: falling & boxes
+  LevelSpec {
+    .title = "Test Boxes",
     .playerStartPos = makeTilePos(2, 5),
-    .numEnemies = 1,
-    .enemyStartPos = enemyStartPosLevel1,
-    .tilesSpec = TilesSpec {
-      .tiles = {
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H4, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H4, 0x00|H0,
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H2, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H2, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-        0x00|H0, 0x00|H4, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H4, 0x00|H0,
-        0x00|H0, 0x00|H4, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x02|H0
-      }
-    }
+    .numEnemies = 0,
+    .enemyStartPos = enemyStartPosTestLevel0,
+    .numPickups = 4,
+    .pickupStartPos = pickupStartPosLevel1,
+    .numTeleportPairs = 0,
+    .teleportSpecs = nullptr,
+    .numBoxes = 17,
+    .boxStartPos = boxStartPosTestLevel0,
+    .numGaps = 0,
+    .gapSpecs = nullptr,
+    .timeLimitInCycles = 3000,
+    .tilesSpec = LevelTilesSpec(tilesTestLevel0)
   }
 #endif
 };
@@ -315,13 +452,13 @@ void Level::drawTimeBar() {
   }
 }
 
-void Level::initMovers() {
-  numMovers = 0;
-
+void Level::initPlayer() {
   // Create player
   _player.init(numMovers++);
   movers[_player.index()] = &_player;
+}
 
+void Level::initEnemies() {
   // Create enemies
   for (uint8_t i = 0; i < _levelSpec->numEnemies; i++) {
     assertTrue(numMovers < maxNumMovers);
@@ -329,6 +466,24 @@ void Level::initMovers() {
     _enemies[i].init(numMovers++, _player.index());
     movers[_enemies[i].index()] = &_enemies[i];
   }
+}
+
+void Level::initBoxes() {
+  // Create boxes
+  for (uint8_t i = 0; i < _levelSpec->numBoxes; i++) {
+    assertTrue(numMovers < maxNumMovers);
+
+    _boxes[i].init(numMovers++);
+    movers[_boxes[i].index()] = &_boxes[i];
+  }
+}
+
+void Level::initMovers() {
+  numMovers = 0;
+
+  initPlayer();
+  initEnemies();
+  initBoxes();
 }
 
 void Level::initPickups() {
@@ -362,11 +517,25 @@ void Level::initTeleports() {
   }
 }
 
+void Level::initGaps() {
+  for (uint8_t i = 0; i < _levelSpec->numGaps; i++) {
+    GapSpec spec = _levelSpec->gapSpecs[i];
+
+    assertTrue(numObjects < maxNumObjects);
+
+    _gaps[i].init(numObjects++, spec.paletteIndex);
+    objects[_gaps[i].index()] = &_gaps[i];
+
+    tiles->putObjectOnTile(_gaps[i].index(), spec.pos);
+  }
+}
+
 void Level::initObjects() {
   numObjects = 0;
 
   initPickups();
   initTeleports();
+  initGaps();
 }
 
 void Level::init(const LevelSpec *levelSpec) {
@@ -389,6 +558,11 @@ void Level::reset() {
   // Reset all objects
   for (int8_t i = numObjects; --i >= 0; ) {
     objects[i]->reset();
+  }
+
+  for (int8_t i = _levelSpec->numBoxes; --i >= 0; ) {
+    _boxes[i].reset();
+    tiles->putMoverOnTile(_boxes[i].index(), _levelSpec->boxStartPos[i]);
   }
 
   _started = false;
@@ -428,7 +602,10 @@ void Level::update() {
 
   if (_started) {
     for (int8_t i = numMovers; --i >= 0; ) {
-      movers[i]->update();
+      Mover* mover = movers[i];
+      if (!mover->isDestroyed()) {
+        mover->update();
+      }
     }
   }
 

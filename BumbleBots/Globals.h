@@ -4,10 +4,8 @@
  * Copyright 2018, Erwin Bonsma
  */
 
-const uint8_t maxNumMovers = 8;
+const uint8_t maxNumMovers = 20;
 const uint8_t maxNumObjects = 64;
-
-//#define EMULATION_SETTINGS
 
 // Implemented in Movers.cpp
 class Mover;

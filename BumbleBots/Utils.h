@@ -21,18 +21,22 @@ const int8_t NORTH_EAST = 0;
 
 enum class MoverType : int8_t {
   Player,
-  Enemy
+  Enemy,
+  Box
 };
 const MoverType TYPE_PLAYER = MoverType::Player;
 const MoverType TYPE_ENEMY = MoverType::Enemy;
+const MoverType TYPE_BOX = MoverType::Box;
 
 enum class ObjectType : int8_t {
   Pickup,
   Teleport,
+  Gap,
   MenuDigit
 };
 const ObjectType TYPE_PICKUP = ObjectType::Pickup;
 const ObjectType TYPE_TELEPORT = ObjectType::Teleport;
+const ObjectType TYPE_GAP = ObjectType::Gap;
 const ObjectType TYPE_MENUDIGIT = ObjectType::MenuDigit;
 
 /* Valid values: 0..maxCols * maxRows - 1

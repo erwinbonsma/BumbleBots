@@ -19,25 +19,27 @@ class Tile;
 const int8_t MOVERFLAG_FALLING = 0x01;
 const int8_t MOVERFLAG_FROZEN = 0x02;
 const int8_t MOVERFLAG_TELEPORTED = 0x04;
+const int8_t MOVERFLAG_DROPPING = 0x08;
+const int8_t MOVERFLAG_DESTROYED = 0x10;
+const int8_t MOVERFLAG_FORCEFALL = 0x20; // Only used by Box
 
 class Mover {
   friend class Tile;
   friend class Tiles;
-  friend class Player;
-  friend class Enemy;
   friend class Teleport;
+
+  // Link to next mover on same tile (if any)
+  int8_t _nextMoverIndex;
+
+  int8_t _fallingSpeed;
+
+protected:
 
   int8_t _moverIndex;
   int8_t _tileIndex;
   int8_t _tileIndex2;
 
-  // Link to next mover on same tile (if any)
-  int8_t _nextMoverIndex;
-
-  int8_t _dropSpeed;
   int8_t _flags;
-
-protected:
 
   // Movement
   int8_t _movementDir; // -1, 0, 1
@@ -47,6 +49,7 @@ protected:
   int8_t _dx;
   int8_t _dy;
   int8_t _height;
+  int8_t _heightDelta;
   int8_t _drawTileIndex;
 
   virtual bool canMove();
@@ -65,7 +68,7 @@ protected:
    */
   Heading moveHeading();
 
-  void updateHeight();
+  virtual void updateHeight();
   void updateDxDy();
 
   // Tile that the mover is on for drawing purposes
@@ -75,7 +78,6 @@ protected:
   int8_t dx() { return _dx; }
   int8_t dy() { return _dy; }
 
-  virtual bool canEnterTile(int8_t tileIndex);
   virtual void enteringTile(int8_t tileIndex);
   virtual void swapTiles();
   virtual void exitedTile();
@@ -86,6 +88,7 @@ public:
   virtual void reset();
 
   int8_t index() { return _moverIndex; }
+  int8_t tileIndex() { return _tileIndex; }
   TilePos tilePos() { return (TilePos)_tileIndex; }
 
   virtual MoverType moverType() = 0;
@@ -95,15 +98,31 @@ public:
   void freeze() { _flags |= MOVERFLAG_FROZEN; }
   bool isFrozen() { return _flags & MOVERFLAG_FROZEN; }
 
+  // Signals if a mover is falling (onto any tile)
   void setFalling() { _flags |= MOVERFLAG_FALLING; }
   void clearFalling() { _flags &= ~MOVERFLAG_FALLING; }
   bool isFalling() { return _flags & MOVERFLAG_FALLING; }
+
+  // Signals if a mover is dropping into a gap
+  void setDropping() { _flags |= MOVERFLAG_DROPPING; }
+  void clearDropping() { _flags &= ~MOVERFLAG_DROPPING; }
+  bool isDropping() { return _flags & MOVERFLAG_DROPPING; }
+
+  void virtual startDrop() = 0;
 
   void setTeleported() { _flags |= MOVERFLAG_TELEPORTED; }
   void clearTeleported() { _flags &= ~MOVERFLAG_TELEPORTED; }
   bool didTeleport() { return _flags & MOVERFLAG_TELEPORTED; }
 
+  void setDestroyed() { _flags |= MOVERFLAG_DESTROYED; }
+  bool isDestroyed() { return _flags & MOVERFLAG_DESTROYED; }
+
   void setHeight(int8_t height);
+  int8_t height() { return _height; }
+
+  virtual void destroy();
+
+  virtual bool canEnterTile(int8_t tileIndex);
 
   virtual void update();
   virtual void draw(int8_t x, int8_t y) = 0;
@@ -161,15 +180,24 @@ class Player : public Bot {
   int8_t _nextRotationDir;
   bool _swappedTiles;
 
+  int8_t _drop;
+
 protected:
   void bump();
+
+  void enteringTile(int8_t tileIndex);
   void swapTiles();
+  void updateHeight();
 
 public:
   Player();
 
+  bool canEnterTile(int8_t tileIndex);
   MoverType moverType() { return TYPE_PLAYER; }
 
+  void startDrop() { _drop = 1; }
+
+  void reset();
   void update();
 
   void drawDebugInfo(); // TMP
@@ -201,11 +229,48 @@ public:
   Enemy();
 
   void init(int8_t moverIndex, int8_t targetIndex);
+  void reset();
+  void destroy();
 
   MoverType moverType() { return TYPE_ENEMY; }
 
+  void startDrop() { assertTrue(0); }
+
   void update();
 //  void draw(int8_t x, int8_t y); // TMP
+};
+
+//-----------------------------------------------------------------------------
+// Box declaration
+
+class Box : public Mover {
+
+  Heading _heading;
+  int8_t _drop;
+
+  void setForceFall() { _flags |= MOVERFLAG_FORCEFALL; }
+  void clearForceFall() { _flags &= ~MOVERFLAG_FORCEFALL; }
+  bool shouldForceFall() { return _flags & MOVERFLAG_FORCEFALL; }
+
+  Heading heading() { return _heading; }
+  void setHeading(Heading heading) { _heading = heading; }
+
+protected:
+  bool canEnterTile(int8_t tileIndex);
+  void enteringTile(int8_t tileIndex);
+  void exitedTile();
+
+  void updateHeight();
+
+public:
+  MoverType moverType() { return TYPE_BOX; }
+
+  void reset();
+
+  void push(Heading heading);
+  void startDrop() { _drop = 1; }
+
+  void draw(int8_t x, int8_t y);
 };
 
 #endif

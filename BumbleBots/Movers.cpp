@@ -24,6 +24,11 @@ const Gamebuino_Meta::Sound_FX moveSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,30,0,0,100,1},
 };
 
+const Gamebuino_Meta::Sound_FX crushSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,150,0,127,142,1},
+  {Gamebuino_Meta::Sound_FX_Wave::NOISE,0,48,64,0,256,2},
+};
+
 bool isFall(int8_t fromTileIndex, int8_t destTileIndex) {
   return (
     tiles->tileAtIndex(fromTileIndex)->height() -
@@ -54,7 +59,7 @@ void Mover::reset() {
   _movementInc = 1;
 
   _height = 40;
-  _dropSpeed = 6;
+  _fallingSpeed = 6;
   _flags = 0;
 }
 
@@ -84,13 +89,15 @@ void Mover::updateHeight() {
 
   if (_height > tileHeight) {
     // Gradual fall
-    _height = max(tileHeight, _height - _dropSpeed/4);
-    _dropSpeed += 1;
+    _height = max(tileHeight, _height - _fallingSpeed/4);
+    _fallingSpeed += 1;
   }
   else {
     _height = tileHeight;
-    _dropSpeed = 6;
+    _fallingSpeed = 6;
   }
+
+  _heightDelta = _height - tiles->tileAtIndex(_drawTileIndex)->height();
 }
 
 void Mover::setHeight(int8_t height) {
@@ -212,7 +219,17 @@ void Mover::exitedTile() {
   _tileIndex2 = NO_TILE;
 }
 
+void Mover::destroy() {
+  if (!isDestroyed()) {
+    tiles->tileAtIndex(_drawTileIndex)->removeMover(_moverIndex);
+
+    setDestroyed();
+  }
+}
+
 void Mover::update() {
+  assertTrue(!isDestroyed());
+
   if (canMove()) {
     if (isMoving()) {
       moveStep();
@@ -233,7 +250,15 @@ void Mover::update() {
     _tileIndex2 == NO_TILE
   ) {
     if (_height - tiles->tileAtIndex(_tileIndex)->height() < 5) {
-      // TODO: destroy when falling
+      int8_t destroyableIndex = tile->moverOfType(TYPE_BOX, _moverIndex);
+      if (destroyableIndex == -1) {
+        destroyableIndex = tile->moverOfType(TYPE_ENEMY, _moverIndex);
+      }
+      if (destroyableIndex != -1) {
+        movers[destroyableIndex]->destroy();
+
+        gb.sound.fx(crushSfx);
+      }
 
       clearFalling();
     }
@@ -307,11 +332,9 @@ void Bot::draw(int8_t x, int8_t y) {
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
-  int8_t heightDelta = _height - tiles->tileAtIndex(_drawTileIndex)->height();
-
-  gb.display.drawImage(x + _dx + 1, y + _dy - heightDelta - 1, botImage);
+  gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, botImage);
   if (isDazed()) {
-    gb.display.drawImage(x + _dx + 2, y + _dy - heightDelta - 6, dazedImage);
+    gb.display.drawImage(x + _dx + 2, y + _dy - _heightDelta - 6, dazedImage);
   }
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
@@ -322,6 +345,43 @@ void Bot::draw(int8_t x, int8_t y) {
 
 Player::Player() : Bot(2) {}
 
+void Player::reset() {
+  Bot::reset();
+
+  _nextRotationDir = 0;
+  _swappedTiles = false;
+  _drop = 0;
+}
+
+bool Player::canEnterTile(int8_t tileIndex) {
+  int8_t boxIndex = tiles->tileAtIndex(tileIndex)->moverOfType(TYPE_BOX, _moverIndex);
+
+  return (
+    // Check box interactions
+    (
+      // No box
+      boxIndex == -1 ||
+      // Will drop on box
+      isFall(_tileIndex, tileIndex) ||
+      // Can push box
+      movers[boxIndex]->canEnterTile(tiles->neighbour(tileIndex, moveHeading()))
+    ) &&
+    Mover::canEnterTile(tileIndex)
+  );
+}
+
+void Player::enteringTile(int8_t tileIndex) {
+  Mover::enteringTile(tileIndex);
+
+  int8_t boxIndex = tiles->tileAtIndex(tileIndex)->moverOfType(TYPE_BOX, _moverIndex);
+  if (boxIndex != -1) {
+    if (!isFall(_tileIndex, tileIndex)) {
+      // Entering from similar height, so push box
+      ((Box *)movers[boxIndex])->push(moveHeading());
+    }
+  }
+}
+
 void Player::swapTiles() {
   Mover::swapTiles();
 
@@ -330,6 +390,23 @@ void Player::swapTiles() {
   if (!isFxPlaying()) {
     // Do not let ambient move sound cut off a more important sound effect
     gb.sound.fx(moveSfx);
+  }
+}
+
+void Player::updateHeight() {
+  Bot::updateHeight();
+
+  if (_drop > 0) {
+    _drop++;
+
+    if (_drop == 20) {
+      _dazed = 50;
+    }
+    else if (_drop == 36) {
+      signalDeath("Stuck!");
+    }
+
+    _heightDelta -= min(5, _drop / 4);
   }
 }
 
@@ -403,6 +480,21 @@ void Enemy::init(int8_t moverIndex, int8_t targetIndex) {
   _targetIndex = targetIndex;
 }
 
+void Enemy::reset() {
+  Bot::reset();
+
+  _bumpCount = 0;
+}
+
+void Enemy::destroy() {
+  tiles->tileAtIndex(_tileIndex)->clearEnemyEntering();
+  if (_tileIndex2 != -1) {
+    tiles->tileAtIndex(_tileIndex2)->clearEnemyEntering();
+  }
+
+  Bot::destroy();
+}
+
 const Color* Enemy::getBotPalette(bool flipped) {
   return flipped ? palettes[PALETTE_FLIPPED_ENEMY] : palettes[PALETTE_ENEMY];
 }
@@ -428,6 +520,10 @@ bool Enemy::canEnterTile(int8_t tileIndex) {
     // or already there
     tile->moverOfType(TYPE_ENEMY, _moverIndex) != -1
   ) {
+    return false;
+  }
+
+  if (tile->isBoxEntering()) {
     return false;
   }
 
@@ -461,6 +557,15 @@ bool Enemy::isBlocked(int8_t tileIndex) {
     }
   }
 
+  int8_t boxIndex = destTile->moverOfType(TYPE_BOX, _moverIndex);
+  if (
+    boxIndex >= 0 &&
+    !movers[boxIndex]->isFalling()
+  ) {
+    // Boxes block, unless they are falling
+    return true;
+  }
+
   // Fear big falls
   return (
     tiles->tileAtIndex(_tileIndex)->height() -
@@ -480,7 +585,7 @@ int8_t Enemy::headingScore(Heading h) {
   }
 
   int8_t score = 0;
-  int8_t targetTileIndex = movers[_targetIndex]->_tileIndex;
+  int8_t targetTileIndex = movers[_targetIndex]->tileIndex();
 
   if (
     distance((TilePos)destTileIndex, (TilePos)targetTileIndex) <
@@ -524,9 +629,9 @@ int8_t Enemy::headingScore(Heading h) {
 void Enemy::update() {
   Mover* target = movers[_targetIndex];
   if (
-    _tileIndex == target->_tileIndex &&
+    _tileIndex == target->tileIndex() &&
     !target->isFalling() &&
-    abs(_height - target->_height) < 6
+    abs(_height - target->height()) < 6
   ) {
     signalDeath("Intercepted");
   }
@@ -559,3 +664,108 @@ void Enemy::update() {
 //  gb.display.setColor(INDEX_YELLOW);
 //  gb.display.printf("frozen=%d\n", isFrozen());
 //}
+
+//-----------------------------------------------------------------------------
+// Box implementation
+
+void Box::reset() {
+  Mover::reset();
+
+  // Do not let boxes fall on level start. Let them behave as objects
+  _height = 0;
+
+  _heading = NORTH_EAST;
+  _drop = 0;
+}
+
+bool Box::canEnterTile(int8_t tileIndex) {
+  if (isMoving()) {
+    // Move check is done at the start of the move. Once moving, assume it's
+    // okay
+    return true;
+  }
+
+  Tile* destTile = tiles->tileAtIndex(tileIndex);
+  int8_t objectIndex = destTile->object();
+  if (objectIndex >= 0 && objects[objectIndex]->objectType() == TYPE_PICKUP) {
+    // Cannot move over pickup
+    return false;
+  }
+
+  if (isDropping()) {
+    // Cannot move once dropping
+    return false;
+  }
+
+  if (
+    // Cannot move when tile is (going to be) occupied by a mover
+    (
+      destTile->isEnemyEntering() ||
+      destTile->containsMovers()
+    ) &&
+    // Unless box drops onto it
+    !isFall(_tileIndex, tileIndex)
+  ) {
+    return false;
+  }
+
+  return Mover::canEnterTile(tileIndex);
+}
+
+void Box::enteringTile(int8_t tileIndex) {
+  Mover::enteringTile(tileIndex);
+
+  if (shouldForceFall()) {
+    setFalling();
+    clearForceFall();
+  }
+}
+
+void Box::exitedTile() {
+  Mover::exitedTile();
+
+  tiles->tileAtIndex(_tileIndex)->clearBoxEntering();
+}
+
+void Box::updateHeight() {
+  Mover::updateHeight();
+
+  if (_height < -50) {
+    destroy();
+  }
+
+  if (_drop > 0) {
+    _drop++;
+
+    if (_drop == 20) {
+      Gap* gap = (Gap *)objects[tiles->tileAtIndex(_tileIndex)->object()];
+      gap->fill();
+      destroy();
+    }
+    else {
+      _heightDelta -= min(5, _drop / 4);
+    }
+  }
+}
+
+void Box::push(Heading heading) {
+  setHeading(heading);
+  _movementDir = 1;
+
+  int8_t destTileIndex = tiles->neighbour(_tileIndex, heading);
+
+  // Ensure that a box at rest (i.e. not falling) will never share a tile with
+  // a mover (so that this does not need to be handled).
+  if (isFall(_tileIndex, destTileIndex)) {
+    // Force a fall so that any mover entering will be destroyed, even if the
+    // height difference when it enters would be too small to trigger a fall.
+    setForceFall();
+  }
+  else {
+    tiles->tileAtIndex(destTileIndex)->setBoxEntering();
+  }
+}
+
+void Box::draw(int8_t x, int8_t y) {
+  gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, boxImage);
+}

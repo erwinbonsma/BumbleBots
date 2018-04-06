@@ -15,6 +15,7 @@ struct TileType;
 class Player;
 
 const int8_t TILEFLAG_ENEMY_ENTERING = 0x01;
+const int8_t TILEFLAG_BOX_ENTERING = 0x02;
 
 //-----------------------------------------------------------------------------
 // Tile declaration
@@ -51,12 +52,17 @@ public:
   void clearEnemyEntering() { _flags &= ~TILEFLAG_ENEMY_ENTERING; }
   bool isEnemyEntering() { return _flags & TILEFLAG_ENEMY_ENTERING; }
 
+  void setBoxEntering() { _flags |= TILEFLAG_BOX_ENTERING; }
+  void clearBoxEntering() { _flags &= ~TILEFLAG_BOX_ENTERING; }
+  bool isBoxEntering() { return _flags & TILEFLAG_BOX_ENTERING; }
+
   void addMover(int8_t moverIndex);
   void removeMover(int8_t moverIndex);
   /* Returns the mover of the given type that resides at this tile, if any.
    * If excludeMover >= 0, it will not return a mover with this index.
    */
   int8_t moverOfType(MoverType moverType, int8_t excludeMover);
+  bool containsMovers() { return _moverIndex >= 0; }
 
   void addObject(int8_t objectIndex);
   void removeObject(int8_t objectIndex);
