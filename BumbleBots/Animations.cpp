@@ -88,7 +88,7 @@ Animation* GameOverAnimation::update() {
 
   if (gb.buttons.held(BUTTON_A, 0)) {
     showLevelMenu();
-    return 0;
+    return nullptr;
   }
 
   return this;
@@ -172,7 +172,7 @@ Animation* LevelStartAnimation::update() {
     gb.sound.fx(getReadySfx);
 
     game.level()->start();
-    return 0;
+    return nullptr;
   }
 
   return this;
