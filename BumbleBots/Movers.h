@@ -193,8 +193,6 @@ public:
 
   void reset();
   void update();
-
-  void drawDebugInfo(); // TMP
 };
 
 //-----------------------------------------------------------------------------
@@ -229,7 +227,6 @@ public:
   MoverType moverType() { return TYPE_ENEMY; }
 
   void update();
-//  void draw(int8_t x, int8_t y); // TMP
 };
 
 //-----------------------------------------------------------------------------

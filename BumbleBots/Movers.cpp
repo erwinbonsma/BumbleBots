@@ -470,11 +470,6 @@ void Player::update() {
   }
 }
 
-void Player::drawDebugInfo() {
-  gb.display.setCursor(20, 58);
-  gb.display.printf("%d/%d\n", isFalling(), canStartMove());
-}
-
 //-----------------------------------------------------------------------------
 // Enemy implementation
 
@@ -671,13 +666,6 @@ void Enemy::update() {
 
   Bot::update();
 }
-
-//void Enemy::draw(int8_t x, int8_t y) {
-//  Bot::draw(x, y);
-//
-//  gb.display.setColor(INDEX_YELLOW);
-//  gb.display.printf("frozen=%d\n", isFrozen());
-//}
 
 //-----------------------------------------------------------------------------
 // Box implementation
