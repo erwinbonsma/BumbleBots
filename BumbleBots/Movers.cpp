@@ -312,7 +312,7 @@ bool Bot::canStartMove() {
 }
 
 const Color* Bot::getBotPalette(bool flipped) {
-  return (flipped) ? palettes[PALETTE_FLIPPED_BOT] : palettes[PALETTE_DEFAULT];
+  return (flipped) ? palettes[PALETTE_FLIPPED_BOT] : palettes[PALETTE_BOT];
 }
 
 void Bot::update() {
