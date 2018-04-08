@@ -33,6 +33,7 @@ public:
   int8_t index() { return _objectIndex; }
 
   virtual ObjectType objectType() = 0;
+  virtual bool isElevated() { return false; }
 
   virtual void visit(int8_t moverIndex) {}
   virtual void draw(int8_t x, int8_t y) = 0;
@@ -44,6 +45,7 @@ public:
 class Pickup : public Object {
 public:
   ObjectType objectType() { return TYPE_PICKUP; }
+  bool isElevated() { return true; }
 
   void visit(int8_t moverIndex);
   void draw(int8_t x, int8_t y);

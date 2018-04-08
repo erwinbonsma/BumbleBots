@@ -39,6 +39,9 @@ class Tile {
 
   int8_t _flags;
 
+  bool drawMovers(int8_t x, int8_t y) const;
+  void drawMoversAndObjects(int8_t x, int8_t y) const;
+
 public:
   Tile();
 
