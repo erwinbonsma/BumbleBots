@@ -89,6 +89,7 @@ public:
   ObjectType objectType() { return TYPE_GAP; }
 
   void fill() { _state = GAP_FILLED; }
+  GapState state() { return _state; }
 
   void reset();
   void visit(int8_t moverIndex);

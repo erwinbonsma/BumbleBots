@@ -552,7 +552,15 @@ bool Enemy::isBlocked(int8_t tileIndex) {
   int8_t objectIndex = destTile->object();
   if (objectIndex >= 0) {
     Object* object = objects[objectIndex];
-    if (object->objectType() != TYPE_TELEPORT) {
+    if (
+      // except teleports
+      object->objectType() != TYPE_TELEPORT &&
+      // and filled gaps
+      !(
+        object->objectType() == TYPE_GAP &&
+        ((Gap *)object)->state() == GAP_FILLED
+      )
+    ) {
       return true;
     }
   }
@@ -685,15 +693,15 @@ bool Box::canEnterTile(int8_t tileIndex) {
     return true;
   }
 
+  if (isDropping()) {
+    // Cannot move once dropping
+    return false;
+  }
+
   Tile* destTile = tiles->tileAtIndex(tileIndex);
   int8_t objectIndex = destTile->object();
   if (objectIndex >= 0 && objects[objectIndex]->objectType() == TYPE_PICKUP) {
     // Cannot move over pickup
-    return false;
-  }
-
-  if (isDropping()) {
-    // Cannot move once dropping
     return false;
   }
 

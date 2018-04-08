@@ -19,8 +19,7 @@ class Tile;
 const int8_t MOVERFLAG_FALLING = 0x01;
 const int8_t MOVERFLAG_FROZEN = 0x02;
 const int8_t MOVERFLAG_TELEPORTED = 0x04;
-const int8_t MOVERFLAG_DROPPING = 0x08;
-const int8_t MOVERFLAG_DESTROYED = 0x10;
+const int8_t MOVERFLAG_DESTROYED = 0x08;
 const int8_t MOVERFLAG_FORCEFALL = 0x20; // Only used by Box
 
 class Mover {
@@ -103,12 +102,9 @@ public:
   void clearFalling() { _flags &= ~MOVERFLAG_FALLING; }
   bool isFalling() { return _flags & MOVERFLAG_FALLING; }
 
-  // Signals if a mover is dropping into a gap
-  void setDropping() { _flags |= MOVERFLAG_DROPPING; }
-  void clearDropping() { _flags &= ~MOVERFLAG_DROPPING; }
-  bool isDropping() { return _flags & MOVERFLAG_DROPPING; }
 
   void virtual startDrop() = 0;
+  bool virtual isDropping() { return false; }
 
   void setTeleported() { _flags |= MOVERFLAG_TELEPORTED; }
   void clearTeleported() { _flags &= ~MOVERFLAG_TELEPORTED; }
@@ -196,6 +192,7 @@ public:
   MoverType moverType() { return TYPE_PLAYER; }
 
   void startDrop() { _drop = 1; }
+  bool isDropping() { return _drop > 0; }
 
   void reset();
   void update();
@@ -269,6 +266,7 @@ public:
 
   void push(Heading heading);
   void startDrop() { _drop = 1; }
+  bool isDropping() { return _drop > 0; }
 
   void draw(int8_t x, int8_t y);
 };

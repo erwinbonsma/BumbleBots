@@ -117,6 +117,7 @@ void Gap::visit(int8_t moverIndex) {
     // Initiate drop
     _state = GAP_FILLING;
     movers[moverIndex]->startDrop();
+    movers[moverIndex]->freeze();
 
     gb.sound.fx(dropSfx);
   }
