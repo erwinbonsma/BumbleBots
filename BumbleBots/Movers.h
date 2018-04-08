@@ -51,6 +51,8 @@ protected:
   int8_t _heightDelta;
   int8_t _drawTileIndex;
 
+  int8_t _drop;
+
   virtual bool canMove();
   // Returns true iff Bot can initiate a new move or turn during update
   virtual bool canStartMove();
@@ -102,9 +104,9 @@ public:
   void clearFalling() { _flags &= ~MOVERFLAG_FALLING; }
   bool isFalling() { return _flags & MOVERFLAG_FALLING; }
 
-
-  void virtual startDrop() = 0;
-  bool virtual isDropping() { return false; }
+  void startDrop() { _drop = 1; }
+  bool isDropping() { return _drop; }
+  int dropDelta() { return min(5, _drop / 4); }
 
   void setTeleported() { _flags |= MOVERFLAG_TELEPORTED; }
   void clearTeleported() { _flags &= ~MOVERFLAG_TELEPORTED; }
@@ -176,8 +178,6 @@ class Player : public Bot {
   int8_t _nextRotationDir;
   bool _swappedTiles;
 
-  int8_t _drop;
-
 protected:
   void bump();
 
@@ -190,9 +190,6 @@ public:
 
   bool canEnterTile(int8_t tileIndex);
   MoverType moverType() { return TYPE_PLAYER; }
-
-  void startDrop() { _drop = 1; }
-  bool isDropping() { return _drop > 0; }
 
   void reset();
   void update();
@@ -231,8 +228,6 @@ public:
 
   MoverType moverType() { return TYPE_ENEMY; }
 
-  void startDrop() { assertTrue(0); }
-
   void update();
 //  void draw(int8_t x, int8_t y); // TMP
 };
@@ -243,7 +238,6 @@ public:
 class Box : public Mover {
 
   Heading _heading;
-  int8_t _drop;
 
   void setForceFall() { _flags |= MOVERFLAG_FORCEFALL; }
   void clearForceFall() { _flags &= ~MOVERFLAG_FORCEFALL; }
@@ -265,8 +259,6 @@ public:
   void reset();
 
   void push(Heading heading);
-  void startDrop() { _drop = 1; }
-  bool isDropping() { return _drop > 0; }
 
   void draw(int8_t x, int8_t y);
 };

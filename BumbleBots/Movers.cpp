@@ -61,6 +61,7 @@ void Mover::reset() {
   _height = 40;
   _fallingSpeed = 6;
   _flags = 0;
+  _drop = 0;
 }
 
 bool Mover::canMove() {
@@ -332,7 +333,13 @@ void Bot::draw(int8_t x, int8_t y) {
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
-  gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, botImage);
+  if (isDropping()) {
+    drawDroppingImage(gb.display, x + _dx + 1, y + _dy - _heightDelta - 1, botImage, dropDelta());
+  }
+  else {
+    gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, botImage);
+  }
+
   if (isDazed()) {
     gb.display.drawImage(x + _dx + 2, y + _dy - _heightDelta - 6, dazedImage);
   }
@@ -350,7 +357,6 @@ void Player::reset() {
 
   _nextRotationDir = 0;
   _swappedTiles = false;
-  _drop = 0;
 }
 
 bool Player::canEnterTile(int8_t tileIndex) {
@@ -406,7 +412,7 @@ void Player::updateHeight() {
       signalDeath("Stuck!");
     }
 
-    _heightDelta -= min(5, _drop / 4);
+    _heightDelta -= dropDelta();
   }
 }
 
@@ -683,7 +689,6 @@ void Box::reset() {
   _height = 0;
 
   _heading = NORTH_EAST;
-  _drop = 0;
 }
 
 bool Box::canEnterTile(int8_t tileIndex) {
@@ -751,7 +756,7 @@ void Box::updateHeight() {
       destroy();
     }
     else {
-      _heightDelta -= min(5, _drop / 4);
+      _heightDelta -= dropDelta();
     }
   }
 }
@@ -775,5 +780,10 @@ void Box::push(Heading heading) {
 }
 
 void Box::draw(int8_t x, int8_t y) {
-  gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, boxImage);
+  if (isDropping()) {
+    drawDroppingImage(gb.display, x + _dx, y + _dy - _heightDelta - 1, boxImage, dropDelta());
+  }
+  else {
+    gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, boxImage);
+  }
 }

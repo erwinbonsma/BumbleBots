@@ -163,6 +163,99 @@ bool isFxPlaying() {
   );
 }
 
+/* Based on Graphics::indexTo565
+ *
+ * Modified to support drawing of "dropping" images using a mask
+ */
+void maskedIndexTo565(uint16_t *dest, uint8_t *src, uint8_t *msk, Color *index, uint16_t length, bool skipFirst) {
+  uint8_t srcVal = *(src++);
+  uint8_t mskVal = *(msk++);
+
+  for (uint16_t i = 0; i < length; i++) {
+    if (skipFirst) {
+      if (mskVal & 0x0F) {
+        dest[i] = (uint16_t)index[srcVal & 0x0F];
+      }
+      else {
+        dest[i] = 0;
+      }
+      srcVal = *(src++);
+      mskVal = *(msk++);
+    } else {
+      if (mskVal >> 4) {
+        dest[i] = (uint16_t)index[srcVal >> 4];
+      }
+      else {
+        dest[i] = 0;
+      }
+    }
+    skipFirst = !skipFirst;
+  }
+}
+
+/* Based on Graphics::drawImage(int16_t x, int16_t y, Image&)
+ *
+ * Modified to support drawing of "dropping" images. The significant changes
+ * are marked using ADDED and CHANGED in comments.
+ */
+void drawDroppingImage(Gamebuino_Meta::Graphics& g, int16_t x, int16_t y, Image& img, int8_t drop) {
+  int16_t w1 = img._width;
+  int16_t h1 = img._height;
+  if ((x > g._width) || ((x + w1) < 0) || (y > g._height) || ((y + h1) < 0)) {
+    return;
+  }
+
+  // Horizontal cropping
+  int16_t i2offset = 0;
+  int16_t w2cropped = w1;
+  if (x < 0) {
+    i2offset = -x;
+    w2cropped = w1 + x;
+    if (w2cropped > g._width) {
+      w2cropped = g._width;
+    }
+  } else if ((x + w1) > g._width) {
+    w2cropped = g._width - x;
+  }
+
+  // Vertical cropping
+  int16_t j2offset = 0;
+  int16_t h2cropped = h1;
+  if (y < 0) {
+    j2offset = -y;
+    h2cropped = h1 + y;
+    if (h2cropped > g._height) {
+      h2cropped = g._height;
+    }
+  } else if ((y + h1) > g._height) {
+    h2cropped = g._height - y;
+  }
+  h2cropped -= drop; // ADDED
+
+  // Only support these modes
+  assertTrue(img.colorMode == ColorMode::index);
+  assertTrue(g.colorMode == ColorMode::rgb565);
+
+  uint16_t transparent_backup = img.transparentColor;
+  // Only support BLACK as transparent (index) color
+  assertTrue(img.useTransparentIndex);
+  assertTrue(img.transparentColorIndex == (uint8_t)INDEX_BLACK);
+  img.transparentColor = 0; // Same as: (uint16_t)g.colorIndex[img.transparentColorIndex];
+
+  uint16_t destLineArray[w2cropped];
+  uint16_t *destLine = destLineArray;
+  for (int j2 = 0; j2 < h2cropped; j2++) {
+    uint8_t *srcLine = (uint8_t*)img._buffer + ((w1 + 1) / 2) * (j2 + j2offset) + (i2offset / 2);
+    uint8_t *mskLine = srcLine + ((w1 + 1) / 2) * drop; // ADDED
+
+    maskedIndexTo565(destLine, srcLine, mskLine, g.colorIndex, w2cropped, i2offset % 2); // CHANGED
+
+    g.drawBufferedLine(x + i2offset, y + j2offset + j2, destLine, w2cropped, img);
+  }
+  img.transparentColor = transparent_backup;
+}
+
+
 void assertFailed(const char *function, const char *file, int lineNo, const char *expression) {
   if (SerialUSB) {
     SerialUSB.println("=== ASSERT FAILED ===");
