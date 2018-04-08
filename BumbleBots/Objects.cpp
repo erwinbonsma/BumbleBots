@@ -105,7 +105,7 @@ void Gap::reset() {
 }
 
 const Gamebuino_Meta::Sound_FX dropSfx[] = {
-  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,80,0,24,142,25},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,80,0,24,142,40},
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,160,-20,127,179,4},
 };
 
