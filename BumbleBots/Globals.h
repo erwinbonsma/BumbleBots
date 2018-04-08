@@ -19,7 +19,7 @@ extern Object* objects[maxNumObjects];
 
 // Implemented in Tiles.cpp
 class Tiles;
-extern Tiles *const tiles;
+extern Tiles* const tiles;
 
 // Implemented in main
 void slowMotion(bool enable);

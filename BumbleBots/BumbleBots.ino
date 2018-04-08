@@ -13,19 +13,16 @@
 bool _slowMotionEnabled = false;
 uint8_t _slowMotionCount = 0;
 
-void slowMotion(bool enable) {
-  _slowMotionEnabled = enable;
+void toggleSlowMotion() {
+  _slowMotionEnabled = !_slowMotionEnabled;
   _slowMotionCount = 0;
 
   gb.setFrameRate(_slowMotionEnabled ? 1 : 25);
 }
 
 void checkSlowMotionButtons() {
-  if (gb.buttons.held(BUTTON_A, 0)) {
-    slowMotion(true);
-  }
   if (gb.buttons.held(BUTTON_B, 0)) {
-    slowMotion(false);
+    toggleSlowMotion();
   }
 }
 
@@ -34,6 +31,9 @@ void displayCpuLoad() {
   gb.display.setColor(cpuLoad < 80 ? INDEX_GREEN : (cpuLoad < 100 ? INDEX_YELLOW : INDEX_RED));
   gb.display.setCursor(1, 58);
   gb.display.printf("%d", cpuLoad);
+  if (_slowMotionEnabled) {
+    gb.display.printf(" SM");
+  }
 }
 
 void signalDeath(const char* causeOfDeath) {
@@ -71,7 +71,7 @@ void loop() {
   gb.display.clear();
   gb.lights.clear();
 
-  //checkSlowMotionButtons();
+  checkSlowMotionButtons();
   if (gb.buttons.held(BUTTON_MENU, 0) && loopHandler != &levelMenu) {
     showLevelMenu();
   }
@@ -83,5 +83,5 @@ void loop() {
   }
   loopHandler->draw();
 
-  //displayCpuLoad();
+  displayCpuLoad();
 }

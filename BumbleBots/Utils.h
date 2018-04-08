@@ -121,6 +121,8 @@ inline int8_t sign(int8_t value) {
 
 bool isFxPlaying();
 
+void drawDroppingImage(Gamebuino_Meta::Graphics& g, int16_t x, int16_t y, Image& img, int8_t drop);
+
 void assertFailed(const char *function, const char *file, int lineNo, const char *expression);
 
 #define assertTrue(condition) \

@@ -130,6 +130,24 @@ const GapSpec gapSpecsLevel7[1] = {
     .paletteIndex = PALETTE_GAP_DEFAULT
   }
 };
+const GapSpec gapSpecsTestLevel0[4] = {
+  GapSpec {
+    .pos = makeTilePos(4, 1),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(4, 2),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(5, 1),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(5, 2),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  }
+};
 
 const TilePos boxStartPosLevel6[4] = {
   makeTilePos(2, 4), makeTilePos(2, 5), makeTilePos(4, 3), makeTilePos(6, 3)
@@ -376,8 +394,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .teleportSpecs = nullptr,
     .numBoxes = 17,
     .boxStartPos = boxStartPosTestLevel0,
-    .numGaps = 0,
-    .gapSpecs = nullptr,
+    .numGaps = 4,
+    .gapSpecs = gapSpecsTestLevel0,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesTestLevel0)
   }

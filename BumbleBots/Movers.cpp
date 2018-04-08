@@ -61,6 +61,7 @@ void Mover::reset() {
   _height = 40;
   _fallingSpeed = 6;
   _flags = 0;
+  _drop = 0;
 }
 
 bool Mover::canMove() {
@@ -311,7 +312,7 @@ bool Bot::canStartMove() {
 }
 
 const Color* Bot::getBotPalette(bool flipped) {
-  return (flipped) ? palettes[PALETTE_FLIPPED_BOT] : palettes[PALETTE_DEFAULT];
+  return (flipped) ? palettes[PALETTE_FLIPPED_BOT] : palettes[PALETTE_BOT];
 }
 
 void Bot::update() {
@@ -332,7 +333,13 @@ void Bot::draw(int8_t x, int8_t y) {
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
-  gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, botImage);
+  if (isDropping()) {
+    drawDroppingImage(gb.display, x + _dx + 1, y + _dy - _heightDelta - 1, botImage, dropDelta());
+  }
+  else {
+    gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, botImage);
+  }
+
   if (isDazed()) {
     gb.display.drawImage(x + _dx + 2, y + _dy - _heightDelta - 6, dazedImage);
   }
@@ -350,7 +357,6 @@ void Player::reset() {
 
   _nextRotationDir = 0;
   _swappedTiles = false;
-  _drop = 0;
 }
 
 bool Player::canEnterTile(int8_t tileIndex) {
@@ -406,7 +412,7 @@ void Player::updateHeight() {
       signalDeath("Stuck!");
     }
 
-    _heightDelta -= min(5, _drop / 4);
+    _heightDelta -= dropDelta();
   }
 }
 
@@ -462,11 +468,6 @@ void Player::update() {
   if (_height < -50) {
     signalDeath("System crash");
   }
-}
-
-void Player::drawDebugInfo() {
-  gb.display.setCursor(20, 58);
-  gb.display.printf("%d/%d\n", isFalling(), canStartMove());
 }
 
 //-----------------------------------------------------------------------------
@@ -552,7 +553,15 @@ bool Enemy::isBlocked(int8_t tileIndex) {
   int8_t objectIndex = destTile->object();
   if (objectIndex >= 0) {
     Object* object = objects[objectIndex];
-    if (object->objectType() != TYPE_TELEPORT) {
+    if (
+      // except teleports
+      object->objectType() != TYPE_TELEPORT &&
+      // and filled gaps
+      !(
+        object->objectType() == TYPE_GAP &&
+        ((Gap *)object)->state() == GAP_FILLED
+      )
+    ) {
       return true;
     }
   }
@@ -658,13 +667,6 @@ void Enemy::update() {
   Bot::update();
 }
 
-//void Enemy::draw(int8_t x, int8_t y) {
-//  Bot::draw(x, y);
-//
-//  gb.display.setColor(INDEX_YELLOW);
-//  gb.display.printf("frozen=%d\n", isFrozen());
-//}
-
 //-----------------------------------------------------------------------------
 // Box implementation
 
@@ -675,7 +677,6 @@ void Box::reset() {
   _height = 0;
 
   _heading = NORTH_EAST;
-  _drop = 0;
 }
 
 bool Box::canEnterTile(int8_t tileIndex) {
@@ -685,15 +686,15 @@ bool Box::canEnterTile(int8_t tileIndex) {
     return true;
   }
 
+  if (isDropping()) {
+    // Cannot move once dropping
+    return false;
+  }
+
   Tile* destTile = tiles->tileAtIndex(tileIndex);
   int8_t objectIndex = destTile->object();
   if (objectIndex >= 0 && objects[objectIndex]->objectType() == TYPE_PICKUP) {
     // Cannot move over pickup
-    return false;
-  }
-
-  if (isDropping()) {
-    // Cannot move once dropping
     return false;
   }
 
@@ -743,7 +744,7 @@ void Box::updateHeight() {
       destroy();
     }
     else {
-      _heightDelta -= min(5, _drop / 4);
+      _heightDelta -= dropDelta();
     }
   }
 }
@@ -767,5 +768,10 @@ void Box::push(Heading heading) {
 }
 
 void Box::draw(int8_t x, int8_t y) {
-  gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, boxImage);
+  if (isDropping()) {
+    drawDroppingImage(gb.display, x + _dx, y + _dy - _heightDelta - 1, boxImage, dropDelta());
+  }
+  else {
+    gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, boxImage);
+  }
 }

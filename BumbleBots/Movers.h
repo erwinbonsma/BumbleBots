@@ -19,8 +19,7 @@ class Tile;
 const int8_t MOVERFLAG_FALLING = 0x01;
 const int8_t MOVERFLAG_FROZEN = 0x02;
 const int8_t MOVERFLAG_TELEPORTED = 0x04;
-const int8_t MOVERFLAG_DROPPING = 0x08;
-const int8_t MOVERFLAG_DESTROYED = 0x10;
+const int8_t MOVERFLAG_DESTROYED = 0x08;
 const int8_t MOVERFLAG_FORCEFALL = 0x20; // Only used by Box
 
 class Mover {
@@ -51,6 +50,8 @@ protected:
   int8_t _height;
   int8_t _heightDelta;
   int8_t _drawTileIndex;
+
+  int8_t _drop;
 
   virtual bool canMove();
   // Returns true iff Bot can initiate a new move or turn during update
@@ -103,12 +104,9 @@ public:
   void clearFalling() { _flags &= ~MOVERFLAG_FALLING; }
   bool isFalling() { return _flags & MOVERFLAG_FALLING; }
 
-  // Signals if a mover is dropping into a gap
-  void setDropping() { _flags |= MOVERFLAG_DROPPING; }
-  void clearDropping() { _flags &= ~MOVERFLAG_DROPPING; }
-  bool isDropping() { return _flags & MOVERFLAG_DROPPING; }
-
-  void virtual startDrop() = 0;
+  void startDrop() { _drop = 1; }
+  bool isDropping() { return _drop; }
+  int dropDelta() { return min(5, _drop / 4); }
 
   void setTeleported() { _flags |= MOVERFLAG_TELEPORTED; }
   void clearTeleported() { _flags &= ~MOVERFLAG_TELEPORTED; }
@@ -180,8 +178,6 @@ class Player : public Bot {
   int8_t _nextRotationDir;
   bool _swappedTiles;
 
-  int8_t _drop;
-
 protected:
   void bump();
 
@@ -195,12 +191,8 @@ public:
   bool canEnterTile(int8_t tileIndex);
   MoverType moverType() { return TYPE_PLAYER; }
 
-  void startDrop() { _drop = 1; }
-
   void reset();
   void update();
-
-  void drawDebugInfo(); // TMP
 };
 
 //-----------------------------------------------------------------------------
@@ -234,10 +226,7 @@ public:
 
   MoverType moverType() { return TYPE_ENEMY; }
 
-  void startDrop() { assertTrue(0); }
-
   void update();
-//  void draw(int8_t x, int8_t y); // TMP
 };
 
 //-----------------------------------------------------------------------------
@@ -246,7 +235,6 @@ public:
 class Box : public Mover {
 
   Heading _heading;
-  int8_t _drop;
 
   void setForceFall() { _flags |= MOVERFLAG_FORCEFALL; }
   void clearForceFall() { _flags &= ~MOVERFLAG_FORCEFALL; }
@@ -268,7 +256,6 @@ public:
   void reset();
 
   void push(Heading heading);
-  void startDrop() { _drop = 1; }
 
   void draw(int8_t x, int8_t y);
 };

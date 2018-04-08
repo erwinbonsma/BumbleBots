@@ -189,6 +189,58 @@ void Tile::removeObject(int8_t objectIndex) {
   _objectIndex = -1;
 }
 
+bool Tile::drawMovers(int8_t x, int8_t y) const {
+  int8_t moverIndex = _moverIndex;
+  int8_t lastDrawnIndex = -1;
+  int8_t maxDyIndex = -1;
+
+  while (moverIndex >= 0) {
+    movers[moverIndex]->draw(x, y);
+    lastDrawnIndex = moverIndex;
+    if (maxDyIndex < 0 || movers[moverIndex]->_dy > movers[maxDyIndex]->_dy) {
+      maxDyIndex = moverIndex;
+    }
+
+    moverIndex = movers[moverIndex]->_nextMoverIndex;
+  }
+
+  if (lastDrawnIndex != maxDyIndex) {
+    // Multiple movers and the front-most one was not the last to be drawn, so
+    // redraw it to ensure it is not partially obscured by movers behind it.
+    movers[maxDyIndex]->draw(x, y);
+  }
+
+  // Are all movers behind the center of the tile?
+  return (movers[maxDyIndex]->_dy < 0);
+}
+
+//-----------------------------------------------------------------------------
+
+/* This methods draws all movers and objects on the tile. It ensures that the
+ * front-most one is drawn last to prevent it from being partially obscured by
+ * the other images. The implementation is optimized for speed for the common
+ * use-case (only one object or mover). In case of multiple objects and movers,
+ * it may redraw one of the images.
+ */
+void Tile::drawMoversAndObjects(int8_t x, int8_t y) const {
+  if (_objectIndex >= 0) {
+    // Draw object
+    objects[_objectIndex]->draw(x, y);
+  }
+
+  if (_moverIndex >= 0) {
+    // Draw movers
+    if (
+      drawMovers(x, y) &&
+      _objectIndex >= 0 &&
+      // Only elevated objects can obscure movers
+      objects[_objectIndex]->isElevated()
+    ) {
+      // Redraw object, as it is in front of all movers
+      objects[_objectIndex]->draw(x, y);
+    }
+  }
+}
 
 void Tile::draw(TilePos tilePos, TileType* tileType) const {
   int8_t col = colOfAnyPos(tilePos);
@@ -222,14 +274,8 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
     gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
   }
 
-  if (_objectIndex >= 0) {
-    objects[_objectIndex]->draw(pos.x + 4, pos.y - 2);
-  }
-
-  int8_t moverIndex = _moverIndex;
-  while (moverIndex >= 0) {
-    movers[moverIndex]->draw(pos.x + 4, pos.y - 2);
-    moverIndex = movers[moverIndex]->_nextMoverIndex;
+  if (_objectIndex >= 0 || _moverIndex >= 0) {
+    drawMoversAndObjects(pos.x + 4, pos.y - 2);
   }
 }
 
