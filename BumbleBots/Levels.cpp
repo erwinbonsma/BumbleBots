@@ -27,6 +27,7 @@ const TilePos enemyStartPosLevel2[2] = { makeTilePos(4, 0), makeTilePos(4, 1) };
 const TilePos enemyStartPosLevel3[3] = { makeTilePos(7, 0), makeTilePos(0, 7) };
 const TilePos enemyStartPosLevel4[1] = { makeTilePos(1, 1) };
 const TilePos enemyStartPosLevel6[1] = { makeTilePos(0, 0) };
+const TilePos enemyStartPosLevel8[2] = { makeTilePos(0, 0), makeTilePos(1, 0) };
 const TilePos enemyStartPosTestLevel0[1] = { makeTilePos(7, 1) };
 
 const TilePos pickupStartPosLevel0[13] = {
@@ -59,6 +60,9 @@ const TilePos pickupStartPosLevel6[4] = {
 };
 const TilePos pickupStartPosLevel7[1] = {
   makeTilePos(0, 2)
+};
+const TilePos pickupStartPosLevel8[1] = {
+  makeTilePos(7, 0)
 };
 
 const TeleportPairSpec teleportSpecsLevel4[4] = {
@@ -130,6 +134,20 @@ const GapSpec gapSpecsLevel7[1] = {
     .paletteIndex = PALETTE_GAP_DEFAULT
   }
 };
+const GapSpec gapSpecsLevel8[3] = {
+  GapSpec {
+    .pos = makeTilePos(7, 1),
+    .paletteIndex = PALETTE_GAP_BLUE
+  },
+  GapSpec {
+    .pos = makeTilePos(6, 2),
+    .paletteIndex = PALETTE_GAP_BLUE
+  },
+  GapSpec {
+    .pos = makeTilePos(7, 2),
+    .paletteIndex = PALETTE_GAP_BLUE
+  },
+};
 const GapSpec gapSpecsTestLevel0[4] = {
   GapSpec {
     .pos = makeTilePos(4, 1),
@@ -154,6 +172,9 @@ const TilePos boxStartPosLevel6[4] = {
 };
 const TilePos boxStartPosLevel7[1] = {
   makeTilePos(3, 5)
+};
+const TilePos boxStartPosLevel8[7] = {
+  makeTilePos(0, 6), makeTilePos(1, 6), makeTilePos(2, 6), makeTilePos(3, 6), makeTilePos(4, 6), makeTilePos(5, 6), makeTilePos(6, 6)
 };
 const TilePos boxStartPosTestLevel0[17] = {
   makeTilePos(1, 0), makeTilePos(1, 1), makeTilePos(1, 2), makeTilePos(1, 3), makeTilePos(1, 4), makeTilePos(1, 5), makeTilePos(1, 6),
@@ -232,6 +253,16 @@ const uint8_t tilesLevel7[maxTiles] = {
   0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x0c|H0,
   0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x0c|H0,
   0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0,
+};
+const uint8_t tilesLevel8[maxTiles] = {
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0a|H3, 0x0b|H0,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0a|H3, 0x0b|H0,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0a|H3, 0x0a|H3,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0f|H1,
+  0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0e|H0,
+  0x0e|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0,
 };
 const uint8_t tilesTestLevel0[maxTiles] = {
   0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
@@ -379,6 +410,23 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = gapSpecsLevel7,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel7)
+  },
+
+  LevelSpec {
+    .title = "Tea Party",
+    .playerStartPos = makeTilePos(3, 7),
+    .numEnemies = 2,
+    .enemyStartPos = enemyStartPosLevel8,
+    .numPickups = 1,
+    .pickupStartPos = pickupStartPosLevel8,
+    .numTeleportPairs = 0,
+    .teleportSpecs = nullptr,
+    .numBoxes = 7,
+    .boxStartPos = boxStartPosLevel8,
+    .numGaps = 3,
+    .gapSpecs = gapSpecsLevel8,
+    .timeLimitInCycles = 6000,
+    .tilesSpec = LevelTilesSpec(tilesLevel8)
   },
 
 #ifdef TEST_LEVELS
