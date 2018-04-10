@@ -15,7 +15,7 @@ const Color DBLUE = DARKBLUE;
 const Color CUST1 = gb.createColor(34, 103, 171);
 
 // Blend of ORANGE and BROWN
-const Color CUST2 = gb.createColor(230, 151, 41);
+const Color CUST2 = gb.createColor(145, 110, 67);
 
 const Color palettes[numPalettes][16] = {
   // Default
@@ -25,9 +25,9 @@ const Color palettes[numPalettes][16] = {
   // Flipped bot
   { BLACK,  DBLUE,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  YELLOW, ORANGE, RED,    LGREEN, LBLUE,  BLUE,   CUST1,  BEIGE },
   // Enemy
-  { BLACK,  BROWN,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  RED,    ORANGE, YELLOW, LGREEN, BEIGE,  ORANGE, CUST2,  BEIGE },
+  { BLACK,  DGRAY,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  RED,    ORANGE, YELLOW, LGREEN, BEIGE,  BROWN,  CUST2,  BEIGE },
   // Flipped enemy
-  { BLACK,  BROWN,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  YELLOW, ORANGE, RED,    LGREEN, BEIGE,  ORANGE, CUST2,  BEIGE },
+  { BLACK,  DGRAY,  PURPLE, GREEN,  BROWN,  DGRAY,  GRAY,   WHITE,  YELLOW, ORANGE, RED,    LGREEN, BEIGE,  BROWN,  CUST2,  BEIGE },
   // Checker/darker tile
   { BLACK,  DBLUE,  PURPLE, GREEN,  BROWN,  BLACK,  DGRAY,  GRAY,   RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,   BEIGE },
   // Level menu, Tile 1
