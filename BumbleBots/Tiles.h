@@ -9,10 +9,10 @@
 
 #include "Utils.h"
 
+#include "Movers.h"
 #include "Waves.h"
 
 struct TileType;
-class Player;
 
 const int8_t TILEFLAG_ENEMY_ENTERING = 0x01;
 const int8_t TILEFLAG_BOX_ENTERING = 0x02;

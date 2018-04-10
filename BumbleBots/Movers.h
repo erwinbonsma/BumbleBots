@@ -14,6 +14,19 @@
 class Tile;
 
 //-----------------------------------------------------------------------------
+// MoverType declaration
+
+enum class MoverType : int8_t {
+  Player,
+  Enemy,
+  Box
+};
+
+const MoverType TYPE_PLAYER = MoverType::Player;
+const MoverType TYPE_ENEMY = MoverType::Enemy;
+const MoverType TYPE_BOX = MoverType::Box;
+
+//-----------------------------------------------------------------------------
 // Mover declaration
 
 const int8_t MOVERFLAG_FALLING = 0x01;
