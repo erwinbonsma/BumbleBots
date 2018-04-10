@@ -418,7 +418,7 @@ void Tiles::drawPartOfIsoline(int8_t elementIndex) {
   }
 }
 
-void Tiles::draw(Player *player) {
+void Tiles::draw(Player* player) {
   ScreenPos targetPos;
   if (player) {
     // Let camera focus on player
@@ -443,8 +443,6 @@ void Tiles::draw(Player *player) {
   _cameraPos.y += sign(targetPos.y - _cameraPos.y);
 
   int8_t offMapIsoline = 14 - (colOfOffMapPos(_offMapTilePos) + rowOfOffMapPos(_offMapTilePos));
-  //gb.display.setColor(INDEX_RED);
-  //gb.display.printf("%d\n", offMapIsoline);
   if (offMapIsoline == numIsolines) {
     _offMapTile.draw(_offMapTilePos, tileTypes);
   }
@@ -457,11 +455,5 @@ void Tiles::draw(Player *player) {
   if (offMapIsoline == -1) {
     _offMapTile.draw(_offMapTilePos, tileTypes);
   }
-
-  //gb.display.printf("%d,%d\n",col,row);
-  //gb.display.printf("%d,%d\n",colOfAnyPos(_offMapTilePos),rowOfAnyPos(_offMapTilePos));
-  //gb.display.setColor(INDEX_GRAY);
-  //gb.display.drawFastVLine( 8, 0, 64);
-  //gb.display.drawFastVLine(72, 0, 64);
 }
 

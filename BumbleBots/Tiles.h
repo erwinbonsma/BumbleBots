@@ -148,7 +148,7 @@ public:
   /* Draws the tiles. The player is passed to enable update of the camera
    * position based on the player position.
    */
-  void draw(Player *player);
+  void draw(Player* player);
 };
 
 #endif
