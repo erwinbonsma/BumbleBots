@@ -598,7 +598,7 @@ void Level::initPickups() {
     _pickups[i].init(numObjects++);
     objects[_pickups[i].index()] = &_pickups[i];
 
-    tiles->putObjectOnTile(_pickups[i].index(), _levelSpec->pickupStartPos[i]);
+    tiles.putObjectOnTile(_pickups[i].index(), _levelSpec->pickupStartPos[i]);
   }
   _numPickupsCollected = 0;
 }
@@ -611,13 +611,13 @@ void Level::initTeleports() {
     assertTrue(numObjects < maxNumObjects);
     _teleports[j].init(numObjects++, spec.tile2, spec.paletteIndex);
     objects[_teleports[j].index()] = &_teleports[j];
-    tiles->putObjectOnTile(_teleports[j].index(), spec.tile1);
+    tiles.putObjectOnTile(_teleports[j].index(), spec.tile1);
     j++;
 
     assertTrue(numObjects < maxNumObjects);
     _teleports[j].init(numObjects++, spec.tile1, spec.paletteIndex);
     objects[_teleports[j].index()] = &_teleports[j];
-    tiles->putObjectOnTile(_teleports[j].index(), spec.tile2);
+    tiles.putObjectOnTile(_teleports[j].index(), spec.tile2);
     j++;
   }
 }
@@ -631,7 +631,7 @@ void Level::initGaps() {
     _gaps[i].init(numObjects++, spec.paletteIndex);
     objects[_gaps[i].index()] = &_gaps[i];
 
-    tiles->putObjectOnTile(_gaps[i].index(), spec.pos);
+    tiles.putObjectOnTile(_gaps[i].index(), spec.pos);
   }
 }
 
@@ -644,7 +644,7 @@ void Level::initObstacles() {
     _obstacles[i].init(numObjects++, spec.typeIndex);
     objects[_obstacles[i].index()] = &_obstacles[i];
 
-    tiles->putObjectOnTile(_obstacles[i].index(), spec.pos);
+    tiles.putObjectOnTile(_obstacles[i].index(), spec.pos);
   }
 }
 
@@ -660,7 +660,7 @@ void Level::initObjects() {
 void Level::init(const LevelSpec *levelSpec) {
   _levelSpec = levelSpec;
 
-  tiles->init(&_levelSpec->tilesSpec, -64);
+  tiles.init(&_levelSpec->tilesSpec, -64);
 
   initMovers();
   initObjects();
@@ -672,7 +672,7 @@ void Level::reset() {
     initObjects();
   }
 
-  tiles->reset();
+  tiles.reset();
 
   // Reset all objects
   for (int8_t i = numObjects; --i >= 0; ) {
@@ -681,7 +681,7 @@ void Level::reset() {
 
   for (int8_t i = _levelSpec->numBoxes; --i >= 0; ) {
     _boxes[i].reset();
-    tiles->putMoverOnTile(_boxes[i].index(), _levelSpec->boxStartPos[i]);
+    tiles.putMoverOnTile(_boxes[i].index(), _levelSpec->boxStartPos[i]);
   }
 
   _started = false;
@@ -692,18 +692,18 @@ void Level::reset() {
 
 void Level::start() {
   _player.reset();
-  tiles->putMoverOnTile(_player.index(), _levelSpec->playerStartPos);
+  tiles.putMoverOnTile(_player.index(), _levelSpec->playerStartPos);
 
   for (int8_t i = _levelSpec->numEnemies; --i >= 0; ) {
     _enemies[i].reset();
-    tiles->putMoverOnTile(_enemies[i].index(), _levelSpec->enemyStartPos[i]);
+    tiles.putMoverOnTile(_enemies[i].index(), _levelSpec->enemyStartPos[i]);
   }
 
   _started = true;
 }
 
 void Level::freeze() {
-  tiles->attenuateWaves();
+  tiles.attenuateWaves();
 
   for (int8_t i = numMovers; --i >= 0; ) {
     movers[i]->freeze();
@@ -717,7 +717,7 @@ bool Level::isCompleted() {
 }
 
 void Level::update() {
-  tiles->update();
+  tiles.update();
 
   if (_started) {
     for (int8_t i = numMovers; --i >= 0; ) {
@@ -734,7 +734,7 @@ void Level::update() {
 }
 
 void Level::draw() {
-  tiles->draw(_started ? &_player : 0);
+  tiles.draw(_started ? &_player : 0);
 
   drawTimeBar();
 }

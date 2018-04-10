@@ -31,8 +31,8 @@ const Gamebuino_Meta::Sound_FX crushSfx[] = {
 
 bool isFall(int8_t fromTileIndex, int8_t destTileIndex) {
   return (
-    tiles->tileAtIndex(fromTileIndex)->height() -
-    tiles->tileAtIndex(destTileIndex)->height()
+    tiles.tileAtIndex(fromTileIndex).height() -
+    tiles.tileAtIndex(destTileIndex).height()
   ) > 6;
 }
 
@@ -81,11 +81,11 @@ Heading Mover::moveHeading() {
 }
 
 void Mover::updateHeight() {
-  int8_t tileHeight = tiles->tileAtIndex(_tileIndex)->height();
+  int8_t tileHeight = tiles.tileAtIndex(_tileIndex).height();
 
   // On two tiles. Height determined by highest one
   if (_tileIndex2 >= 0) {
-    tileHeight = max(tileHeight, tiles->tileAtIndex(_tileIndex2)->height());
+    tileHeight = max(tileHeight, tiles.tileAtIndex(_tileIndex2).height());
   }
 
   if (_height > tileHeight) {
@@ -98,7 +98,7 @@ void Mover::updateHeight() {
     _fallingSpeed = 6;
   }
 
-  _heightDelta = _height - tiles->tileAtIndex(_drawTileIndex)->height();
+  _heightDelta = _height - tiles.tileAtIndex(_drawTileIndex).height();
 }
 
 void Mover::setHeight(int8_t height) {
@@ -149,7 +149,7 @@ void Mover::moveStep() {
   //gb.display.printf("relMov=%d, hd=%d\n", relMov, moveHeading());
   if (relMov == 3) {
     // About to enter next tile
-    int8_t destTile = tiles->neighbour(_tileIndex, moveHeading());
+    int8_t destTile = tiles.neighbour(_tileIndex, moveHeading());
     if (canEnterTile(destTile)) {
       // Entering destination tile
       enteringTile(destTile);
@@ -176,16 +176,16 @@ void Mover::moveStep() {
 }
 
 bool Mover::canEnterTile(int8_t tileIndex) {
-  Tile* destTile = tiles->tileAtIndex(tileIndex);
+  Tile& destTile = tiles.tileAtIndex(tileIndex);
   if (
-    destTile->height() >
-    tiles->tileAtIndex(_tileIndex)->height()
+    destTile.height() >
+    tiles.tileAtIndex(_tileIndex).height()
   ) {
     // Cannot move to higher unit
     return false;
   }
 
-  int8_t objectIndex = destTile->object();
+  int8_t objectIndex = destTile.object();
   if (
     objectIndex >= 0 &&
     objects[objectIndex]->objectType() == TYPE_OBSTACLE
@@ -200,8 +200,8 @@ bool Mover::canEnterTile(int8_t tileIndex) {
 void Mover::enteringTile(int8_t tileIndex) {
   _tileIndex2 = tileIndex;
 
-  TilePos destPos = tiles->posOfTile(_tileIndex2);
-  TilePos fromPos = tiles->posOfTile(_tileIndex);
+  TilePos destPos = tiles.posOfTile(_tileIndex2);
+  TilePos fromPos = tiles.posOfTile(_tileIndex);
 
   if (
     colOfAnyPos(destPos) + rowOfAnyPos(destPos) >
@@ -209,7 +209,7 @@ void Mover::enteringTile(int8_t tileIndex) {
   ) {
     // Destination tile is in front of current one.
     // Add mover there, to ensure it is drawn on top of both tiles.
-    tiles->moveMoverToTile(_moverIndex, destPos);
+    tiles.moveMoverToTile(_moverIndex, destPos);
     _movement -= 16 * sign(_movement);
   }
 }
@@ -224,7 +224,7 @@ void Mover::exitedTile() {
   if (_drawTileIndex != _tileIndex) {
     // The mover was not yet added to the new tile. Do so now, now it is not covering the
     // previous tile anymore.
-    tiles->moveMoverToTile(_moverIndex, _tileIndex);
+    tiles.moveMoverToTile(_moverIndex, _tileIndex);
     _movement -= 16 * sign(_movement);
   }
 
@@ -237,7 +237,7 @@ void Mover::exitedTile() {
 
 void Mover::destroy() {
   if (!isDestroyed()) {
-    tiles->tileAtIndex(_drawTileIndex)->removeMover(_moverIndex);
+    tiles.tileAtIndex(_drawTileIndex).removeMover(_moverIndex);
 
     setDestroyed();
   }
@@ -255,9 +255,9 @@ void Mover::update() {
   updateHeight();
   updateDxDy();
 
-  Tile* tile = tiles->tileAtIndex(_tileIndex);
-  if (tile->object() >= 0 && _height == tile->height()) {
-    objects[tile->object()]->visit(_moverIndex);
+  Tile& tile = tiles.tileAtIndex(_tileIndex);
+  if (tile.object() >= 0 && _height == tile.height()) {
+    objects[tile.object()]->visit(_moverIndex);
   }
 
   if (
@@ -265,10 +265,10 @@ void Mover::update() {
     // Wait with checking until mover is not on two tiles anymore
     _tileIndex2 == NO_TILE
   ) {
-    if (_height - tiles->tileAtIndex(_tileIndex)->height() < 5) {
-      int8_t destroyableIndex = tile->moverOfType(TYPE_BOX, _moverIndex);
+    if (_height - tiles.tileAtIndex(_tileIndex).height() < 5) {
+      int8_t destroyableIndex = tile.moverOfType(TYPE_BOX, _moverIndex);
       if (destroyableIndex == -1) {
-        destroyableIndex = tile->moverOfType(TYPE_ENEMY, _moverIndex);
+        destroyableIndex = tile.moverOfType(TYPE_ENEMY, _moverIndex);
       }
       if (destroyableIndex != -1) {
         movers[destroyableIndex]->destroy();
@@ -375,7 +375,7 @@ void Player::reset() {
 }
 
 bool Player::canEnterTile(int8_t tileIndex) {
-  int8_t boxIndex = tiles->tileAtIndex(tileIndex)->moverOfType(TYPE_BOX, _moverIndex);
+  int8_t boxIndex = tiles.tileAtIndex(tileIndex).moverOfType(TYPE_BOX, _moverIndex);
 
   return (
     // Check box interactions
@@ -385,7 +385,7 @@ bool Player::canEnterTile(int8_t tileIndex) {
       // Will drop on box
       isFall(_tileIndex, tileIndex) ||
       // Can push box
-      movers[boxIndex]->canEnterTile(tiles->neighbour(tileIndex, moveHeading()))
+      movers[boxIndex]->canEnterTile(tiles.neighbour(tileIndex, moveHeading()))
     ) &&
     Mover::canEnterTile(tileIndex)
   );
@@ -394,7 +394,7 @@ bool Player::canEnterTile(int8_t tileIndex) {
 void Player::enteringTile(int8_t tileIndex) {
   Mover::enteringTile(tileIndex);
 
-  int8_t boxIndex = tiles->tileAtIndex(tileIndex)->moverOfType(TYPE_BOX, _moverIndex);
+  int8_t boxIndex = tiles.tileAtIndex(tileIndex).moverOfType(TYPE_BOX, _moverIndex);
   if (boxIndex != -1) {
     if (!isFall(_tileIndex, tileIndex)) {
       // Entering from similar height, so push box
@@ -503,9 +503,9 @@ void Enemy::reset() {
 }
 
 void Enemy::destroy() {
-  tiles->tileAtIndex(_tileIndex)->clearEnemyEntering();
+  tiles.tileAtIndex(_tileIndex).clearEnemyEntering();
   if (_tileIndex2 != -1) {
-    tiles->tileAtIndex(_tileIndex2)->clearEnemyEntering();
+    tiles.tileAtIndex(_tileIndex2).clearEnemyEntering();
   }
 
   Bot::destroy();
@@ -529,17 +529,17 @@ bool Enemy::canEnterTile(int8_t tileIndex) {
     return false;
   }
 
-  Tile* tile = tiles->tileAtIndex(tileIndex);
+  Tile& tile = tiles.tileAtIndex(tileIndex);
   if (
     // Another enemy is entering
-    tile->isEnemyEntering() ||
+    tile.isEnemyEntering() ||
     // or already there
-    tile->moverOfType(TYPE_ENEMY, _moverIndex) != -1
+    tile.moverOfType(TYPE_ENEMY, _moverIndex) != -1
   ) {
     return false;
   }
 
-  if (tile->isBoxEntering()) {
+  if (tile.isBoxEntering()) {
     return false;
   }
 
@@ -548,12 +548,12 @@ bool Enemy::canEnterTile(int8_t tileIndex) {
 
 void Enemy::enteringTile(int8_t tileIndex) {
   Bot::enteringTile(tileIndex);
-  tiles->tileAtIndex(tileIndex)->setEnemyEntering();
+  tiles.tileAtIndex(tileIndex).setEnemyEntering();
 }
 
 void Enemy::exitedTile() {
   Bot::exitedTile();
-  tiles->tileAtIndex(_tileIndex)->clearEnemyEntering();
+  tiles.tileAtIndex(_tileIndex).clearEnemyEntering();
 }
 
 void Enemy::turnStep() {
@@ -562,10 +562,10 @@ void Enemy::turnStep() {
 }
 
 bool Enemy::isBlocked(int8_t tileIndex) {
-  Tile* destTile = tiles->tileAtIndex(tileIndex);
+  Tile& destTile = tiles.tileAtIndex(tileIndex);
 
   // (Most) objects block
-  int8_t objectIndex = destTile->object();
+  int8_t objectIndex = destTile.object();
   if (objectIndex >= 0) {
     Object* object = objects[objectIndex];
     if (
@@ -581,7 +581,7 @@ bool Enemy::isBlocked(int8_t tileIndex) {
     }
   }
 
-  int8_t boxIndex = destTile->moverOfType(TYPE_BOX, _moverIndex);
+  int8_t boxIndex = destTile.moverOfType(TYPE_BOX, _moverIndex);
   if (
     boxIndex >= 0 &&
     !movers[boxIndex]->isFalling()
@@ -592,17 +592,17 @@ bool Enemy::isBlocked(int8_t tileIndex) {
 
   // Fear big falls
   return (
-    tiles->tileAtIndex(_tileIndex)->height() -
-    destTile->height()
+    tiles.tileAtIndex(_tileIndex).height() -
+    destTile.height()
   ) > 10;
 }
 
 int8_t Enemy::headingScore(Heading h) {
-  int8_t destTileIndex = tiles->neighbour(_tileIndex, h);
+  int8_t destTileIndex = tiles.neighbour(_tileIndex, h);
 
   if (
     !isPosOnMap((TilePos)destTileIndex) ||
-    tiles->tileAtIndex(destTileIndex)->height() < -5
+    tiles.tileAtIndex(destTileIndex).height() < -5
   ) {
     // Do not move off the map
     return -99;
@@ -641,8 +641,8 @@ int8_t Enemy::headingScore(Heading h) {
   else {
     // Penalize climbs
     int8_t hDelta = (
-      tiles->tileAtIndex(destTileIndex)->height() -
-      tiles->tileAtIndex(_tileIndex)->height()
+      tiles.tileAtIndex(destTileIndex).height() -
+      tiles.tileAtIndex(_tileIndex).height()
     );
     score -= max(0, min(5, hDelta));
   }
@@ -706,8 +706,8 @@ bool Box::canEnterTile(int8_t tileIndex) {
     return false;
   }
 
-  Tile* destTile = tiles->tileAtIndex(tileIndex);
-  int8_t objectIndex = destTile->object();
+  Tile& destTile = tiles.tileAtIndex(tileIndex);
+  int8_t objectIndex = destTile.object();
   if (objectIndex >= 0 && objects[objectIndex]->objectType() == TYPE_PICKUP) {
     // Cannot move over pickup
     return false;
@@ -716,8 +716,8 @@ bool Box::canEnterTile(int8_t tileIndex) {
   if (
     // Cannot move when tile is (going to be) occupied by a mover
     (
-      destTile->isEnemyEntering() ||
-      destTile->containsMovers()
+      destTile.isEnemyEntering() ||
+      destTile.containsMovers()
     ) &&
     // Unless box drops onto it
     !isFall(_tileIndex, tileIndex)
@@ -740,7 +740,7 @@ void Box::enteringTile(int8_t tileIndex) {
 void Box::exitedTile() {
   Mover::exitedTile();
 
-  tiles->tileAtIndex(_tileIndex)->clearBoxEntering();
+  tiles.tileAtIndex(_tileIndex).clearBoxEntering();
 }
 
 void Box::updateHeight() {
@@ -754,7 +754,7 @@ void Box::updateHeight() {
     _drop++;
 
     if (_drop == 20) {
-      Gap* gap = (Gap *)objects[tiles->tileAtIndex(_tileIndex)->object()];
+      Gap* gap = (Gap *)objects[tiles.tileAtIndex(_tileIndex).object()];
       gap->fill();
       destroy();
     }
@@ -768,7 +768,7 @@ void Box::push(Heading heading) {
   setHeading(heading);
   _movementDir = 1;
 
-  int8_t destTileIndex = tiles->neighbour(_tileIndex, heading);
+  int8_t destTileIndex = tiles.neighbour(_tileIndex, heading);
 
   // Ensure that a box at rest (i.e. not falling) will never share a tile with
   // a mover (so that this does not need to be handled).
@@ -778,7 +778,7 @@ void Box::push(Heading heading) {
     setForceFall();
   }
   else {
-    tiles->tileAtIndex(destTileIndex)->setBoxEntering();
+    tiles.tileAtIndex(destTileIndex).setBoxEntering();
   }
 }
 

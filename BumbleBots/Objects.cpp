@@ -28,7 +28,7 @@ void Object::init(int8_t objectIndex) {
 
 void Pickup::visit(int8_t moverIndex) {
   if (!movers[moverIndex]->isFrozen()) {
-    tiles->tileAtIndex(_tileIndex)->removeObject(_objectIndex);
+    tiles.tileAtIndex(_tileIndex).removeObject(_objectIndex);
     signalPickupCollected();
   }
 }
@@ -63,13 +63,13 @@ void Teleport::visit(int8_t moverIndex) {
     mover->clearTeleported();
   }
   else if (!mover->didTeleport()) {
-    Tile* destTile = tiles->tileAtIndex(_destTileIndex);
+    Tile& destTile = tiles.tileAtIndex(_destTileIndex);
 
-    tiles->moveMoverToTile(moverIndex, _destTileIndex);
+    tiles.moveMoverToTile(moverIndex, _destTileIndex);
     mover->_tileIndex = _destTileIndex;
     mover->setTeleported();
     mover->setFalling();
-    mover->setHeight(destTile->height() + 16);
+    mover->setHeight(destTile.height() + 16);
 
     _coolDownCount = 24;
     gb.sound.fx(teleportSfx);

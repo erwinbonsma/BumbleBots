@@ -52,7 +52,7 @@ void LevelMenu::initPlayer() {
   _player.init(numMovers++);
   _player.reset();
   movers[_player.index()] = &_player;
-  tiles->putMoverOnTile(_player.index(), makeTilePos(6, 6));
+  tiles.putMoverOnTile(_player.index(), makeTilePos(6, 6));
 }
 
 void LevelMenu::addDigits() {
@@ -72,9 +72,7 @@ void LevelMenu::addDigits() {
     _digitsParts[i].init(i, digit, topPart, digitColor);
     objects[i] = &_digitsParts[i];
 
-    if (1) {
-      tiles->putObjectOnTile(i, pos);
-    }
+    tiles.putObjectOnTile(i, pos);
   }
 }
 
@@ -92,8 +90,8 @@ void LevelMenu::drawTitle() {
 
 void LevelMenu::init() {
   _tilesSpec.init(progressTracker.maxStartLevel());
-  tiles->init(&_tilesSpec, 16);
-  tiles->reset();
+  tiles.init(&_tilesSpec, 16);
+  tiles.reset();
 
   // Create and add player
   initPlayer();
@@ -111,7 +109,7 @@ void LevelMenu::update() {
 }
 
 void LevelMenu::draw() {
-  tiles->draw(&_player);
+  tiles.draw(&_player);
 
   drawTitle();
 }
