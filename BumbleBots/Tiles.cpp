@@ -16,7 +16,7 @@
 Tiles _tiles = Tiles();
 
 // Exposed in Globals.h
-Tiles *const tiles = &_tiles;
+Tiles& tiles = _tiles;
 
 const uint8_t numIsolines = 15;
 
@@ -246,8 +246,8 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
   int8_t col = colOfAnyPos(tilePos);
   int8_t row = rowOfAnyPos(tilePos);
   ScreenPos pos = TilePosToScreenPos(col, row);
-  pos.x += 40 - tiles->cameraPos().x;
-  pos.y += 32 - tiles->cameraPos().y - _height;
+  pos.x += 40 - tiles.cameraPos().x;
+  pos.y += 32 - tiles.cameraPos().y - _height;
 
   if (pos.x <= -16 || pos.x >= 80) {
     return;
@@ -312,12 +312,12 @@ void Tiles::reset() {
   _waveStrengthDelta = 2;
 }
 
-Tile* Tiles::tileAtIndex(int8_t tileIndex) {
+Tile& Tiles::tileAtIndex(int8_t tileIndex) {
   if (isPosOnMap((TilePos)tileIndex)) {
-    return &_units[tileIndex];
+    return _units[tileIndex];
   }
   else {
-    return &_offMapTile;
+    return _offMapTile;
   }
 }
 
@@ -403,22 +403,22 @@ void Tiles::drawPartOfIsoline(int8_t elementIndex) {
     _units[pos].draw(pos, _tilesSpec->tileTypeAt(pos));
   }
   else {
-    const IsolinePair *pair = &isolineTreePairs[elementIndex - 1];
+    const IsolinePair& pair = isolineTreePairs[elementIndex - 1];
     if (
-      tiles->tileAtIndex(pair->lrLeaf)->height() <
-      tiles->tileAtIndex(pair->rlLeaf)->height()
+      tiles.tileAtIndex(pair.lrLeaf).height() <
+      tiles.tileAtIndex(pair.rlLeaf).height()
     ) {
-      drawPartOfIsoline(pair->lChild);
-      drawPartOfIsoline(pair->rChild);
+      drawPartOfIsoline(pair.lChild);
+      drawPartOfIsoline(pair.rChild);
     }
     else {
-      drawPartOfIsoline(pair->rChild);
-      drawPartOfIsoline(pair->lChild);
+      drawPartOfIsoline(pair.rChild);
+      drawPartOfIsoline(pair.lChild);
     }
   }
 }
 
-void Tiles::draw(Player *player) {
+void Tiles::draw(Player* player) {
   ScreenPos targetPos;
   if (player) {
     // Let camera focus on player
@@ -443,8 +443,6 @@ void Tiles::draw(Player *player) {
   _cameraPos.y += sign(targetPos.y - _cameraPos.y);
 
   int8_t offMapIsoline = 14 - (colOfOffMapPos(_offMapTilePos) + rowOfOffMapPos(_offMapTilePos));
-  //gb.display.setColor(INDEX_RED);
-  //gb.display.printf("%d\n", offMapIsoline);
   if (offMapIsoline == numIsolines) {
     _offMapTile.draw(_offMapTilePos, tileTypes);
   }
@@ -457,11 +455,5 @@ void Tiles::draw(Player *player) {
   if (offMapIsoline == -1) {
     _offMapTile.draw(_offMapTilePos, tileTypes);
   }
-
-  //gb.display.printf("%d,%d\n",col,row);
-  //gb.display.printf("%d,%d\n",colOfAnyPos(_offMapTilePos),rowOfAnyPos(_offMapTilePos));
-  //gb.display.setColor(INDEX_GRAY);
-  //gb.display.drawFastVLine( 8, 0, 64);
-  //gb.display.drawFastVLine(72, 0, 64);
 }
 

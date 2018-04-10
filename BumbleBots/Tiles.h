@@ -9,10 +9,10 @@
 
 #include "Utils.h"
 
+#include "Movers.h"
 #include "Waves.h"
 
 struct TileType;
-class Player;
 
 const int8_t TILEFLAG_ENEMY_ENTERING = 0x01;
 const int8_t TILEFLAG_BOX_ENTERING = 0x02;
@@ -116,7 +116,7 @@ public:
     return _cameraPos;
   }
 
-  Tile* tileAtIndex(int8_t tileIndex);
+  Tile& tileAtIndex(int8_t tileIndex);
   TilePos posOfTile(int8_t tileIndex) { return (TilePos)tileIndex; }
 
   /* Returns the index of the tile neighbouring the given on in the indicated
@@ -148,7 +148,7 @@ public:
   /* Draws the tiles. The player is passed to enable update of the camera
    * position based on the player position.
    */
-  void draw(Player *player);
+  void draw(Player* player);
 };
 
 #endif

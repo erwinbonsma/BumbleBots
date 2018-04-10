@@ -28,7 +28,7 @@ void Object::init(int8_t objectIndex) {
 
 void Pickup::visit(int8_t moverIndex) {
   if (!movers[moverIndex]->isFrozen()) {
-    tiles->tileAtIndex(_tileIndex)->removeObject(_objectIndex);
+    tiles.tileAtIndex(_tileIndex).removeObject(_objectIndex);
     signalPickupCollected();
   }
 }
@@ -63,13 +63,13 @@ void Teleport::visit(int8_t moverIndex) {
     mover->clearTeleported();
   }
   else if (!mover->didTeleport()) {
-    Tile* destTile = tiles->tileAtIndex(_destTileIndex);
+    Tile& destTile = tiles.tileAtIndex(_destTileIndex);
 
-    tiles->moveMoverToTile(moverIndex, _destTileIndex);
+    tiles.moveMoverToTile(moverIndex, _destTileIndex);
     mover->_tileIndex = _destTileIndex;
     mover->setTeleported();
     mover->setFalling();
-    mover->setHeight(destTile->height() + 16);
+    mover->setHeight(destTile.height() + 16);
 
     _coolDownCount = 24;
     gb.sound.fx(teleportSfx);
@@ -129,6 +129,33 @@ void Gap::draw(int8_t x, int8_t y) {
   gb.display.drawImage(x, y + 4, gapImage);
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
+}
+
+//-----------------------------------------------------------------------------
+// Obstacle implementation
+
+const ObstacleTypeSpec obstacleTypes[numObstacleTypes] = {
+  ObstacleTypeSpec {
+    .image = rock1Image,
+    .dx = 0,
+    .dy = 1
+  },
+  ObstacleTypeSpec {
+    .image = rock2Image,
+    .dx = 0,
+    .dy = 1
+  },
+};
+
+void Obstacle::init(int8_t objectIndex, uint8_t obstacleTypeIndex) {
+  Object::init(objectIndex);
+
+  _obstacleTypeIndex = obstacleTypeIndex;
+}
+
+void Obstacle::draw(int8_t x, int8_t y) {
+  const ObstacleTypeSpec& spec = obstacleTypes[_obstacleTypeIndex];
+  gb.display.drawImage(x + spec.dx, y + spec.dy, spec.image);
 }
 
 //-----------------------------------------------------------------------------

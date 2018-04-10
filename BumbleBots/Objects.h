@@ -12,6 +12,23 @@
 #include "Utils.h"
 
 //-----------------------------------------------------------------------------
+// ObjectType declaration
+
+enum class ObjectType : int8_t {
+  Pickup,
+  Teleport,
+  Gap,
+  Obstacle,
+  MenuDigit
+};
+
+const ObjectType TYPE_PICKUP = ObjectType::Pickup;
+const ObjectType TYPE_TELEPORT = ObjectType::Teleport;
+const ObjectType TYPE_GAP = ObjectType::Gap;
+const ObjectType TYPE_OBSTACLE = ObjectType::Obstacle;
+const ObjectType TYPE_MENUDIGIT = ObjectType::MenuDigit;
+
+//-----------------------------------------------------------------------------
 // Object declaration
 
 class Object {
@@ -93,6 +110,27 @@ public:
 
   void reset();
   void visit(int8_t moverIndex);
+  void draw(int8_t x, int8_t y);
+};
+
+//-----------------------------------------------------------------------------
+// Obstacle declaration
+
+struct ObstacleTypeSpec {
+  Image& image;
+  int8_t dx;
+  int8_t dy;
+};
+
+const uint8_t numObstacleTypes = 2;
+extern const ObstacleTypeSpec obstacleTypes[numObstacleTypes];
+
+class Obstacle : public Object {
+  uint8_t _obstacleTypeIndex;
+public:
+  void init(int8_t objectIndex, uint8_t obstacleTypeIndex);
+
+  ObjectType objectType() { return TYPE_OBSTACLE; }
   void draw(int8_t x, int8_t y);
 };
 
