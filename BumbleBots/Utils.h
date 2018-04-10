@@ -32,11 +32,13 @@ enum class ObjectType : int8_t {
   Pickup,
   Teleport,
   Gap,
+  Obstacle,
   MenuDigit
 };
 const ObjectType TYPE_PICKUP = ObjectType::Pickup;
 const ObjectType TYPE_TELEPORT = ObjectType::Teleport;
 const ObjectType TYPE_GAP = ObjectType::Gap;
+const ObjectType TYPE_OBSTACLE = ObjectType::Obstacle;
 const ObjectType TYPE_MENUDIGIT = ObjectType::MenuDigit;
 
 /* Valid values: 0..maxCols * maxRows - 1

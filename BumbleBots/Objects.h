@@ -97,6 +97,27 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+// Obstacle declaration
+
+struct ObstacleTypeSpec {
+  Image& image;
+  int8_t dx;
+  int8_t dy;
+};
+
+const uint8_t numObstacleTypes = 2;
+extern const ObstacleTypeSpec obstacleTypes[numObstacleTypes];
+
+class Obstacle : public Object {
+  uint8_t _obstacleTypeIndex;
+public:
+  void init(int8_t objectIndex, uint8_t obstacleTypeIndex);
+
+  ObjectType objectType() { return TYPE_OBSTACLE; }
+  void draw(int8_t x, int8_t y);
+};
+
+//-----------------------------------------------------------------------------
 // MenuDigit declaration
 
 class MenuDigit : public Object {

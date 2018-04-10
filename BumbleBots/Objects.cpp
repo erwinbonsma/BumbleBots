@@ -132,6 +132,33 @@ void Gap::draw(int8_t x, int8_t y) {
 }
 
 //-----------------------------------------------------------------------------
+// Obstacle implementation
+
+const ObstacleTypeSpec obstacleTypes[numObstacleTypes] = {
+  ObstacleTypeSpec {
+    .image = rock1Image,
+    .dx = 0,
+    .dy = 1
+  },
+  ObstacleTypeSpec {
+    .image = rock2Image,
+    .dx = 0,
+    .dy = 1
+  },
+};
+
+void Obstacle::init(int8_t objectIndex, uint8_t obstacleTypeIndex) {
+  Object::init(objectIndex);
+
+  _obstacleTypeIndex = obstacleTypeIndex;
+}
+
+void Obstacle::draw(int8_t x, int8_t y) {
+  const ObstacleTypeSpec& spec = obstacleTypes[_obstacleTypeIndex];
+  gb.display.drawImage(x + spec.dx, y + spec.dy, spec.image);
+}
+
+//-----------------------------------------------------------------------------
 // MenuDigit implementation
 
 const uint8_t menuDigitsSpecsStart[] = {

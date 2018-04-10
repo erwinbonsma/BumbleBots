@@ -167,6 +167,25 @@ const GapSpec gapSpecsTestLevel0[4] = {
   }
 };
 
+const ObstacleSpec obstacleSpecsLevel8[4] = {
+  ObstacleSpec {
+    .pos = makeTilePos(6, 0),
+    .typeIndex = 0
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(6, 1),
+    .typeIndex = 1
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(6, 4),
+    .typeIndex = 0
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(7, 4),
+    .typeIndex = 1
+  }
+};
+
 const TilePos boxStartPosLevel6[4] = {
   makeTilePos(2, 4), makeTilePos(2, 5), makeTilePos(4, 3), makeTilePos(6, 3)
 };
@@ -255,11 +274,11 @@ const uint8_t tilesLevel7[maxTiles] = {
   0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0,
 };
 const uint8_t tilesLevel8[maxTiles] = {
-  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0a|H3, 0x0b|H0,
-  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0a|H3, 0x0b|H0,
   0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
   0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
-  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0a|H3, 0x0a|H3,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
   0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0f|H1,
   0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0e|H0,
   0x0e|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0, 0x0d|H0,
@@ -289,6 +308,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
     .timeLimitInCycles = 2000,
     .tilesSpec = LevelTilesSpec(tilesLevel0)
   },
@@ -306,6 +327,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel1)
   },
@@ -323,6 +346,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
     .timeLimitInCycles = 4500,
     .tilesSpec = LevelTilesSpec(tilesLevel2)
   },
@@ -340,6 +365,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel3)
   },
@@ -357,6 +384,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel4)
   },
@@ -374,6 +403,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
     .timeLimitInCycles = -1000,
     .tilesSpec = LevelTilesSpec(tilesLevel5)
   },
@@ -391,6 +422,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = boxStartPosLevel6,
     .numGaps = 4,
     .gapSpecs = gapSpecsLevel6,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel6)
   },
@@ -408,6 +441,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = boxStartPosLevel7,
     .numGaps = 1,
     .gapSpecs = gapSpecsLevel7,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel7)
   },
@@ -425,6 +460,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = boxStartPosLevel8,
     .numGaps = 3,
     .gapSpecs = gapSpecsLevel8,
+    .numObstacles = 4,
+    .obstacleSpecs = obstacleSpecsLevel8,
     .timeLimitInCycles = 6000,
     .tilesSpec = LevelTilesSpec(tilesLevel8)
   },
@@ -444,6 +481,8 @@ const LevelSpec levelSpecs[numLevels] = {
     .boxStartPos = boxStartPosTestLevel0,
     .numGaps = 4,
     .gapSpecs = gapSpecsTestLevel0,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
     .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesTestLevel0)
   }
@@ -596,12 +635,26 @@ void Level::initGaps() {
   }
 }
 
+void Level::initObstacles() {
+  for (uint8_t i = 0; i < _levelSpec->numObstacles; i++) {
+    ObstacleSpec spec = _levelSpec->obstacleSpecs[i];
+
+    assertTrue(numObjects < maxNumObjects);
+
+    _obstacles[i].init(numObjects++, spec.typeIndex);
+    objects[_obstacles[i].index()] = &_obstacles[i];
+
+    tiles->putObjectOnTile(_obstacles[i].index(), spec.pos);
+  }
+}
+
 void Level::initObjects() {
   numObjects = 0;
 
   initPickups();
   initTeleports();
   initGaps();
+  initObstacles();
 }
 
 void Level::init(const LevelSpec *levelSpec) {

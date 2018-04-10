@@ -176,10 +176,25 @@ void Mover::moveStep() {
 }
 
 bool Mover::canEnterTile(int8_t tileIndex) {
-  return (
-    tiles->tileAtIndex(tileIndex)->height() <=
+  Tile* destTile = tiles->tileAtIndex(tileIndex);
+  if (
+    destTile->height() >
     tiles->tileAtIndex(_tileIndex)->height()
-  );
+  ) {
+    // Cannot move to higher unit
+    return false;
+  }
+
+  int8_t objectIndex = destTile->object();
+  if (
+    objectIndex >= 0 &&
+    objects[objectIndex]->objectType() == TYPE_OBSTACLE
+  ) {
+    // Obstacles always block
+    return false;
+  }
+
+  return true;
 }
 
 void Mover::enteringTile(int8_t tileIndex) {
