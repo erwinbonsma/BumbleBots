@@ -58,7 +58,8 @@ void Mover::reset() {
   _movementDir = 0;
   _movementInc = 1;
 
-  _height = 40;
+  _height = 0;
+  _heightDelta = 0;
   _fallingSpeed = 6;
   _flags = 0;
   _drop = 0;
@@ -687,9 +688,6 @@ void Enemy::update() {
 
 void Box::reset() {
   Mover::reset();
-
-  // Do not let boxes fall on level start. Let them behave as objects
-  _height = 0;
 
   _heading = NORTH_EAST;
 }

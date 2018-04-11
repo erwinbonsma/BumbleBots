@@ -690,12 +690,17 @@ void Level::reset() {
   _cyclesRemaining = abs(_levelSpec->timeLimitInCycles);
 }
 
+// Height from which bots drop from sky on level start
+const int8_t initialBotHeight = 40;
+
 void Level::start() {
   _player.reset();
+  _player.setHeight(initialBotHeight);
   tiles.putMoverOnTile(_player.index(), _levelSpec->playerStartPos);
 
   for (int8_t i = _levelSpec->numEnemies; --i >= 0; ) {
     _enemies[i].reset();
+    _enemies[i].setHeight(initialBotHeight);
     tiles.putMoverOnTile(_enemies[i].index(), _levelSpec->enemyStartPos[i]);
   }
 
