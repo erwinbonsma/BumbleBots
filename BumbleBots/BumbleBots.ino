@@ -71,7 +71,10 @@ void loop() {
   gb.display.clear();
   gb.lights.clear();
 
+#ifdef DEVELOPMENT
   checkSlowMotionButtons();
+#endif
+
   if (gb.buttons.held(BUTTON_MENU, 0) && loopHandler != &levelMenu) {
     showLevelMenu();
   }
@@ -83,5 +86,7 @@ void loop() {
   }
   loopHandler->draw();
 
+#ifdef DEVELOPMENT
   displayCpuLoad();
+#endif
 }

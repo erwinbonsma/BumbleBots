@@ -11,7 +11,9 @@
 #include "Movers.h"
 #include "Objects.h"
 
-#define TEST_LEVELS
+#ifdef DEVELOPMENT
+  #define TEST_LEVELS
+#endif
 
 //-----------------------------------------------------------------------------
 // LevelTilesSpec declaration
