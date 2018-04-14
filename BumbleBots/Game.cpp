@@ -31,11 +31,11 @@ Animation* Game::restartLevel() {
 }
 
 Animation* Game::nextLevel() {
-  progressTracker.levelDone(_levelNum, _levelStartScore - _score);
+  progressTracker.levelDone(_levelNum, _score - _levelStartScore);
 
   _levelNum = (_levelNum + 1 ) % numLevels;
   _level.init(&levelSpecs[_levelNum]);
-  _levelStartScore = 0;
+  _levelStartScore = _score;
 
   return restartLevel();
 }
