@@ -136,18 +136,6 @@ const uint8_t boxData[] = {
 };
 Image boxImage = Image(boxData);
 
-const uint8_t dazedData[] = {
-  4, 3, 2, 0, 2, (uint8_t)INDEX_BLACK, 1,
-  0x00, 0x90,
-  0x09, 0x00,
-  0x00, 0x09,
-
-  0x00, 0x09,
-  0x90, 0x00,
-  0x00, 0x90
-};
-Image dazedImage = Image(dazedData);
-
 const uint8_t pickupData[] = {
   8, 8, 1, 0, 1, (uint8_t)INDEX_BLACK, 1,
   0x00, 0x99, 0x99, 0x00,
