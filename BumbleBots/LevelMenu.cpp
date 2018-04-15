@@ -89,7 +89,11 @@ void LevelMenu::drawTitle() {
 }
 
 void LevelMenu::init() {
+#ifdef DEVELOPMENT
+  _tilesSpec.init(numLevels - 1);
+#else
   _tilesSpec.init(progressTracker.maxStartLevel());
+#endif
   tiles.init(&_tilesSpec, 16);
   tiles.reset();
 
