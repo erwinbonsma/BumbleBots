@@ -242,7 +242,7 @@ void Tile::drawMoversAndObjects(int8_t x, int8_t y) const {
   }
 }
 
-void Tile::draw(TilePos tilePos, TileType* tileType) const {
+void Tile::draw(TilePos tilePos, TileType& tileType) const {
   int8_t col = colOfAnyPos(tilePos);
   int8_t row = rowOfAnyPos(tilePos);
   ScreenPos pos = TilePosToScreenPos(col, row);
@@ -254,21 +254,21 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
   }
 
   if (isPosOnMap(tilePos)) {
-    if (!(tileType->flags & TILEFLAG_CHECKERED) || ((col + row) & 0x01)) {
-      gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
+    if (!(tileType.flags & TILEFLAG_CHECKERED) || ((col + row) & 0x01)) {
+      gb.display.colorIndex = (Color *)palettes[tileType.paletteIndex];
     }
 
     // Draw top image (which has transparency)
-    uint8_t imageIndex = tileType->topImageIndex;
+    uint8_t imageIndex = tileType.topImageIndex;
     int8_t dy = tileImageInfo[imageIndex].dy;
-    tileImages[imageIndex].setFrame(tileType->topFrameIndex);
+    tileImages[imageIndex].setFrame(tileType.topFrameIndex);
     gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
     dy += tileImages[imageIndex].height();
 
     // Draw bottom image (without transparency)
-    imageIndex = tileType->bottomImageIndex;
+    imageIndex = tileType.bottomImageIndex;
     dy += tileImageInfo[imageIndex].dy;
-    tileImages[imageIndex].setFrame(tileType->bottomFrameIndex);
+    tileImages[imageIndex].setFrame(tileType.bottomFrameIndex);
     gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
 
     gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
@@ -378,7 +378,7 @@ void Tiles::update() {
   uint8_t t = (gb.frameCount % _wave.period()) * (256 / _wave.period());
 
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
-    uint8_t flexibility = _tilesSpec->tileTypeAt(pos)->flexibility;
+    uint8_t flexibility = _tilesSpec->tileTypeAt(pos).flexibility;
 
     if (flexibility) {
       int16_t waveHeight = _wave.eval(pos, t);
@@ -444,16 +444,16 @@ void Tiles::draw(Player* player) {
 
   int8_t offMapIsoline = 14 - (colOfOffMapPos(_offMapTilePos) + rowOfOffMapPos(_offMapTilePos));
   if (offMapIsoline == numIsolines) {
-    _offMapTile.draw(_offMapTilePos, tileTypes);
+    _offMapTile.draw(_offMapTilePos, tileTypes[0]);
   }
   for (int8_t i = numIsolines; --i >= 0; ) {
     drawPartOfIsoline(isolineTreeRoots[i]);
     if (i == offMapIsoline) {
-      _offMapTile.draw(_offMapTilePos, tileTypes);
+      _offMapTile.draw(_offMapTilePos, tileTypes[0]);
     }
   }
   if (offMapIsoline == -1) {
-    _offMapTile.draw(_offMapTilePos, tileTypes);
+    _offMapTile.draw(_offMapTilePos, tileTypes[0]);
   }
 }
 

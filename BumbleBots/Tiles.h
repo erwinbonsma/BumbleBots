@@ -71,7 +71,7 @@ public:
   void removeObject(int8_t objectIndex);
   int8_t object() { return _objectIndex; }
 
-  void draw(TilePos pos, TileType* tileType) const;
+  void draw(TilePos pos, TileType& tileType) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ public:
    */
   virtual int8_t baselineHeightAt(TilePos pos) const = 0;
 
-  virtual TileType* tileTypeAt(TilePos pos) const = 0;
+  virtual TileType& tileTypeAt(TilePos pos) const = 0;
 };
 
 //-----------------------------------------------------------------------------

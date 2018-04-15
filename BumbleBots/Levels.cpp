@@ -501,8 +501,8 @@ int8_t LevelTilesSpec::baselineHeightAt(TilePos pos) const {
   return tileTypes[tile & 0x1f].height0 + 2 * ((tile & 0xe0) >> 5);
 }
 
-TileType* LevelTilesSpec::tileTypeAt(TilePos pos) const {
-  return &tileTypes[_tiles[pos] & 0x1f];
+TileType& LevelTilesSpec::tileTypeAt(TilePos pos) const {
+  return tileTypes[_tiles[pos] & 0x1f];
 }
 
 //-----------------------------------------------------------------------------

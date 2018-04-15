@@ -40,8 +40,8 @@ uint8_t MenuTilesSpec::tileTypeIndexAt(TilePos pos) const {
   return (level + level / 4) % 2 ? TILETYPE_MENU1 : TILETYPE_MENU2;
 }
 
-TileType* MenuTilesSpec::tileTypeAt(TilePos pos) const {
-  return &tileTypes[tileTypeIndexAt(pos)];
+TileType& MenuTilesSpec::tileTypeAt(TilePos pos) const {
+  return tileTypes[tileTypeIndexAt(pos)];
 }
 
 //-----------------------------------------------------------------------------

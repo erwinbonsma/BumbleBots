@@ -32,7 +32,7 @@ public:
 
   int8_t baselineHeightAt(TilePos pos) const;
 
-  TileType* tileTypeAt(TilePos pos) const;
+  TileType& tileTypeAt(TilePos pos) const;
 };
 
 //-----------------------------------------------------------------------------
