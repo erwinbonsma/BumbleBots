@@ -46,6 +46,10 @@ const Color palettes[numPalettes][16] = {
   { BLACK,  BEIGE,  PURPLE, GREEN,  BROWN,  BEIGE,  BEIGE,  WHITE,  RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,   BEIGE },
   // Gap, Blue
   { BLACK,  DBLUE,  PURPLE, GREEN,  BROWN,  DBLUE,  BLUE,   WHITE,  RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,   BEIGE },
+  // Gap, Earth
+  { BLACK,  BROWN,  PURPLE, GREEN,  BROWN,  DGRAY,  BROWN,  WHITE,  RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,   BEIGE },
   // Blue tile
   { BLACK,  DBLUE,  PURPLE, GREEN,  BROWN,  DBLUE,  BLUE,   LBLUE,  RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,   BEIGE },
+  // Test
+  { RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED   },
 };
