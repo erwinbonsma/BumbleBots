@@ -135,15 +135,23 @@ void Gap::draw(int8_t x, int8_t y) {
 // Obstacle implementation
 
 const ObstacleTypeSpec obstacleTypes[numObstacleTypes] = {
+  // 0: Rock 1
   ObstacleTypeSpec {
     .image = rock1Image,
     .dx = 0,
     .dy = 1
   },
+  // 1: Rock 2
   ObstacleTypeSpec {
     .image = rock2Image,
     .dx = 0,
     .dy = 1
+  },
+  // 2: Tree
+  ObstacleTypeSpec {
+    .image = treeImage,
+    .dx = 0,
+    .dy = -5
   },
 };
 

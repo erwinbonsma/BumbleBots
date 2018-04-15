@@ -214,8 +214,6 @@ bool Tile::drawMovers(int8_t x, int8_t y) const {
   return (movers[maxDyIndex]->_dy < 0);
 }
 
-//-----------------------------------------------------------------------------
-
 /* This methods draws all movers and objects on the tile. It ensures that the
  * front-most one is drawn last to prevent it from being partially obscured by
  * the other images. The implementation is optimized for speed for the common
@@ -242,7 +240,7 @@ void Tile::drawMoversAndObjects(int8_t x, int8_t y) const {
   }
 }
 
-void Tile::draw(TilePos tilePos, TileType* tileType) const {
+void Tile::draw(TilePos tilePos, TileType& tileType) const {
   int8_t col = colOfAnyPos(tilePos);
   int8_t row = rowOfAnyPos(tilePos);
   ScreenPos pos = TilePosToScreenPos(col, row);
@@ -254,22 +252,38 @@ void Tile::draw(TilePos tilePos, TileType* tileType) const {
   }
 
   if (isPosOnMap(tilePos)) {
-    if (!(tileType->flags & TILEFLAG_CHECKERED) || ((col + row) & 0x01)) {
-      gb.display.colorIndex = (Color *)palettes[tileType->paletteIndex];
+    if (!(tileType.flags & TILEFLAG_CHECKERED) || ((col + row) & 0x01)) {
+      gb.display.colorIndex = (Color *)palettes[tileType.paletteIndex];
     }
 
     // Draw top image (which has transparency)
-    uint8_t imageIndex = tileType->topImageIndex;
-    int8_t dy = tileImageInfo[imageIndex].dy;
-    tileImages[imageIndex].setFrame(tileType->topFrameIndex);
-    gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
-    dy += tileImages[imageIndex].height();
+    const TileImageSpec& spec1 = tileType.image1;
+    Image& image1 = tileImages[spec1.imageIndex];
+    int8_t dy = spec1.dy;
 
-    // Draw bottom image (without transparency)
-    imageIndex = tileType->bottomImageIndex;
-    dy += tileImageInfo[imageIndex].dy;
-    tileImages[imageIndex].setFrame(tileType->bottomFrameIndex);
-    gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
+    image1.setFrame(spec1.frameIndex);
+    gb.display.drawImage(pos.x + spec1.dx, pos.y + dy, image1);
+    dy += image1.height();
+
+    // Draw next image (without transparency)
+    const TileImageSpec& spec2 = tileType.image2;
+    Image& image2 = tileImages[spec2.imageIndex];
+    dy += spec2.dy;
+
+    image2.setFrame(spec2.frameIndex);
+    gb.display.drawImage(pos.x + spec2.dx, pos.y + dy, image2);
+
+    const TileImageSpec& spec3 = tileType.image3;
+    if (spec3.imageIndex >= 0) {
+      dy += image2.height();
+
+      // Draw optional last image
+      Image& image3 = tileImages[spec3.imageIndex];
+      dy += spec3.dy;
+
+      image3.setFrame(spec3.frameIndex);
+      gb.display.drawImage(pos.x + spec3.dx, pos.y + dy, image3);
+    }
 
     gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
   }
@@ -378,7 +392,7 @@ void Tiles::update() {
   uint8_t t = (gb.frameCount % _wave.period()) * (256 / _wave.period());
 
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
-    uint8_t flexibility = _tilesSpec->tileTypeAt(pos)->flexibility;
+    uint8_t flexibility = _tilesSpec->tileTypeAt(pos).flexibility;
 
     if (flexibility) {
       int16_t waveHeight = _wave.eval(pos, t);
@@ -444,16 +458,16 @@ void Tiles::draw(Player* player) {
 
   int8_t offMapIsoline = 14 - (colOfOffMapPos(_offMapTilePos) + rowOfOffMapPos(_offMapTilePos));
   if (offMapIsoline == numIsolines) {
-    _offMapTile.draw(_offMapTilePos, tileTypes);
+    _offMapTile.draw(_offMapTilePos, tileTypes[0]);
   }
   for (int8_t i = numIsolines; --i >= 0; ) {
     drawPartOfIsoline(isolineTreeRoots[i]);
     if (i == offMapIsoline) {
-      _offMapTile.draw(_offMapTilePos, tileTypes);
+      _offMapTile.draw(_offMapTilePos, tileTypes[0]);
     }
   }
   if (offMapIsoline == -1) {
-    _offMapTile.draw(_offMapTilePos, tileTypes);
+    _offMapTile.draw(_offMapTilePos, tileTypes[0]);
   }
 }
 

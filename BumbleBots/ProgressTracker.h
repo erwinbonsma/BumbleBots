@@ -8,6 +8,8 @@
 // ProgressTracker declaration
 
 class ProgressTracker {
+  void dump();
+
 public:
   void init();
 

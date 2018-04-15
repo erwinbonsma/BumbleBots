@@ -8,7 +8,6 @@
 
 extern Image botImage;
 extern Image boxImage;
-extern Image dazedImage;
 extern Image pickupImage;
 extern Image teleportImage;
 extern Image teleportPuffsImage;
@@ -18,3 +17,4 @@ extern Image gameOverImage;
 extern Image bestGameEverImage;
 extern Image rock1Image;
 extern Image rock2Image;
+extern Image treeImage;

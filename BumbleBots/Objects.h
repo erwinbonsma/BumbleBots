@@ -122,7 +122,10 @@ struct ObstacleTypeSpec {
   int8_t dy;
 };
 
-const uint8_t numObstacleTypes = 2;
+const uint8_t numObstacleTypes = 3;
+const uint8_t OBSTACLE_ROCK1 = 0;
+const uint8_t OBSTACLE_ROCK2 = 1;
+const uint8_t OBSTACLE_TREE = 2;
 extern const ObstacleTypeSpec obstacleTypes[numObstacleTypes];
 
 class Obstacle : public Object {

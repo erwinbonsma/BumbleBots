@@ -20,7 +20,7 @@ public:
   int8_t baselineHeightAt(TilePos pos) const;
 
   uint8_t tileTypeIndexAt(TilePos pos) const;
-  TileType* tileTypeAt(TilePos pos) const;
+  TileType& tileTypeAt(TilePos pos) const;
 };
 
 //-----------------------------------------------------------------------------

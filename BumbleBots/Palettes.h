@@ -6,7 +6,13 @@
 
 #include <Gamebuino-Meta.h>
 
-const uint8_t numPalettes = 15;
+#include "Utils.h"
+
+#ifdef DEVELOPMENT
+const uint8_t numPalettes = 17;
+#else
+const uint8_t numPalettes = 16;
+#endif
 
 const uint8_t PALETTE_DEFAULT = 0;
 const uint8_t PALETTE_BOT = 1;
@@ -23,6 +29,9 @@ const uint8_t PALETTE_TELEPORT4 = 10;
 const uint8_t PALETTE_GAP_DEFAULT = 11;
 const uint8_t PALETTE_GAP_FILLED = 12;
 const uint8_t PALETTE_GAP_BLUE = 13;
-const uint8_t PALETTE_BLUE_TILE = 14;
-
+const uint8_t PALETTE_GAP_EARTH = 14;
+const uint8_t PALETTE_BLUE_TILE = 15;
+#ifdef DEVELOPMENT
+const uint8_t PALETTE_TEST = numPalettes - 1;
+#endif
 extern const Color palettes[numPalettes][16];

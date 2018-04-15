@@ -349,15 +349,21 @@ void Bot::draw(int8_t x, int8_t y) {
   botImage.setFrame(r % 10);
   gb.display.colorIndex = (Color *)getBotPalette(r > 9);
 
+  int8_t x0 = x + _dx + 1;
+  int8_t y0 = y + _dy - _heightDelta - 1;
+
   if (isDropping()) {
-    drawDroppingImage(gb.display, x + _dx + 1, y + _dy - _heightDelta - 1, botImage, dropDelta());
+    drawDroppingImage(gb.display, x0, y0, botImage, dropDelta());
   }
   else {
-    gb.display.drawImage(x + _dx + 1, y + _dy - _heightDelta - 1, botImage);
+    gb.display.drawImage(x0, y0, botImage);
   }
 
   if (isDazed()) {
-    gb.display.drawImage(x + _dx + 2, y + _dy - _heightDelta - 6, dazedImage);
+    int8_t dazePhase = (_dazed / 2) % 2;
+    gb.display.drawPixel(x0 + 4 + dazePhase, y0 - 4, ORANGE);
+    gb.display.drawPixel(x0 + 3 - dazePhase, y0 - 3, ORANGE);
+    gb.display.drawPixel(x0 + 5 - dazePhase, y0 - 2, ORANGE);
   }
 
   gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];

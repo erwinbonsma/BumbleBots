@@ -32,7 +32,7 @@ public:
 
   int8_t baselineHeightAt(TilePos pos) const;
 
-  TileType* tileTypeAt(TilePos pos) const;
+  TileType& tileTypeAt(TilePos pos) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -93,18 +93,18 @@ struct LevelSpec {
 };
 
 #ifdef TEST_LEVELS
-  const uint8_t numLevels = 10;
+  const uint8_t numLevels = 11;
 #else
-  const uint8_t numLevels = 9;
+  const uint8_t numLevels = 10;
 #endif
 extern const LevelSpec levelSpecs[numLevels];
 
-const uint8_t maxNumEnemies = 6;
+const uint8_t maxNumEnemies = 7;
 const uint8_t maxNumPickups = 13;
 const uint8_t maxNumTeleports = 8;
 const uint8_t maxNumBoxes = 17;
 const uint8_t maxNumGaps = 4;
-const uint8_t maxNumObstacles = 4;
+const uint8_t maxNumObstacles = 6;
 
 //-----------------------------------------------------------------------------
 // Level declaration

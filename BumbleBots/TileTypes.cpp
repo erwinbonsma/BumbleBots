@@ -8,27 +8,26 @@
 
 #include "Palettes.h"
 
+const TileImageSpec NO_TILE_IMAGE =
+  TileImageSpec { .imageIndex = -1, .frameIndex = 0, .dx = 0, .dy = 0 };
+
 TileType tileTypes[numTileTypes] = {
   // 0: Basic, fixed, light
   TileType {
-    .topImageIndex = 2,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 3,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 3, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = 0,
     .height0 = 0,
     .flexibility = 0,
     .flags = 0
   },
 
-  // 1: Basic, normal flexibilty
+  // 1: Basic, normal flexibility
   TileType {
-    .topImageIndex = 0,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 1,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 1, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 1, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_DARK_TILE,
     .height0 = 0,
     .flexibility = 2,
@@ -37,10 +36,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 2: Basic, fixed, checkered
   TileType {
-    .topImageIndex = 2,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 3,
-    .bottomFrameIndex = 0,
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 3, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
 
     .paletteIndex = PALETTE_DARK_TILE,
     .height0 = 0,
@@ -50,11 +48,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 3: Basic, flexibility-3
   TileType {
-    .topImageIndex = 0,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 1,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 1, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 1, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_DARK_TILE,
     .height0 = 0,
     .flexibility = 3,
@@ -63,11 +59,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 4: Bridge Left
   TileType {
-    .topImageIndex = 0,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 4,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 1, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 4, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = 0,
     .height0 = 8,
     .flexibility = 0,
@@ -76,11 +70,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 5: Bridge Middle
   TileType {
-    .topImageIndex = 0,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 1,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 1, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 1, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = 0,
     .height0 = 8,
     .flexibility = 0,
@@ -89,11 +81,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 6: Bridge Right
   TileType {
-    .topImageIndex = 0,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 4,
-    .bottomFrameIndex = 1,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 1, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 4, .frameIndex = 1, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = 0,
     .height0 = 8,
     .flexibility = 0,
@@ -102,11 +92,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 7: Elevator
   TileType {
-    .topImageIndex = 0,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 1,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 1, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 1, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = 0,
     .height0 = 8,
     .flexibility = 9,
@@ -115,10 +103,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 8: Pillar, Moving
   TileType {
-    .topImageIndex = 5,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 6,
-    .bottomFrameIndex = 0,
+    .image1 = TileImageSpec { .imageIndex = 5, .frameIndex = 0, .dx = 3, .dy = 2 },
+    .image2 = TileImageSpec { .imageIndex = 6, .frameIndex = 0, .dx = 2, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
 
     .paletteIndex = 0,
     .height0 = 0,
@@ -128,11 +115,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 9: Pillar, Fixed
   TileType {
-    .topImageIndex = 5,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 7,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 5, .frameIndex = 0, .dx = 3, .dy = 2 },
+    .image2 = TileImageSpec { .imageIndex = 7, .frameIndex = 0, .dx = 2, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = 0,
     .height0 = 0,
     .flexibility = 0,
@@ -141,11 +126,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 10: Basic, fixed, dark
   TileType {
-    .topImageIndex = 2,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 3,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 3, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_DARK_TILE,
     .height0 = 0,
     .flexibility = 0,
@@ -154,11 +137,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 11: Basic, fixed, blue
   TileType {
-    .topImageIndex = 2,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 3,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 3, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_BLUE_TILE,
     .height0 = 0,
     .flexibility = 0,
@@ -167,11 +148,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 12: Off-map (to create maps smaller than 8x8)
   TileType {
-    .topImageIndex = 9,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 9,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 9, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 9, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_DEFAULT,
     .height0 = -100,
     .flexibility = 0,
@@ -180,11 +159,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 13: Plank bridge
   TileType {
-    .topImageIndex = 2,
-    .topFrameIndex = 1,
-    .bottomImageIndex = 10,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex =  0, .frameIndex = 1, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 10, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_DEFAULT,
     .height0 = 4,
     .flexibility = 0,
@@ -193,11 +170,9 @@ TileType tileTypes[numTileTypes] = {
 
   // 14: Plank bridge (edge), requires larger top image
   TileType {
-    .topImageIndex = 11,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 3,
-    .bottomFrameIndex = 1,
-
+    .image1 = TileImageSpec { .imageIndex = 11, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex =  3, .frameIndex = 1, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_DEFAULT,
     .height0 = 4,
     .flexibility = 0,
@@ -206,24 +181,90 @@ TileType tileTypes[numTileTypes] = {
 
   // 15: Basic, flexibility-3, Blue
   TileType {
-    .topImageIndex = 0,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 1,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 1, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 1, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_BLUE_TILE,
     .height0 = 0,
     .flexibility = 3,
     .flags = 0
   },
 
+  // 16: Grass
+  TileType {
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 3, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 3, .frameIndex = 2, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
+    .paletteIndex = 0,
+    .height0 = 0,
+    .flexibility = 0,
+    .flags = 0
+  },
+
+  // 17: Grass with tree
+  TileType {
+    .image1 = TileImageSpec { .imageIndex = 12, .frameIndex = 0, .dx = 2, .dy = 2 },
+    .image2 = TileImageSpec { .imageIndex =  3, .frameIndex = 3, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
+    .paletteIndex = 0,
+    .height0 = 0,
+    .flexibility = 0,
+    .flags = 0
+  },
+
+  // 18: Castle roof
+  TileType {
+    .image1 = TileImageSpec { .imageIndex =  0, .frameIndex = 2, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex =  2, .frameIndex = 0, .dx = 1, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
+    .paletteIndex = PALETTE_DEFAULT,
+    .height0 = 16,
+    .flexibility = 0,
+    .flags = 0
+  },
+
+  // 19: Castle wall, corner
+  TileType {
+    .image1 = TileImageSpec { .imageIndex =  0, .frameIndex = 2, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 13, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
+    .paletteIndex = PALETTE_DEFAULT,
+    .height0 = 16,
+    .flexibility = 0,
+    .flags = 0
+  },
+
+  // 20: Castle wall, sunny side
+  // Added this next to "Castle wall, Corner" for performance. It is 16x8 pixels
+  // smaller so can be drawn more quickly.
+  TileType {
+    .image1 = TileImageSpec { .imageIndex =  0, .frameIndex = 2, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 14, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = TileImageSpec { .imageIndex = 15, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .paletteIndex = PALETTE_DEFAULT,
+    .height0 = 16,
+    .flexibility = 0,
+    .flags = 0
+  },
+
+  // 21: Castle wall, dark side
+  // Added this next to "Castle wall, Corner" for performance. It is 16x8 pixels
+  // smaller so can be drawn more quickly.
+  TileType {
+    .image1 = TileImageSpec { .imageIndex =  0, .frameIndex = 2, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 14, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = TileImageSpec { .imageIndex = 15, .frameIndex = 1, .dx = 8, .dy = 0 },
+    .paletteIndex = PALETTE_DEFAULT,
+    .height0 = 16,
+    .flexibility = 0,
+    .flags = 0
+  },
+
   // X: TMP Basic, high flexibilty
   TileType {
-    .topImageIndex = 0,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 1,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 1, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 1, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = 4,
     .height0 = 0,
     .flexibility = 8,
@@ -232,11 +273,9 @@ TileType tileTypes[numTileTypes] = {
 
   // N - 2: Level menu 1
   TileType {
-    .topImageIndex = 2,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 8,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 8, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_LEVELMENU_TILE1,
     .height0 = 0,
     .flexibility = 0,
@@ -245,11 +284,9 @@ TileType tileTypes[numTileTypes] = {
 
   // N - 1: Level menu 2
   TileType {
-    .topImageIndex = 2,
-    .topFrameIndex = 0,
-    .bottomImageIndex = 8,
-    .bottomFrameIndex = 0,
-
+    .image1 = TileImageSpec { .imageIndex = 0, .frameIndex = 0, .dx = 2, .dy = 0 },
+    .image2 = TileImageSpec { .imageIndex = 8, .frameIndex = 0, .dx = 0, .dy = 0 },
+    .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_LEVELMENU_TILE2,
     .height0 = 0,
     .flexibility = 0,
@@ -257,75 +294,31 @@ TileType tileTypes[numTileTypes] = {
   },
 };
 
-ImageInfo tileImageInfo[numTileImages] = {
-  // 0
-  ImageInfo {
-    .dx = 1,
-    .dy = 0
-  },
-  // 1
-  ImageInfo {
-    .dx = 0,
-    .dy = 0
-  },
-  // 2
-  ImageInfo {
-    .dx = 2,
-    .dy = 0
-  },
-  // 3
-  ImageInfo {
-    .dx = 0,
-    .dy = 0
-  },
-  // 4
-  ImageInfo {
-    .dx = 0,
-    .dy = 0
-  },
-  // 5
-  ImageInfo {
-    .dx = 3,
-    .dy = 2
-  },
-  // 6
-  ImageInfo {
-    .dx = 2,
-    .dy = 0
-  },
-  // 7
-  ImageInfo {
-    .dx = 2,
-    .dy = 0
-  },
-  // 8
-  ImageInfo {
-    .dx = 0,
-    .dy = 0
-  },
-  // 9
-  ImageInfo {
-    .dx = 0,
-    .dy = 0
-  },
-  // 10
-  ImageInfo {
-    .dx = 0,
-    .dy = 0
-  },
-  // 11
-  ImageInfo {
-    .dx = 0,
-    .dy = 0
-  },
-};
-
 const uint8_t data_0[] = {
-  13, 4, 1, 0, 0, (uint8_t)INDEX_PINK, 1,
+  13, 4, 4, 0, 0, (uint8_t)INDEX_PINK, 1,
+  // 0: TileBasicFixed-Top.png/TileBasicMoving-Top.png
   0xee, 0xee, 0xee, 0x7e, 0xee, 0xee, 0xe0,
   0xee, 0xee, 0x77, 0x77, 0x7e, 0xee, 0xe0,
   0xee, 0x77, 0x77, 0x77, 0x77, 0x7e, 0xe0,
-  0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x70
+  0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x70,
+
+  // 1: PlankBridge-Top.png
+  0xee, 0xee, 0xee, 0x4e, 0xee, 0xee, 0xe0,
+  0xee, 0xee, 0x44, 0x44, 0x4e, 0xee, 0xe0,
+  0xee, 0x44, 0x44, 0x44, 0x44, 0x4e, 0xe0,
+  0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x40,
+
+  // 2: CastleRoof-Top.png
+  0xee, 0xee, 0xee, 0x4e, 0xee, 0xee, 0xe0,
+  0xee, 0xee, 0x49, 0x94, 0x4e, 0xee, 0xe0,
+  0xee, 0x49, 0x94, 0x49, 0x94, 0x4e, 0xe0,
+  0x49, 0x94, 0x49, 0x94, 0x49, 0x94, 0x40,
+
+  // 3: Grass-Top.png
+  0xee, 0xee, 0xee, 0xbe, 0xee, 0xee, 0xe0,
+  0xee, 0xee, 0xbb, 0xbb, 0xbe, 0xee, 0xe0,
+  0xee, 0xbb, 0xbb, 0x3b, 0xbb, 0xbe, 0xe0,
+  0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0xb0,
 };
 
 const uint8_t data_1[] = {
@@ -339,25 +332,18 @@ const uint8_t data_1[] = {
   0x00, 0x00, 0x00, 0x66, 0x50, 0x00, 0x00, 0x00
 };
 
-// Note: dx differs compared to data_0, so cannot be merged with current scheme
 const uint8_t data_2[] = {
-  13, 4, 2, 0, 0, (uint8_t)INDEX_PINK, 1,
-  // 0: TileBasic-Fixed.png
-  0xee, 0xee, 0xee, 0x7e, 0xee, 0xee, 0xe0,
-  0xee, 0xee, 0x77, 0x77, 0x7e, 0xee, 0xe0,
-  0xee, 0x77, 0x77, 0x77, 0x77, 0x7e, 0xe0,
-  0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x70,
-
-  // 1: PlankBridge-Top.png
-  0xee, 0xee, 0xee, 0x4e, 0xee, 0xee, 0xe0,
-  0xee, 0xee, 0x44, 0x44, 0x4e, 0xee, 0xe0,
-  0xee, 0x44, 0x44, 0x44, 0x44, 0x4e, 0xe0,
-  0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x40
+  15, 4, 1, 0, 1, 0xFF, 1,
+  // 0: CastleRoof-Bottom.png
+  0x99, 0x44, 0x99, 0x44, 0x99, 0x44, 0x99, 0x40,
+  0x00, 0x99, 0x44, 0x99, 0x44, 0x99, 0x40, 0x00,
+  0x00, 0x00, 0x99, 0x44, 0x99, 0x40, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x99, 0x40, 0x00, 0x00, 0x00,
 };
 
 const uint8_t data_3[] = {
-  16, 9, 2, 0, 0, 0xFF, 1,
-  // Basic fixed, bottom
+  16, 9, 4, 0, 0, 0xFF, 1,
+  // 0: Basic fixed, bottom
   0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x77,
   0x67, 0x77, 0x77, 0x77, 0x77, 0x77, 0x77, 0x55,
   0x66, 0x67, 0x77, 0x77, 0x77, 0x77, 0x55, 0x55,
@@ -368,7 +354,7 @@ const uint8_t data_3[] = {
   0x00, 0x00, 0x06, 0x66, 0x55, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00,
 
-  // PlankBridgeEdge-Bottom.png
+  // 1: PlankBridgeEdge-Bottom.png
   0xcc, 0xa9, 0xc5, 0x54, 0x00, 0xcc, 0xcc, 0xcc,
   0xdc, 0xcc, 0xcc, 0xa5, 0xcc, 0xcc, 0xcc, 0x11,
   0xdd, 0xdc, 0xcc, 0xa9, 0xcc, 0xcc, 0x11, 0x11,
@@ -377,7 +363,29 @@ const uint8_t data_3[] = {
   0x0d, 0xdd, 0xdd, 0xdd, 0x11, 0x11, 0x11, 0x00,
   0x00, 0x0d, 0xdd, 0xdd, 0x11, 0x11, 0x00, 0x00,
   0x00, 0x00, 0x0d, 0xdd, 0x11, 0x00, 0x00, 0x00,
-  0x00, 0x00, 0x00, 0x0d, 0x00, 0x00, 0x00, 0x00
+  0x00, 0x00, 0x00, 0x0d, 0x00, 0x00, 0x00, 0x00,
+
+  // 2: Grass-Bottom.png
+  0xbb, 0xbb, 0xb3, 0xbb, 0xbb, 0x3b, 0xb3, 0xbb,
+  0x4b, 0x3b, 0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0x44,
+  0x44, 0x4b, 0xbb, 0xbb, 0xb3, 0xbb, 0x44, 0x55,
+  0x44, 0x44, 0x4b, 0xbb, 0xbb, 0x44, 0x55, 0x44,
+  0x44, 0x44, 0x44, 0x4b, 0x44, 0x55, 0x44, 0x55,
+  0x04, 0x44, 0x44, 0x44, 0x55, 0x44, 0x55, 0x00,
+  0x00, 0x04, 0x44, 0x44, 0x44, 0x55, 0x00, 0x00,
+  0x00, 0x00, 0x04, 0x44, 0x55, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00,
+
+  // 3: GrassWithTree-Bottom.png
+  0xbb, 0xbb, 0xbb, 0xb4, 0x4b, 0xbb, 0xb3, 0xbb,
+  0x4b, 0x3b, 0xbb, 0x8b, 0xbb, 0x3b, 0xbb, 0x44,
+  0x44, 0x4b, 0xbb, 0xbb, 0x3b, 0xbb, 0x44, 0x55,
+  0x44, 0x44, 0x4b, 0xbb, 0xbb, 0x44, 0x55, 0x44,
+  0x44, 0x44, 0x44, 0x4b, 0x44, 0x55, 0x44, 0x55,
+  0x04, 0x44, 0x44, 0x44, 0x55, 0x44, 0x55, 0x00,
+  0x00, 0x04, 0x44, 0x44, 0x44, 0x55, 0x00, 0x00,
+  0x00, 0x00, 0x04, 0x44, 0x55, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00,
 };
 
 const uint8_t data_4[] = {
@@ -526,6 +534,86 @@ const uint8_t data_11[] = {
   0xee, 0xa5, 0x54, 0x44, 0x44, 0x00, 0xa9, 0xce
 };
 
+const uint8_t data_12[] = {
+  13, 2, 1, 0, 1, (uint8_t)INDEX_PINK, 1,
+  // GrassWithTree-Top.png
+  0xee, 0xbb, 0xb4, 0x4b, 0x3b, 0xbe, 0xe0,
+  0xbb, 0x3b, 0xb4, 0x4b, 0xbb, 0xbb, 0xb0,
+};
+
+const uint8_t data_13[] = {
+  16, 20, 1, 0, 1, 0xFF, 1,
+  // CastleWall-Bottom.png
+  0x79, 0x94, 0x49, 0x94, 0x49, 0x94, 0x49, 0x94,
+  0x67, 0x79, 0x94, 0x49, 0x94, 0x49, 0x94, 0x77,
+  0x66, 0x67, 0x79, 0x94, 0x49, 0x94, 0x77, 0x55,
+  0x66, 0x66, 0x67, 0x79, 0x94, 0x77, 0x55, 0x55,
+  0x66, 0x56, 0x66, 0x67, 0x77, 0x55, 0x55, 0x05,
+  0x66, 0x56, 0x66, 0x66, 0x55, 0x55, 0x55, 0x05,
+  0x66, 0x56, 0x66, 0x66, 0x55, 0x55, 0x55, 0x05,
+  0x66, 0x56, 0x66, 0x66, 0x55, 0x55, 0x55, 0x05,
+  0x66, 0x56, 0x66, 0x66, 0x55, 0x55, 0x55, 0x05,
+  0x66, 0x76, 0x66, 0x66, 0x55, 0x55, 0x55, 0x65,
+  0x66, 0x67, 0x76, 0x66, 0x55, 0x55, 0x66, 0x55,
+  0x66, 0x66, 0x67, 0x66, 0x55, 0x56, 0x55, 0x55,
+  0x66, 0x66, 0x66, 0x66, 0x55, 0x55, 0x55, 0x55,
+  0x66, 0x66, 0x66, 0x66, 0x55, 0x55, 0x55, 0x55,
+  0x66, 0x66, 0x66, 0x66, 0x55, 0x55, 0x55, 0x55,
+  0x66, 0x66, 0x66, 0x66, 0x55, 0x55, 0x55, 0x55,
+  0x66, 0x66, 0x66, 0x66, 0x55, 0x55, 0x55, 0x55,
+  0x66, 0x66, 0x66, 0x66, 0x55, 0x55, 0x55, 0x55,
+  0x66, 0x66, 0x66, 0x66, 0x55, 0x55, 0x55, 0x55,
+  0x66, 0x66, 0x66, 0x66, 0x55, 0x55, 0x55, 0x55,
+};
+
+const uint8_t data_14[] = {
+  16, 4, 1, 0, 1, 0xFF, 1,
+  // CastleWall-Middle.png
+  0x79, 0x94, 0x49, 0x94, 0x49, 0x94, 0x49, 0x94,
+  0x67, 0x79, 0x94, 0x49, 0x94, 0x49, 0x94, 0x77,
+  0x66, 0x67, 0x79, 0x94, 0x49, 0x94, 0x77, 0x55,
+  0x66, 0x66, 0x67, 0x79, 0x94, 0x77, 0x55, 0x55,
+};
+
+const uint8_t data_15[] = {
+  8, 16, 2, 0, 1, 0xFF, 1,
+  // 0: CastleWall-BottomLeft.png
+  0x66, 0x56,0x66, 0x67,
+  0x66, 0x56,0x66, 0x66,
+  0x66, 0x56,0x66, 0x66,
+  0x66, 0x56,0x66, 0x66,
+  0x66, 0x56,0x66, 0x66,
+  0x66, 0x76,0x66, 0x66,
+  0x66, 0x67,0x76, 0x66,
+  0x66, 0x66,0x67, 0x66,
+  0x66, 0x66,0x66, 0x66,
+  0x66, 0x66,0x66, 0x66,
+  0x66, 0x66,0x66, 0x66,
+  0x66, 0x66,0x66, 0x66,
+  0x66, 0x66,0x66, 0x66,
+  0x66, 0x66,0x66, 0x66,
+  0x66, 0x66,0x66, 0x66,
+  0x66, 0x66,0x66, 0x66,
+
+  // 1: CastleWall-BottomRight.png
+  0x77, 0x55,0x55, 0x05,
+  0x55, 0x55,0x55, 0x05,
+  0x55, 0x55,0x55, 0x05,
+  0x55, 0x55,0x55, 0x05,
+  0x55, 0x55,0x55, 0x05,
+  0x55, 0x55,0x55, 0x65,
+  0x55, 0x55,0x66, 0x55,
+  0x55, 0x56,0x55, 0x55,
+  0x55, 0x55,0x55, 0x55,
+  0x55, 0x55,0x55, 0x55,
+  0x55, 0x55,0x55, 0x55,
+  0x55, 0x55,0x55, 0x55,
+  0x55, 0x55,0x55, 0x55,
+  0x55, 0x55,0x55, 0x55,
+  0x55, 0x55,0x55, 0x55,
+  0x55, 0x55,0x55, 0x55,
+};
+
 Image tileImages[numTileImages] = {
   Image(data_0),
   Image(data_1),
@@ -539,4 +627,8 @@ Image tileImages[numTileImages] = {
   Image(data_9),
   Image(data_10),
   Image(data_11),
+  Image(data_12),
+  Image(data_13),
+  Image(data_14),
+  Image(data_15),
 };

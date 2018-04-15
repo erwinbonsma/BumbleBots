@@ -11,13 +11,20 @@ const uint8_t TILEFLAG_CHECKERED = 0x02;
 
 const ColorIndex NO_TRANSPARANCY = INDEX_BLACK;
 
+struct TileImageSpec {
+  const int8_t imageIndex;
+  const int8_t frameIndex;
+  const int8_t dx;
+  const int8_t dy;
+};
+
 struct TileType {
-  // Top part of image, with transparent color
-  const uint8_t topImageIndex;
-  const uint8_t topFrameIndex;
-  // Bottom part of image, fully opaque
-  const uint8_t bottomImageIndex;
-  const uint8_t bottomFrameIndex;
+  // Image for top of tile, with transparent color
+  const TileImageSpec image1;
+  // Image for next part of tile, fully opaque
+  const TileImageSpec image2;
+  // Optional last image
+  const TileImageSpec image3;
 
   const uint8_t paletteIndex;
   const int8_t height0;
@@ -30,11 +37,10 @@ struct ImageInfo {
   const int8_t dy;
 };
 
-const uint8_t numTileTypes = 19;
+const uint8_t numTileTypes = 25;
 const uint8_t TILETYPE_MENU1 = numTileTypes - 2;
 const uint8_t TILETYPE_MENU2 = numTileTypes - 1;
 extern TileType tileTypes[numTileTypes];
 
-const uint8_t numTileImages = 12;
-extern ImageInfo tileImageInfo[numTileImages];
+const uint8_t numTileImages = 16;
 extern Image tileImages[numTileImages];
