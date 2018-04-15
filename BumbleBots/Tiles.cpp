@@ -214,8 +214,6 @@ bool Tile::drawMovers(int8_t x, int8_t y) const {
   return (movers[maxDyIndex]->_dy < 0);
 }
 
-//-----------------------------------------------------------------------------
-
 /* This methods draws all movers and objects on the tile. It ensures that the
  * front-most one is drawn last to prevent it from being partially obscured by
  * the other images. The implementation is optimized for speed for the common
@@ -259,17 +257,21 @@ void Tile::draw(TilePos tilePos, TileType& tileType) const {
     }
 
     // Draw top image (which has transparency)
-    uint8_t imageIndex = tileType.topImageIndex;
-    int8_t dy = tileImageInfo[imageIndex].dy;
-    tileImages[imageIndex].setFrame(tileType.topFrameIndex);
-    gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
-    dy += tileImages[imageIndex].height();
+    const TileImageSpec& spec1 = tileType.image1;
+    Image& image1 = tileImages[spec1.imageIndex];
+    int8_t dy = spec1.dy;
+
+    image1.setFrame(spec1.frameIndex);
+    gb.display.drawImage(pos.x + spec1.dx, pos.y + dy, image1);
+    dy += image1.height();
 
     // Draw bottom image (without transparency)
-    imageIndex = tileType.bottomImageIndex;
-    dy += tileImageInfo[imageIndex].dy;
-    tileImages[imageIndex].setFrame(tileType.bottomFrameIndex);
-    gb.display.drawImage(pos.x + tileImageInfo[imageIndex].dx, pos.y + dy, tileImages[imageIndex]);
+    const TileImageSpec& spec2 = tileType.image2;
+    Image& image2 = tileImages[spec2.imageIndex];
+    dy += spec2.dy;
+
+    image2.setFrame(spec2.frameIndex);
+    gb.display.drawImage(pos.x + spec2.dx, pos.y + dy, image2);
 
     gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
   }
