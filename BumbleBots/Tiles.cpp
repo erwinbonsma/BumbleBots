@@ -265,13 +265,25 @@ void Tile::draw(TilePos tilePos, TileType& tileType) const {
     gb.display.drawImage(pos.x + spec1.dx, pos.y + dy, image1);
     dy += image1.height();
 
-    // Draw bottom image (without transparency)
+    // Draw next image (without transparency)
     const TileImageSpec& spec2 = tileType.image2;
     Image& image2 = tileImages[spec2.imageIndex];
     dy += spec2.dy;
 
     image2.setFrame(spec2.frameIndex);
     gb.display.drawImage(pos.x + spec2.dx, pos.y + dy, image2);
+
+    const TileImageSpec& spec3 = tileType.image3;
+    if (spec3.imageIndex >= 0) {
+      dy += image2.height();
+
+      // Draw optional last image
+      Image& image3 = tileImages[spec3.imageIndex];
+      dy += spec3.dy;
+
+      image3.setFrame(spec3.frameIndex);
+      gb.display.drawImage(pos.x + spec3.dx, pos.y + dy, image3);
+    }
 
     gb.display.colorIndex = (Color *)palettes[PALETTE_DEFAULT];
   }
