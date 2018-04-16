@@ -9,9 +9,9 @@
 #include "Utils.h"
 
 #ifdef DEVELOPMENT
-const uint8_t numPalettes = 17;
+const uint8_t numPalettes = 18;
 #else
-const uint8_t numPalettes = 16;
+const uint8_t numPalettes = 17;
 #endif
 
 const uint8_t PALETTE_DEFAULT = 0;
@@ -30,7 +30,8 @@ const uint8_t PALETTE_GAP_DEFAULT = 11;
 const uint8_t PALETTE_GAP_FILLED = 12;
 const uint8_t PALETTE_GAP_BLUE = 13;
 const uint8_t PALETTE_GAP_EARTH = 14;
-const uint8_t PALETTE_BLUE_TILE = 15;
+const uint8_t PALETTE_GAP_DARK = 15;
+const uint8_t PALETTE_BLUE_TILE = 16;
 #ifdef DEVELOPMENT
 const uint8_t PALETTE_TEST = numPalettes - 1;
 #endif

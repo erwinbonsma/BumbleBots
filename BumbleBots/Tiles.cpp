@@ -252,7 +252,7 @@ void Tile::draw(TilePos tilePos, TileType& tileType) const {
   }
 
   if (isPosOnMap(tilePos)) {
-    if (!(tileType.flags & TILEFLAG_CHECKERED) || ((col + row) & 0x01)) {
+    if (!(tileType.flags & TILEFLAG_CHECKERED) || !((col + row) & 0x01)) {
       gb.display.colorIndex = (Color *)palettes[tileType.paletteIndex];
     }
 
