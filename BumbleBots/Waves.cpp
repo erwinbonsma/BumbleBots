@@ -18,7 +18,7 @@ DirectionalWave::DirectionalWave(float angle) : Wave() {
   _drow = fastCos(intAngle - 64);
 }
 
-int16_t const DirectionalWave::eval(TilePos pos, uint8_t t) {
+int16_t DirectionalWave::eval(TilePos pos, uint8_t t) const {
   int16_t d = colOfPos(pos) * _dcol + rowOfPos(pos) * _drow;
   return fastCos(d/_waveLength - t) * _amplitude;
 }

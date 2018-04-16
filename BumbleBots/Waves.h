@@ -26,7 +26,7 @@ public:
   /* Input: t is normalized time, mapped to 0..255 based on period
    * Output: output scaled by 256.
    */
-  virtual int16_t const eval(TilePos pos, uint8_t t) = 0;
+  virtual int16_t eval(TilePos pos, uint8_t t) const = 0;
 };
 
 class DirectionalWave : public Wave {
@@ -35,7 +35,7 @@ class DirectionalWave : public Wave {
 public:
   DirectionalWave(float angle);
 
-  int16_t const eval(TilePos pos, uint8_t t);
+  int16_t eval(TilePos pos, uint8_t t) const;
 };
 
 //class ShockWave : public Wave {
