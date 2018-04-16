@@ -34,7 +34,7 @@ void Pickup::visit(int8_t moverIndex) {
 }
 
 void Pickup::draw(int8_t x, int8_t y) {
-  gb.display.drawImage(x, y - 1, pickupImage);
+  gb.display.drawImage(x + 1, y, pickupImage);
 }
 
 //-----------------------------------------------------------------------------

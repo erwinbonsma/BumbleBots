@@ -34,6 +34,11 @@ const TilePos enemyStartPosLevel9[7] = {
   makeTilePos(6, 6), makeTilePos(7, 6),
   makeTilePos(6, 7), makeTilePos(7, 7)
 };
+const TilePos enemyStartPosLevel10[5] = {
+  makeTilePos(2, 0),
+  makeTilePos(3, 3), makeTilePos(4, 3), makeTilePos(5, 3),
+  makeTilePos(0, 7)
+};
 const TilePos enemyStartPosTestLevel0[1] = { makeTilePos(7, 1) };
 
 const TilePos pickupStartPosLevel0[13] = {
@@ -72,6 +77,11 @@ const TilePos pickupStartPosLevel8[1] = {
 };
 const TilePos pickupStartPosLevel9[2] = {
   makeTilePos(0, 7),  makeTilePos(5, 7)
+};
+const TilePos pickupStartPosLevel10[9] = {
+  makeTilePos(1, 0), makeTilePos(0, 3), makeTilePos(7, 3),
+  makeTilePos(2, 4), makeTilePos(4, 4), makeTilePos(6, 4),
+  makeTilePos(2, 6), makeTilePos(4, 6), makeTilePos(6, 6)
 };
 
 const TeleportPairSpec teleportSpecsLevel4[4] = {
@@ -118,6 +128,23 @@ const TeleportPairSpec teleportSpecsLevel7[4] = {
     .paletteIndex = PALETTE_TELEPORT4
   }
 };
+const TeleportPairSpec teleportSpecsLevel10[3] = {
+  TeleportPairSpec {
+    .tile1 = makeTilePos(0, 0),
+    .tile2 = makeTilePos(0, 1),
+    .paletteIndex = PALETTE_TELEPORT1
+  },
+  TeleportPairSpec {
+    .tile1 = makeTilePos(6, 0),
+    .tile2 = makeTilePos(7, 0),
+    .paletteIndex = PALETTE_TELEPORT2
+  },
+  TeleportPairSpec {
+    .tile1 = makeTilePos(7, 5),
+    .tile2 = makeTilePos(7, 7),
+    .paletteIndex = PALETTE_TELEPORT3
+  },
+};
 
 const GapSpec gapSpecsLevel6[4] = {
   GapSpec {
@@ -140,7 +167,7 @@ const GapSpec gapSpecsLevel6[4] = {
 const GapSpec gapSpecsLevel7[1] = {
   GapSpec {
     .pos = makeTilePos(2, 2),
-    .paletteIndex = PALETTE_GAP_DEFAULT
+    .paletteIndex = PALETTE_GAP_DARK
   }
 };
 const GapSpec gapSpecsLevel8[3] = {
@@ -238,6 +265,40 @@ const ObstacleSpec obstacleSpecsLevel9[6] = {
     .typeIndex = OBSTACLE_TREE
   }
 };
+const ObstacleSpec obstacleSpecsLevel10[8] = {
+  ObstacleSpec {
+    .pos = makeTilePos(1, 4),
+    .typeIndex = OBSTACLE_TREE
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(3, 4),
+    .typeIndex = OBSTACLE_TREE
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(5, 4),
+    .typeIndex = OBSTACLE_TREE
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(7, 4),
+    .typeIndex = OBSTACLE_TREE
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(1, 6),
+    .typeIndex = OBSTACLE_TREE
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(3, 6),
+    .typeIndex = OBSTACLE_TREE
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(5, 6),
+    .typeIndex = OBSTACLE_TREE
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(7, 6),
+    .typeIndex = OBSTACLE_TREE
+  }
+};
 
 const TilePos boxStartPosLevel6[4] = {
   makeTilePos(2, 4), makeTilePos(2, 5), makeTilePos(4, 3), makeTilePos(6, 3)
@@ -251,6 +312,9 @@ const TilePos boxStartPosLevel8[7] = {
 const TilePos boxStartPosLevel9[9] = {
   makeTilePos(0, 3), makeTilePos(1, 3), makeTilePos(2, 3), makeTilePos(3, 3), makeTilePos(4, 3), makeTilePos(5, 3),
   makeTilePos(5, 0), makeTilePos(5, 1), makeTilePos(5, 2)
+};
+const TilePos boxStartPosLevel10[2] = {
+  makeTilePos(2, 2), makeTilePos(4, 2)
 };
 const TilePos boxStartPosTestLevel0[17] = {
   makeTilePos(1, 0), makeTilePos(1, 1), makeTilePos(1, 2), makeTilePos(1, 3), makeTilePos(1, 4), makeTilePos(1, 5), makeTilePos(1, 6),
@@ -280,13 +344,13 @@ const uint8_t tilesLevel1[maxTiles] = {
   0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0
 };
 const uint8_t tilesLevel2[maxTiles] = {
-  0x07|H0, 0x04|H4, 0x05|H4, 0x06|H4, 0x04|H4, 0x05|H4, 0x06|H4, 0x07|H1,
+  0x07|H0, 0x04|H4, 0x05|H4, 0x06|H4, 0x04|H4, 0x05|H4, 0x06|H4, 0x07|H0,
   0x02|H0, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1,
-  0x02|H0, 0x02|H1, 0x02|H2, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H2, 0x02|H1,
+  0x02|H0, 0x02|H1, 0x16|H2, 0x03|H1, 0x03|H1, 0x03|H1, 0x16|H2, 0x02|H1,
   0x02|H0, 0x02|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H1,
   0x02|H0, 0x02|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H1,
   0x02|H0, 0x02|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H1,
-  0x02|H0, 0x02|H1, 0x02|H2, 0x03|H1, 0x03|H1, 0x03|H1, 0x02|H2, 0x02|H1,
+  0x02|H0, 0x02|H1, 0x16|H2, 0x03|H1, 0x03|H1, 0x03|H1, 0x16|H2, 0x02|H1,
   0x03|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1, 0x02|H1
 };
 const uint8_t tilesLevel3[maxTiles] = {
@@ -323,11 +387,11 @@ const uint8_t tilesLevel6[maxTiles] = {
 const uint8_t tilesLevel7[maxTiles] = {
   0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0,
   0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0,
-  0x02|H7, 0x02|H7, 0x02|H7, 0x02|H7, 0x02|H7, 0x02|H7, 0x02|H7, 0x0c|H0,
-  0x02|H5, 0x02|H5, 0x02|H5, 0x02|H5, 0x02|H5, 0x02|H5, 0x02|H5, 0x0c|H0,
-  0x02|H3, 0x03|H1, 0x02|H2, 0x02|H2, 0x02|H2, 0x03|H1, 0x02|H3, 0x0c|H0,
-  0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x0c|H0,
-  0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x02|H0, 0x0c|H0,
+  0x16|H7, 0x16|H7, 0x16|H7, 0x16|H7, 0x16|H7, 0x16|H7, 0x16|H7, 0x0c|H0,
+  0x16|H5, 0x16|H5, 0x16|H5, 0x16|H5, 0x16|H5, 0x16|H5, 0x16|H5, 0x0c|H0,
+  0x16|H3, 0x03|H1, 0x16|H2, 0x16|H2, 0x16|H2, 0x03|H1, 0x16|H3, 0x0c|H0,
+  0x16|H0, 0x16|H0, 0x16|H0, 0x16|H0, 0x16|H0, 0x16|H0, 0x16|H0, 0x0c|H0,
+  0x16|H0, 0x16|H0, 0x16|H0, 0x16|H0, 0x16|H0, 0x16|H0, 0x16|H0, 0x0c|H0,
   0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0,
 };
 const uint8_t tilesLevel8[maxTiles] = {
@@ -349,6 +413,16 @@ const uint8_t tilesLevel9[maxTiles] = {
   0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0,
   0x11|H0, 0x11|H0, 0x11|H0, 0x11|H0, 0x11|H0, 0x11|H0, 0x10|H0, 0x10|H0,
   0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0, 0x10|H0,
+};
+const uint8_t tilesLevel10[maxTiles] = {
+  0x0b|H2, 0x0b|H2, 0x0b|H2, 0x0b|H2, 0x0b|H2, 0x0b|H2, 0x0b|H2, 0x0b|H1,
+  0x10|H3, 0x10|H3, 0x10|H3, 0x10|H3, 0x10|H3, 0x10|H3, 0x10|H3, 0x0b|H1,
+  0x10|H3, 0x10|H3, 0x10|H3, 0x10|H3, 0x10|H3, 0x10|H3, 0x10|H3, 0x0b|H1,
+  0x0b|H1, 0x0b|H1, 0x0b|H1, 0x0b|H1, 0x0b|H1, 0x0b|H1, 0x0b|H1, 0x0b|H1,
+  0x0b|H1, 0x11|H2, 0x10|H2, 0x11|H2, 0x10|H2, 0x11|H2, 0x10|H2, 0x11|H2,
+  0x0b|H1, 0x10|H2, 0x10|H2, 0x10|H2, 0x10|H2, 0x10|H2, 0x10|H2, 0x10|H2,
+  0x0b|H1, 0x11|H2, 0x10|H2, 0x11|H2, 0x10|H2, 0x11|H2, 0x10|H2, 0x11|H2,
+  0x0b|H1, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
 };
 const uint8_t tilesTestLevel0[maxTiles] = {
   0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
@@ -550,6 +624,25 @@ const LevelSpec levelSpecs[numLevels] = {
     .obstacleSpecs = obstacleSpecsLevel9,
     .timeLimitInCycles = 6000,
     .tilesSpec = LevelTilesSpec(tilesLevel9)
+  },
+
+  LevelSpec {
+    .title = "Down the River",
+    .playerStartPos = makeTilePos(3, 1),
+    .numEnemies = 5,
+    .enemyStartPos = enemyStartPosLevel10,
+    .numPickups = 9,
+    .pickupStartPos = pickupStartPosLevel10,
+    .numTeleportPairs = 3,
+    .teleportSpecs = teleportSpecsLevel10,
+    .numBoxes = 2,
+    .boxStartPos = boxStartPosLevel10,
+    .numGaps = 0,
+    .gapSpecs = nullptr,
+    .numObstacles = 8,
+    .obstacleSpecs = obstacleSpecsLevel10,
+    .timeLimitInCycles = -4500,
+    .tilesSpec = LevelTilesSpec(tilesLevel10)
   },
 
 #ifdef TEST_LEVELS
