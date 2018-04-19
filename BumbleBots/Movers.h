@@ -245,9 +245,15 @@ public:
 //-----------------------------------------------------------------------------
 // Box declaration
 
+enum class BoxType : int8_t {
+  Box1, // Box for filling gaps
+  Box2  // Box that needs to be destroyed
+};
+
 class Box : public Mover {
 
   Heading _heading;
+  BoxType _boxType;
 
   void setForceFall() { _flags |= MOVERFLAG_FORCEFALL; }
   void clearForceFall() { _flags &= ~MOVERFLAG_FORCEFALL; }
@@ -264,9 +270,11 @@ protected:
   void updateHeight();
 
 public:
-  MoverType moverType() { return TYPE_BOX; }
-
+  void init(int8_t moverIndex, BoxType boxType);
   void reset();
+
+  bool mustBeDestroyed() { return _boxType == BoxType::Box2; }
+  MoverType moverType() { return TYPE_BOX; }
 
   void push(Heading heading);
 

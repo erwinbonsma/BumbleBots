@@ -56,6 +56,7 @@ const Gamebuino_Meta::Sound_FX pickupCollectedSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,0,0,89,3},
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-1,0,63,3},
 };
+const Gamebuino_Meta::Sound_FX* boxDestroyedSfx = pickupCollectedSfx;
 
 void Game::signalPickupCollected() {
   _level.pickupCollected();
@@ -65,6 +66,19 @@ void Game::signalPickupCollected() {
 
   if (_level.isCompleted()) {
     _activeAnimation = _levelDoneAnimation.init();
+  }
+}
+
+void Game::signalBoxDestroyed(Box& box) {
+  if (box.mustBeDestroyed()) {
+    addToScore(10);
+    gb.sound.fx(boxDestroyedSfx);
+
+    _level.boxDestroyed();
+
+    if (_level.isCompleted()) {
+      _activeAnimation = _levelDoneAnimation.init();
+    }
   }
 }
 

@@ -61,6 +61,14 @@ struct ObstacleSpec {
 };
 
 //-----------------------------------------------------------------------------
+// BoxSpec declaration
+
+struct BoxSpec {
+  const TilePos pos;
+  const BoxType type;
+};
+
+//-----------------------------------------------------------------------------
 // LevelSpec declaration
 
 struct LevelSpec {
@@ -78,7 +86,7 @@ struct LevelSpec {
   const TeleportPairSpec* teleportSpecs;
 
   const uint8_t numBoxes;
-  const TilePos* boxStartPos;
+  const BoxSpec* boxSpecs;
 
   const uint8_t numGaps;
   const GapSpec* gapSpecs;
@@ -93,9 +101,9 @@ struct LevelSpec {
 };
 
 #ifdef TEST_LEVELS
-  const uint8_t numLevels = 12;
+  const uint8_t numLevels = 13;
 #else
-  const uint8_t numLevels = 11;
+  const uint8_t numLevels = 12;
 #endif
 extern const LevelSpec levelSpecs[numLevels];
 
@@ -114,7 +122,8 @@ class Level {
 
   bool _started;
   bool _frozen;
-  uint8_t _numPickupsCollected;
+  int8_t _numPickupsCollected;
+  int8_t _numBoxesToDestroy;
   int16_t _cyclesRemaining;
 
   Player _player;
@@ -169,9 +178,12 @@ public:
    */
   void freeze();
 
-  /* Invoke to signal that a pick-up has been completed.
+  /* Invoke to signal that a pick-up has been collected.
    */
   void pickupCollected() { _numPickupsCollected++; }
+  /* Invoke to signal that a box which must be destroyed has been destroyed.
+   */
+  void boxDestroyed() { _numBoxesToDestroy--; }
   bool isCompleted();
 
   void update();

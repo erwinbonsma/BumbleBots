@@ -692,6 +692,12 @@ void Enemy::update() {
 //-----------------------------------------------------------------------------
 // Box implementation
 
+void Box::init(int8_t moverIndex, BoxType boxType) {
+  Mover::init(moverIndex);
+
+  _boxType = boxType;
+}
+
 void Box::reset() {
   Mover::reset();
 
@@ -751,20 +757,21 @@ void Box::updateHeight() {
   Mover::updateHeight();
 
   if (_height < -50) {
+    signalBoxDestroyed(*this);
     destroy();
   }
 
   if (_drop > 0) {
-    _drop++;
+    if (_drop < 20) {
+      _drop++;
 
-    if (_drop == 20) {
-      Gap* gap = (Gap *)objects[tiles.tileAtIndex(_tileIndex).object()];
-      gap->fill();
-      destroy();
+      if (_drop == 20 && _boxType == BoxType::Box1) {
+        Gap* gap = (Gap *)objects[tiles.tileAtIndex(_tileIndex).object()];
+        gap->fill();
+        destroy();
+      }
     }
-    else {
-      _heightDelta -= dropDelta();
-    }
+    _heightDelta -= dropDelta();
   }
 }
 
@@ -787,10 +794,11 @@ void Box::push(Heading heading) {
 }
 
 void Box::draw(int8_t x, int8_t y) {
+  Image& image = _boxType == BoxType::Box2 ? box2Image : box1Image;
   if (isDropping()) {
-    drawDroppingImage(gb.display, x + _dx, y + _dy - _heightDelta - 1, boxImage, dropDelta());
+    drawDroppingImage(gb.display, x + _dx, y + _dy - _heightDelta - 1, image, dropDelta());
   }
   else {
-    gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, boxImage);
+    gb.display.drawImage(x + _dx, y + _dy - _heightDelta - 1, image);
   }
 }
