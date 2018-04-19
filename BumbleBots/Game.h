@@ -39,6 +39,7 @@ public:
 
   void signalDeath(const char* cause);
   void signalPickupCollected();
+  void signalBoxDestroyed(Box& box);
 
   /* Starts a new game.
    */

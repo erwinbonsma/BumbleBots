@@ -300,27 +300,177 @@ const ObstacleSpec obstacleSpecsLevel10[8] = {
   }
 };
 
-const TilePos boxStartPosLevel6[4] = {
-  makeTilePos(2, 4), makeTilePos(2, 5), makeTilePos(4, 3), makeTilePos(6, 3)
+const BoxSpec boxSpecsLevel6[4] = {
+  BoxSpec {
+    .pos = makeTilePos(2, 4),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 5),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(4, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 3),
+    .type = BoxType::Box1
+  }
 };
-const TilePos boxStartPosLevel7[1] = {
-  makeTilePos(3, 5)
+const BoxSpec boxSpecsLevel7[1] = {
+  BoxSpec {
+    .pos = makeTilePos(3, 5),
+    .type = BoxType::Box1
+  }
 };
-const TilePos boxStartPosLevel8[7] = {
-  makeTilePos(0, 6), makeTilePos(1, 6), makeTilePos(2, 6), makeTilePos(3, 6), makeTilePos(4, 6), makeTilePos(5, 6), makeTilePos(6, 6)
+const BoxSpec boxSpecsLevel8[7] = {
+  BoxSpec {
+    .pos = makeTilePos(0, 6),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 6),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 6),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(3, 6),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(4, 6),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(5, 6),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 6),
+    .type = BoxType::Box1
+  }
 };
-const TilePos boxStartPosLevel9[9] = {
-  makeTilePos(0, 3), makeTilePos(1, 3), makeTilePos(2, 3), makeTilePos(3, 3), makeTilePos(4, 3), makeTilePos(5, 3),
-  makeTilePos(5, 0), makeTilePos(5, 1), makeTilePos(5, 2)
+const BoxSpec boxSpecsLevel9[9] = {
+  BoxSpec {
+    .pos = makeTilePos(0, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(3, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(4, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(5, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(5, 0),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(5, 1),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(5, 2),
+    .type = BoxType::Box1
+  }
 };
-const TilePos boxStartPosLevel10[2] = {
-  makeTilePos(2, 2), makeTilePos(4, 2)
+const BoxSpec boxSpecsLevel10[2] = {
+  BoxSpec {
+    .pos = makeTilePos(2, 2),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(4, 2),
+    .type = BoxType::Box1
+  }
 };
-const TilePos boxStartPosTestLevel0[17] = {
-  makeTilePos(1, 0), makeTilePos(1, 1), makeTilePos(1, 2), makeTilePos(1, 3), makeTilePos(1, 4), makeTilePos(1, 5), makeTilePos(1, 6),
-  makeTilePos(2, 0), makeTilePos(2, 1), makeTilePos(2, 2), makeTilePos(2, 3), makeTilePos(2, 4),
-  makeTilePos(6, 0), makeTilePos(6, 1), makeTilePos(6, 2),
-  makeTilePos(6, 5), makeTilePos(7, 5)
+const BoxSpec boxSpecsTestLevel0[17] = {
+  BoxSpec {
+    .pos = makeTilePos(1, 0),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 1),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 2),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 4),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 5),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 6),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 0),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 1),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 2),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 4),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 0),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 1),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 2),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 5),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(7, 5),
+    .type = BoxType::Box1
+  }
 };
 
 const uint8_t tilesLevel0[maxTiles] = {
@@ -446,7 +596,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
     .numBoxes = 0,
-    .boxStartPos = nullptr,
+    .boxSpecs = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
     .numObstacles = 0,
@@ -465,7 +615,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
     .numBoxes = 0,
-    .boxStartPos = nullptr,
+    .boxSpecs = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
     .numObstacles = 0,
@@ -484,7 +634,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
     .numBoxes = 0,
-    .boxStartPos = nullptr,
+    .boxSpecs = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
     .numObstacles = 0,
@@ -503,7 +653,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
     .numBoxes = 0,
-    .boxStartPos = nullptr,
+    .boxSpecs = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
     .numObstacles = 0,
@@ -522,7 +672,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 4,
     .teleportSpecs = teleportSpecsLevel4,
     .numBoxes = 0,
-    .boxStartPos = nullptr,
+    .boxSpecs = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
     .numObstacles = 0,
@@ -541,7 +691,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
     .numBoxes = 0,
-    .boxStartPos = nullptr,
+    .boxSpecs = nullptr,
     .numGaps = 0,
     .gapSpecs = nullptr,
     .numObstacles = 0,
@@ -560,7 +710,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
     .numBoxes = 4,
-    .boxStartPos = boxStartPosLevel6,
+    .boxSpecs = boxSpecsLevel6,
     .numGaps = 4,
     .gapSpecs = gapSpecsLevel6,
     .numObstacles = 0,
@@ -579,7 +729,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 4,
     .teleportSpecs = teleportSpecsLevel7,
     .numBoxes = 1,
-    .boxStartPos = boxStartPosLevel7,
+    .boxSpecs = boxSpecsLevel7,
     .numGaps = 1,
     .gapSpecs = gapSpecsLevel7,
     .numObstacles = 0,
@@ -598,7 +748,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
     .numBoxes = 7,
-    .boxStartPos = boxStartPosLevel8,
+    .boxSpecs = boxSpecsLevel8,
     .numGaps = 3,
     .gapSpecs = gapSpecsLevel8,
     .numObstacles = 4,
@@ -617,7 +767,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
     .numBoxes = 9,
-    .boxStartPos = boxStartPosLevel9,
+    .boxSpecs = boxSpecsLevel9,
     .numGaps = 4,
     .gapSpecs = gapSpecsLevel9,
     .numObstacles = 6,
@@ -636,7 +786,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 3,
     .teleportSpecs = teleportSpecsLevel10,
     .numBoxes = 2,
-    .boxStartPos = boxStartPosLevel10,
+    .boxSpecs = boxSpecsLevel10,
     .numGaps = 0,
     .gapSpecs = nullptr,
     .numObstacles = 8,
@@ -657,7 +807,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
     .numBoxes = 17,
-    .boxStartPos = boxStartPosTestLevel0,
+    .boxSpecs = boxSpecsTestLevel0,
     .numGaps = 4,
     .gapSpecs = gapSpecsTestLevel0,
     .numObstacles = 0,
@@ -753,12 +903,20 @@ void Level::initEnemies() {
 }
 
 void Level::initBoxes() {
+  _numBoxesToDestroy = 0;
+
   // Create boxes
   for (uint8_t i = 0; i < _levelSpec->numBoxes; i++) {
+    BoxSpec spec = _levelSpec->boxSpecs[i];
+
     assertTrue(numMovers < maxNumMovers);
 
-    _boxes[i].init(numMovers++);
+    _boxes[i].init(numMovers++, spec.type);
     movers[_boxes[i].index()] = &_boxes[i];
+
+    if (spec.type == BoxType::Box2) {
+      _numBoxesToDestroy++;
+    }
   }
 }
 
@@ -860,7 +1018,7 @@ void Level::reset() {
 
   for (int8_t i = _levelSpec->numBoxes; --i >= 0; ) {
     _boxes[i].reset();
-    tiles.putMoverOnTile(_boxes[i].index(), _levelSpec->boxStartPos[i]);
+    tiles.putMoverOnTile(_boxes[i].index(), _levelSpec->boxSpecs[i].pos);
   }
 
   _started = false;
@@ -897,7 +1055,10 @@ void Level::freeze() {
 }
 
 bool Level::isCompleted() {
-  return _numPickupsCollected == _levelSpec->numPickups;
+  return (
+    _numPickupsCollected == _levelSpec->numPickups &&
+    _numBoxesToDestroy == 0
+  );
 }
 
 void Level::update() {

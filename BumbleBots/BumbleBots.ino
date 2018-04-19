@@ -44,6 +44,10 @@ void signalPickupCollected() {
   game.signalPickupCollected();
 }
 
+void signalBoxDestroyed(Box& box) {
+  game.signalBoxDestroyed(box);
+}
+
 LevelMenu levelMenu;
 LoopHandler* loopHandler;
 
