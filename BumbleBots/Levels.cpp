@@ -202,6 +202,28 @@ const GapSpec gapSpecsLevel9[4] = {
     .paletteIndex = PALETTE_GAP_EARTH
   }
 };
+const GapSpec gapSpecsLevel11[5] = {
+  GapSpec {
+    .pos = makeTilePos(2, 1),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(3, 1),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(6, 3),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(2, 6),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  },
+  GapSpec {
+    .pos = makeTilePos(4, 6),
+    .paletteIndex = PALETTE_GAP_DEFAULT
+  }
+};
 const GapSpec gapSpecsTestLevel0[4] = {
   GapSpec {
     .pos = makeTilePos(4, 1),
@@ -242,61 +264,79 @@ const ObstacleSpec obstacleSpecsLevel8[4] = {
 const ObstacleSpec obstacleSpecsLevel9[6] = {
   ObstacleSpec {
     .pos = makeTilePos(0, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(1, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(2, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(3, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(4, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(5, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   }
 };
 const ObstacleSpec obstacleSpecsLevel10[8] = {
   ObstacleSpec {
     .pos = makeTilePos(1, 4),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(3, 4),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(5, 4),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(7, 4),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(1, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(3, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(5, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
   },
   ObstacleSpec {
     .pos = makeTilePos(7, 6),
-    .typeIndex = OBSTACLE_TREE
+    .typeIndex = OBSTACLE_TREE1
+  }
+};
+const ObstacleSpec obstacleSpecsLevel11[4] = {
+  ObstacleSpec {
+    .pos = makeTilePos(1, 2),
+    .typeIndex = OBSTACLE_TREE2
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(1, 3),
+    .typeIndex = OBSTACLE_TREE2
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(5, 4),
+    .typeIndex = OBSTACLE_TREE2
+  },
+  ObstacleSpec {
+    .pos = makeTilePos(5, 5),
+    .typeIndex = OBSTACLE_TREE2
   }
 };
 
@@ -399,6 +439,56 @@ const BoxSpec boxSpecsLevel10[2] = {
   },
   BoxSpec {
     .pos = makeTilePos(4, 2),
+    .type = BoxType::Box1
+  }
+};
+const BoxSpec boxSpecsLevel11[12] = {
+  BoxSpec {
+    .pos = makeTilePos(1, 1),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 1),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 6),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 6),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 3),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(3, 3),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(5, 3),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(4, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 4),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 5),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(3, 6),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(5, 6),
     .type = BoxType::Box1
   }
 };
@@ -573,6 +663,16 @@ const uint8_t tilesLevel10[maxTiles] = {
   0x0b|H1, 0x10|H2, 0x10|H2, 0x10|H2, 0x10|H2, 0x10|H2, 0x10|H2, 0x10|H2,
   0x0b|H1, 0x11|H2, 0x10|H2, 0x11|H2, 0x10|H2, 0x11|H2, 0x10|H2, 0x11|H2,
   0x0b|H1, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0,
+};
+const uint8_t tilesLevel11[maxTiles] = {
+  0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0,
+  0x0c|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x0c|H0,
+  0x0c|H0, 0x17|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x0c|H0,
+  0x0c|H0, 0x17|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x0c|H0,
+  0x0c|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x17|H0, 0x00|H0, 0x0c|H0,
+  0x0c|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x17|H0, 0x00|H0, 0x0c|H0,
+  0x0c|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x0c|H0,
+  0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0
 };
 const uint8_t tilesTestLevel0[maxTiles] = {
   0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
@@ -793,6 +893,25 @@ const LevelSpec levelSpecs[numLevels] = {
     .obstacleSpecs = obstacleSpecsLevel10,
     .timeLimitInCycles = -4500,
     .tilesSpec = LevelTilesSpec(tilesLevel10)
+  },
+
+  LevelSpec {
+    .title = "Boxing Day",
+    .playerStartPos = makeTilePos(5, 2),
+    .numEnemies = 0,
+    .enemyStartPos = nullptr,
+    .numPickups = 0,
+    .pickupStartPos = nullptr,
+    .numTeleportPairs = 0,
+    .teleportSpecs = nullptr,
+    .numBoxes = 12,
+    .boxSpecs = boxSpecsLevel11,
+    .numGaps = 4,
+    .gapSpecs = gapSpecsLevel11,
+    .numObstacles = 4,
+    .obstacleSpecs = obstacleSpecsLevel11,
+    .timeLimitInCycles = -4500,
+    .tilesSpec = LevelTilesSpec(tilesLevel11)
   },
 
 #ifdef TEST_LEVELS

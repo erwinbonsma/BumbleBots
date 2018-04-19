@@ -18,4 +18,5 @@ extern Image gameOverImage;
 extern Image bestGameEverImage;
 extern Image rock1Image;
 extern Image rock2Image;
-extern Image treeImage;
+extern Image tree1Image;
+extern Image tree2Image;

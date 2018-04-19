@@ -101,9 +101,9 @@ struct LevelSpec {
 };
 
 #ifdef TEST_LEVELS
-  const uint8_t numLevels = 12;
+  const uint8_t numLevels = 13;
 #else
-  const uint8_t numLevels = 11;
+  const uint8_t numLevels = 12;
 #endif
 extern const LevelSpec levelSpecs[numLevels];
 

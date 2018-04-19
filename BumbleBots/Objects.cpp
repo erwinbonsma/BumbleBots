@@ -147,11 +147,17 @@ const ObstacleTypeSpec obstacleTypes[numObstacleTypes] = {
     .dx = 0,
     .dy = 1
   },
-  // 2: Tree
+  // 2: Tree (on grass)
   ObstacleTypeSpec {
-    .image = treeImage,
+    .image = tree1Image,
     .dx = 0,
     .dy = -5
+  },
+  // 3: Tree (on snow)
+  ObstacleTypeSpec {
+    .image = tree2Image,
+    .dx = 0,
+    .dy = -4
   },
 };
 

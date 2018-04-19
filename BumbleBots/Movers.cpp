@@ -757,6 +757,7 @@ void Box::updateHeight() {
   Mover::updateHeight();
 
   if (_height < -50) {
+    signalBoxDestroyed(*this);
     destroy();
   }
 
