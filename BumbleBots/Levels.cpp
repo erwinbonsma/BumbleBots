@@ -39,6 +39,9 @@ const TilePos enemyStartPosLevel10[5] = {
   makeTilePos(3, 3), makeTilePos(4, 3), makeTilePos(5, 3),
   makeTilePos(0, 7)
 };
+const TilePos enemyStartPosLevel12[2] = {
+  makeTilePos(0, 0), makeTilePos(7, 0)
+};
 const TilePos enemyStartPosTestLevel0[1] = { makeTilePos(7, 1) };
 
 const TilePos pickupStartPosLevel0[13] = {
@@ -970,8 +973,8 @@ const LevelSpec levelSpecs[numLevels] = {
   LevelSpec {
     .title = "Enter the Machine",
     .playerStartPos = makeTilePos(7, 7),
-    .numEnemies = 0,
-    .enemyStartPos = nullptr,
+    .numEnemies = 2,
+    .enemyStartPos = enemyStartPosLevel12,
     .numPickups = 4,
     .pickupStartPos = pickupStartPosLevel12,
     .numTeleportPairs = 4,
@@ -982,7 +985,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = nullptr,
     .numObstacles = 0,
     .obstacleSpecs = nullptr,
-    .timeLimitInCycles = -4500,
+    .timeLimitInCycles = -3000,
     .tilesSpec = LevelTilesSpec(tilesLevel12)
   },
 
