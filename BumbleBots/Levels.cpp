@@ -162,12 +162,12 @@ const TeleportPairSpec teleportSpecsLevel12[4] = {
   TeleportPairSpec {
     .tile1 = makeTilePos(1, 6),
     .tile2 = makeTilePos(3, 5),
-    .paletteIndex = PALETTE_TELEPORT3
+    .paletteIndex = PALETTE_TELEPORT4
   },
   TeleportPairSpec {
     .tile1 = makeTilePos(6, 6),
     .tile2 = makeTilePos(5, 4),
-    .paletteIndex = PALETTE_TELEPORT4
+    .paletteIndex = PALETTE_TELEPORT5
   },
 };
 
