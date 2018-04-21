@@ -45,6 +45,8 @@ class Mover {
 
   int8_t _fallingSpeed;
 
+  int8_t destroyableAtTile(Tile& tile);
+
 protected:
 
   int8_t _moverIndex;

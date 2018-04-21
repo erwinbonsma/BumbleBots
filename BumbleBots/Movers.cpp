@@ -244,6 +244,36 @@ void Mover::destroy() {
   }
 }
 
+int8_t Mover::destroyableAtTile(Tile& tile) {
+  int8_t destroyableIndex = tile.moverOfType(TYPE_BOX, _moverIndex);
+
+  if (destroyableIndex == -1) {
+    destroyableIndex = tile.moverOfType(TYPE_ENEMY, _moverIndex);
+  }
+
+  if (destroyableIndex == -1 && tile.isEnemyEntering()) {
+    // Find the enemy that is entering this tile. The above check only finds
+    // an enemy that already on the tile for drawing purposes. If an enemy is
+    // already entering this tile but still on a neighbouring tile it should
+    // still be destroyed. Otherwise it will "pass" through the box.
+    int8_t moverIndex = numMovers;
+    while (--moverIndex >= 0) {
+      Mover* mover = movers[moverIndex];
+      if (
+        mover->moverType() == TYPE_ENEMY && (
+          mover->_tileIndex == _tileIndex ||
+          mover->_tileIndex2 == _tileIndex
+        )
+      ) {
+        destroyableIndex = moverIndex;
+      }
+    }
+  }
+
+  return destroyableIndex;
+}
+
+
 void Mover::update() {
   assertTrue(!isDestroyed());
 
@@ -267,10 +297,8 @@ void Mover::update() {
     _tileIndex2 == NO_TILE
   ) {
     if (_height - tiles.tileAtIndex(_tileIndex).height() < 5) {
-      int8_t destroyableIndex = tile.moverOfType(TYPE_BOX, _moverIndex);
-      if (destroyableIndex == -1) {
-        destroyableIndex = tile.moverOfType(TYPE_ENEMY, _moverIndex);
-      }
+      int8_t destroyableIndex = destroyableAtTile(tile);
+
       if (destroyableIndex != -1) {
         movers[destroyableIndex]->destroy();
 

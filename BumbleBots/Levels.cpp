@@ -39,6 +39,9 @@ const TilePos enemyStartPosLevel10[5] = {
   makeTilePos(3, 3), makeTilePos(4, 3), makeTilePos(5, 3),
   makeTilePos(0, 7)
 };
+const TilePos enemyStartPosLevel12[2] = {
+  makeTilePos(0, 0), makeTilePos(7, 0)
+};
 const TilePos enemyStartPosTestLevel0[1] = { makeTilePos(7, 1) };
 
 const TilePos pickupStartPosLevel0[13] = {
@@ -82,6 +85,9 @@ const TilePos pickupStartPosLevel10[9] = {
   makeTilePos(1, 0), makeTilePos(0, 3), makeTilePos(7, 3),
   makeTilePos(2, 4), makeTilePos(4, 4), makeTilePos(6, 4),
   makeTilePos(2, 6), makeTilePos(4, 6), makeTilePos(6, 6)
+};
+const TilePos pickupStartPosLevel12[4] = {
+  makeTilePos(2, 1), makeTilePos(6, 2), makeTilePos(1, 5), makeTilePos(5, 6)
 };
 
 const TeleportPairSpec teleportSpecsLevel4[4] = {
@@ -143,6 +149,28 @@ const TeleportPairSpec teleportSpecsLevel10[3] = {
     .tile1 = makeTilePos(7, 5),
     .tile2 = makeTilePos(7, 7),
     .paletteIndex = PALETTE_TELEPORT3
+  },
+};
+const TeleportPairSpec teleportSpecsLevel12[4] = {
+  TeleportPairSpec {
+    .tile1 = makeTilePos(1, 1),
+    .tile2 = makeTilePos(2, 3),
+    .paletteIndex = PALETTE_TELEPORT1
+  },
+  TeleportPairSpec {
+    .tile1 = makeTilePos(6, 1),
+    .tile2 = makeTilePos(4, 2),
+    .paletteIndex = PALETTE_TELEPORT2
+  },
+  TeleportPairSpec {
+    .tile1 = makeTilePos(1, 6),
+    .tile2 = makeTilePos(3, 5),
+    .paletteIndex = PALETTE_TELEPORT4
+  },
+  TeleportPairSpec {
+    .tile1 = makeTilePos(6, 6),
+    .tile2 = makeTilePos(5, 4),
+    .paletteIndex = PALETTE_TELEPORT5
   },
 };
 
@@ -492,6 +520,24 @@ const BoxSpec boxSpecsLevel11[12] = {
     .type = BoxType::Box1
   }
 };
+const BoxSpec boxSpecsLevel12[4] = {
+  BoxSpec {
+    .pos = makeTilePos(4, 0),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(0, 3),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(7, 4),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(3, 7),
+    .type = BoxType::Box2
+  },
+};
 const BoxSpec boxSpecsTestLevel0[17] = {
   BoxSpec {
     .pos = makeTilePos(1, 0),
@@ -673,6 +719,16 @@ const uint8_t tilesLevel11[maxTiles] = {
   0x0c|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x17|H0, 0x00|H0, 0x0c|H0,
   0x0c|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x0c|H0,
   0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0, 0x0c|H0
+};
+const uint8_t tilesLevel12[maxTiles] = {
+  0x18|H0, 0x1a|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x1a|H0, 0x18|H0,
+  0x18|H0, 0x1c|H0, 0x1b|H0, 0x19|H0, 0x1b|H0, 0x19|H0, 0x1c|H0, 0x18|H0,
+  0x18|H0, 0x1a|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x1b|H0, 0x18|H0,
+  0x18|H0, 0x1b|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x1a|H0, 0x18|H0,
+  0x18|H0, 0x1a|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x1b|H0, 0x18|H0,
+  0x18|H0, 0x1b|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x1a|H0, 0x18|H0,
+  0x18|H0, 0x1c|H0, 0x19|H0, 0x1b|H0, 0x19|H0, 0x1b|H0, 0x1c|H0, 0x18|H0,
+  0x18|H0, 0x1a|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x18|H0, 0x1a|H0, 0x18|H0,
 };
 const uint8_t tilesTestLevel0[maxTiles] = {
   0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
@@ -910,8 +966,27 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = gapSpecsLevel11,
     .numObstacles = 4,
     .obstacleSpecs = obstacleSpecsLevel11,
-    .timeLimitInCycles = -4500,
+    .timeLimitInCycles = -3000,
     .tilesSpec = LevelTilesSpec(tilesLevel11)
+  },
+
+  LevelSpec {
+    .title = "Enter the Machine",
+    .playerStartPos = makeTilePos(7, 7),
+    .numEnemies = 2,
+    .enemyStartPos = enemyStartPosLevel12,
+    .numPickups = 4,
+    .pickupStartPos = pickupStartPosLevel12,
+    .numTeleportPairs = 4,
+    .teleportSpecs = teleportSpecsLevel12,
+    .numBoxes = 4,
+    .boxSpecs = boxSpecsLevel12,
+    .numGaps = 0,
+    .gapSpecs = nullptr,
+    .numObstacles = 0,
+    .obstacleSpecs = nullptr,
+    .timeLimitInCycles = -3000,
+    .tilesSpec = LevelTilesSpec(tilesLevel12)
   },
 
 #ifdef TEST_LEVELS

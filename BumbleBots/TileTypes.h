@@ -37,10 +37,10 @@ struct ImageInfo {
   const int8_t dy;
 };
 
-const uint8_t numTileTypes = 27;
+const uint8_t numTileTypes = 32;
 const uint8_t TILETYPE_MENU1 = numTileTypes - 2;
 const uint8_t TILETYPE_MENU2 = numTileTypes - 1;
 extern TileType tileTypes[numTileTypes];
 
-const uint8_t numTileImages = 17;
+const uint8_t numTileImages = 20;
 extern Image tileImages[numTileImages];
