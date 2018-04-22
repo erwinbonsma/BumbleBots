@@ -108,7 +108,7 @@ class Tiles {
   int8_t _waveStrengthDelta;
 
   void drawPartOfIsoline(int8_t elementIndex);
-  ScreenPos centerOnPlayer(Player* player);
+  ScreenPos centerOnPlayer(Player& player);
 
 public:
   Tiles();

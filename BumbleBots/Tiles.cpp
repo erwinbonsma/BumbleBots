@@ -448,14 +448,14 @@ void Tiles::drawPartOfIsoline(int8_t elementIndex) {
   }
 }
 
-ScreenPos Tiles::centerOnPlayer(Player* player) {
-  TilePos targetTilePos = player->drawTilePos();
+ScreenPos Tiles::centerOnPlayer(Player& player) {
+  TilePos targetTilePos = player.drawTilePos();
 
   // When player is at the edge, do not fully center player (to maximize the
   // number of visible tiles).
   ScreenPos targetPos = TilePosToScreenPos(targetTilePos);
-  targetPos.x += player->dx() + 8;
-  targetPos.y += player->dy();
+  targetPos.x += player.dx() + 8;
+  targetPos.y += player.dy();
   targetPos.x = min(_maxTargetPos.x, max(_minTargetPos.x, targetPos.x));
   targetPos.y = min(_maxTargetPos.y, max(_minTargetPos.y, targetPos.y));
 
@@ -463,7 +463,7 @@ ScreenPos Tiles::centerOnPlayer(Player* player) {
 }
 
 void Tiles::draw(Player* player) {
-  ScreenPos targetPos = player ? centerOnPlayer(player) : tilesCenterPos;
+  ScreenPos targetPos = player ? centerOnPlayer(*player) : tilesCenterPos;
 
   // Move camera gradually, 1 pixel at most.
   _cameraPos.x += sign(targetPos.x - _cameraPos.x);
