@@ -863,7 +863,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = gapSpecsLevel6,
     .numObstacles = 0,
     .obstacleSpecs = nullptr,
-    .timeLimitInCycles = 3000,
+    .timeLimitInCycles = -3000,
     .tilesSpec = LevelTilesSpec(tilesLevel6)
   },
 
