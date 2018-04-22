@@ -39,7 +39,7 @@ const Gamebuino_Meta::Sound_FX dieSfx[] = {
 
 Animation* DieAnimation::init(const char *cause) {
   _cause = cause;
-  game.level()->freeze();
+  game.level().freeze();
   gb.sound.fx(dieSfx);
 
   return Animation::init();
@@ -124,7 +124,7 @@ const Gamebuino_Meta::Sound_FX timeScoreSfx[] = {
 };
 
 Animation* LevelDoneAnimation::init() {
-  game.level()->freeze();
+  game.level().freeze();
 
   gb.sound.fx(levelDoneSfx);
 
@@ -135,8 +135,8 @@ Animation* LevelDoneAnimation::update() {
   Animation::update();
 
   if (clock() == 50) {
-    if (game.level()->hasTimeLeft()) {
-      game.level()->decreaseTimeLeft();
+    if (game.level().hasTimeLeft()) {
+      game.level().decreaseTimeLeft();
       gb.sound.fx(timeScoreSfx);
       game.addToScore(1);
       rewindClock();
@@ -160,7 +160,7 @@ const Gamebuino_Meta::Sound_FX getReadySfx[] = {
 };
 
 Animation* LevelStartAnimation::init() {
-  game.level()->reset();
+  game.level().reset();
 
   return Animation::init();
 }
@@ -171,7 +171,7 @@ Animation* LevelStartAnimation::update() {
   if (clock() == 60 || gb.buttons.held(BUTTON_A, 0)) {
     gb.sound.fx(getReadySfx);
 
-    game.level()->start();
+    game.level().start();
     return nullptr;
   }
 

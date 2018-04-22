@@ -244,11 +244,7 @@ const GapSpec gapSpecsLevel11[5] = {
     .paletteIndex = PALETTE_GAP_DEFAULT
   },
   GapSpec {
-    .pos = makeTilePos(2, 6),
-    .paletteIndex = PALETTE_GAP_DEFAULT
-  },
-  GapSpec {
-    .pos = makeTilePos(4, 6),
+    .pos = makeTilePos(3, 6),
     .paletteIndex = PALETTE_GAP_DEFAULT
   }
 };
@@ -512,11 +508,7 @@ const BoxSpec boxSpecsLevel11[12] = {
     .type = BoxType::Box1
   },
   BoxSpec {
-    .pos = makeTilePos(3, 6),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(5, 6),
+    .pos = makeTilePos(4, 6),
     .type = BoxType::Box1
   }
 };
@@ -871,7 +863,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = gapSpecsLevel6,
     .numObstacles = 0,
     .obstacleSpecs = nullptr,
-    .timeLimitInCycles = 3000,
+    .timeLimitInCycles = -3000,
     .tilesSpec = LevelTilesSpec(tilesLevel6)
   },
 
@@ -960,7 +952,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = nullptr,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
-    .numBoxes = 12,
+    .numBoxes = 11,
     .boxSpecs = boxSpecsLevel11,
     .numGaps = 4,
     .gapSpecs = gapSpecsLevel11,
@@ -1097,8 +1089,6 @@ void Level::initEnemies() {
 }
 
 void Level::initBoxes() {
-  _numBoxesToDestroy = 0;
-
   // Create boxes
   for (uint8_t i = 0; i < _levelSpec->numBoxes; i++) {
     BoxSpec spec = _levelSpec->boxSpecs[i];
@@ -1107,10 +1097,6 @@ void Level::initBoxes() {
 
     _boxes[i].init(numMovers++, spec.type);
     movers[_boxes[i].index()] = &_boxes[i];
-
-    if (spec.type == BoxType::Box2) {
-      _numBoxesToDestroy++;
-    }
   }
 }
 
@@ -1197,6 +1183,21 @@ void Level::init(const LevelSpec *levelSpec) {
   initObjects();
 }
 
+void Level::resetBoxes() {
+  _numBoxesToDestroy = 0;
+  for (int8_t i = _levelSpec->numBoxes; --i >= 0; ) {
+    Box& box = _boxes[i];
+    BoxSpec spec = _levelSpec->boxSpecs[i];
+
+    box.reset();
+    tiles.putMoverOnTile(box.index(), spec.pos);
+
+    if (spec.type == BoxType::Box2) {
+      _numBoxesToDestroy++;
+    }
+  }
+}
+
 void Level::reset() {
   if (_levelSpec->timeLimitInCycles < 0) {
     // Restore pick-ups
@@ -1210,10 +1211,7 @@ void Level::reset() {
     objects[i]->reset();
   }
 
-  for (int8_t i = _levelSpec->numBoxes; --i >= 0; ) {
-    _boxes[i].reset();
-    tiles.putMoverOnTile(_boxes[i].index(), _levelSpec->boxSpecs[i].pos);
-  }
+  resetBoxes();
 
   _started = false;
   _frozen = false;

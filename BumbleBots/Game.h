@@ -34,7 +34,7 @@ class Game : public LoopHandler {
 public:
   int8_t numLives() { return _numLives; }
   uint8_t levelNum() { return _levelNum + 1; }
-  Level* level() { return &_level; }
+  Level& level() { return _level; }
   void addToScore(uint8_t inc) { _score += inc; }
 
   void signalDeath(const char* cause);
