@@ -244,11 +244,7 @@ const GapSpec gapSpecsLevel11[5] = {
     .paletteIndex = PALETTE_GAP_DEFAULT
   },
   GapSpec {
-    .pos = makeTilePos(2, 6),
-    .paletteIndex = PALETTE_GAP_DEFAULT
-  },
-  GapSpec {
-    .pos = makeTilePos(4, 6),
+    .pos = makeTilePos(3, 6),
     .paletteIndex = PALETTE_GAP_DEFAULT
   }
 };
@@ -512,11 +508,7 @@ const BoxSpec boxSpecsLevel11[12] = {
     .type = BoxType::Box1
   },
   BoxSpec {
-    .pos = makeTilePos(3, 6),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(5, 6),
+    .pos = makeTilePos(4, 6),
     .type = BoxType::Box1
   }
 };
@@ -960,7 +952,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .pickupStartPos = nullptr,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
-    .numBoxes = 12,
+    .numBoxes = 11,
     .boxSpecs = boxSpecsLevel11,
     .numGaps = 4,
     .gapSpecs = gapSpecsLevel11,
