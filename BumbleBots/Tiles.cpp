@@ -322,7 +322,7 @@ void Tiles::reset() {
   _offMapTile.reset();
   _offMapTilePos = makeTilePos(-1, 0); // Any off-map position suffices
 
-  _waveStrength = 92;
+  _waveStrength = 0;
   _waveStrengthDelta = 2;
 }
 
@@ -377,19 +377,15 @@ void Tiles::putObjectOnTile(int8_t objectIndex, int8_t tileIndex) {
 }
 
 void Tiles::update() {
-  if (_waveStrengthDelta > 0) {
-    if (_waveStrength < 128) {
-      _waveStrength += _waveStrengthDelta;
-    }
-  }
-  else {
-    if (_waveStrength > 0) {
-      _waveStrength += _waveStrengthDelta;
+  if (_waveStrengthDelta != 0) {
+    _waveStrength += _waveStrengthDelta;
+    if (_waveStrength == 0 || _waveStrength == 128) {
+      // Reached minimum or maximum strength so stop updating
+      _waveStrengthDelta = 0;
     }
   }
 
-  // TODO: Refactor. Express period differently (in power of two)?
-  uint8_t t = (gb.frameCount % _wave.period()) * (256 / _wave.period());
+  uint16_t t = ((gb.frameCount % _wave.period()) * 256) / _wave.period();
 
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
     uint8_t flexibility = _tilesSpec->tileTypeAt(pos).flexibility;
