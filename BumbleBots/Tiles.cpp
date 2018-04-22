@@ -110,7 +110,9 @@ const IsolinePair isolineTreePairs[] = {
   IsolinePair{ .lChild= -1, .rChild= -8, .lrLeaf= 1, .rlLeaf= 8 }
 };
 
-inline ScreenPos TilePosToScreenPos(int8_t col, int8_t row) {
+ScreenPos TilePosToScreenPos(TilePos tilePos) {
+  int8_t col = colOfAnyPos(tilePos);
+  int8_t row = rowOfAnyPos(tilePos);
   return ScreenPos {
     .x = (int8_t)((col - row) * 8),
     .y = (int8_t)((col + row) * 4)
@@ -241,9 +243,7 @@ void Tile::drawMoversAndObjects(int8_t x, int8_t y) const {
 }
 
 void Tile::draw(TilePos tilePos, TileType& tileType) const {
-  int8_t col = colOfAnyPos(tilePos);
-  int8_t row = rowOfAnyPos(tilePos);
-  ScreenPos pos = TilePosToScreenPos(col, row);
+  ScreenPos pos = TilePosToScreenPos(tilePos);
   pos.x += 40 - tiles.cameraPos().x;
   pos.y += 32 - tiles.cameraPos().y - _height;
 
@@ -252,7 +252,9 @@ void Tile::draw(TilePos tilePos, TileType& tileType) const {
   }
 
   if (isPosOnMap(tilePos)) {
-    if (!(tileType.flags & TILEFLAG_CHECKERED) || !((col + row) & 0x01)) {
+    if (
+      !(tileType.flags & TILEFLAG_CHECKERED) || !((tilePos + (tilePos >> 3)) & 0x01)
+    ) {
       gb.display.colorIndex = (Color *)palettes[tileType.paletteIndex];
     }
 
@@ -305,9 +307,26 @@ Tiles::Tiles() :
 void Tiles::init(const TilesSpec* tilesSpec, int8_t offMapTileHeight) {
   _tilesSpec = tilesSpec;
 
+  ScreenPos minPos = MAX_SCREENPOS;
+  ScreenPos maxPos = MIN_SCREENPOS;
   for (TilePos pos = maxTilePos; --pos >= 0; ) {
-    _units[pos].init(tilesSpec->baselineHeightAt(pos));
+    int height = tilesSpec->baselineHeightAt(pos);
+    _units[pos].init(height);
+
+    if (height != offMapTileHeight) {
+      ScreenPos screenPos = TilePosToScreenPos(pos);
+      screenPos.y -= height;
+
+      minPos.x = min(minPos.x, screenPos.x);
+      minPos.y = min(minPos.y, screenPos.y);
+      maxPos.x = max(maxPos.x, screenPos.x);
+      maxPos.y = max(maxPos.y, screenPos.y);
+    }
   }
+  _minTargetPos.x = minPos.x + 8 + 24;
+  _minTargetPos.y = minPos.y + 26;
+  _maxTargetPos.x = maxPos.x + 8 - 24;
+  _maxTargetPos.y = maxPos.y - 16;
 
   _offMapTile.init(offMapTileHeight);
 
@@ -401,11 +420,12 @@ void Tiles::update() {
 
 /* Draws part of an isoline.
  *
- * The drawing order is chosen so that for two neighbouring tiles, the one with the lower height is
- * always drawn first. This is needed to ensure a mover is always drawn correctly when it is moving
- * from one tile to another. In this case, it can be partially on another tile on the same isoline
- * as its "drawing" tile. If the latter due to its height partially obscures the mover, it needs to
- * be drawn later.
+ * The drawing order is chosen so that for two neighbouring tiles, the one with
+ * the lower height is always drawn first. This is needed to ensure a mover is
+ * always drawn correctly when it is moving from one tile to another. In this
+ * case, it can be partially overlapping another tile on the same isoline as
+ * its "drawing" tile. If the latter due to its height partially obscures the
+ * mover, it needs to be drawn later.
  */
 void Tiles::drawPartOfIsoline(int8_t elementIndex) {
   if (elementIndex <= 0) {
@@ -428,25 +448,22 @@ void Tiles::drawPartOfIsoline(int8_t elementIndex) {
   }
 }
 
+ScreenPos Tiles::centerOnPlayer(Player* player) {
+  TilePos targetTilePos = player->drawTilePos();
+
+  // When player is at the edge, do not fully center player (to maximize the
+  // number of visible tiles).
+  ScreenPos targetPos = TilePosToScreenPos(targetTilePos);
+  targetPos.x += player->dx() + 8;
+  targetPos.y += player->dy();
+  targetPos.x = min(_maxTargetPos.x, max(_minTargetPos.x, targetPos.x));
+  targetPos.y = min(_maxTargetPos.y, max(_minTargetPos.y, targetPos.y));
+
+  return targetPos;
+}
+
 void Tiles::draw(Player* player) {
-  ScreenPos targetPos;
-  if (player) {
-    // Let camera focus on player
-    TilePos targetTilePos = player->drawTilePos();
-
-    // When player is at the edge, do not fully center player (to not
-    // unnecessarily limit the number of visible tiles).
-    int8_t col = colOfAnyPos(targetTilePos);
-    int8_t row = rowOfAnyPos(targetTilePos);
-
-    targetPos = TilePosToScreenPos(col, row);
-    targetPos.x = min(38, max(-26, targetPos.x + player->dx() + 8));
-    targetPos.y = min(40, max( 12, targetPos.y + player->dy()));
-  }
-  else {
-    // Focus on center of screen
-    targetPos = tilesCenterPos;
-  }
+  ScreenPos targetPos = player ? centerOnPlayer(player) : tilesCenterPos;
 
   // Move camera gradually, 1 pixel at most.
   _cameraPos.x += sign(targetPos.x - _cameraPos.x);

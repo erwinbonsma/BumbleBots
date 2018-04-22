@@ -100,12 +100,15 @@ class Tiles {
   TilePos _offMapTilePos;
 
   ScreenPos _cameraPos;
+  ScreenPos _minTargetPos;
+  ScreenPos _maxTargetPos;
 
   DirectionalWave _wave;
   uint8_t _waveStrength;
   int8_t _waveStrengthDelta;
 
   void drawPartOfIsoline(int8_t elementIndex);
+  ScreenPos centerOnPlayer(Player* player);
 
 public:
   Tiles();

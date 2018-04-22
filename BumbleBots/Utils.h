@@ -83,6 +83,8 @@ struct ScreenPos {
   int8_t x;
   int8_t y;
 };
+const ScreenPos MIN_SCREENPOS = ScreenPos { .x = -128, .y = -128 };
+const ScreenPos MAX_SCREENPOS = ScreenPos { .x = 127, .y = 127 };
 
 class LoopHandler {
 public:

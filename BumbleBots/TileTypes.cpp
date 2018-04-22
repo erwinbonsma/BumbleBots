@@ -152,7 +152,7 @@ TileType tileTypes[numTileTypes] = {
     .image2 = TileImageSpec { .imageIndex = 9, .frameIndex = 0, .dx = 0, .dy = 0 },
     .image3 = NO_TILE_IMAGE,
     .paletteIndex = PALETTE_DEFAULT,
-    .height0 = -64,
+    .height0 = OFF_MAP_HEIGHT,
     .flexibility = 0,
     .flags = 0
   },

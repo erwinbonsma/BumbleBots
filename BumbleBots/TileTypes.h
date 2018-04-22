@@ -11,6 +11,8 @@ const uint8_t TILEFLAG_CHECKERED = 0x02;
 
 const ColorIndex NO_TRANSPARANCY = INDEX_BLACK;
 
+const int8_t OFF_MAP_HEIGHT = -64;
+
 struct TileImageSpec {
   const int8_t imageIndex;
   const int8_t frameIndex;
