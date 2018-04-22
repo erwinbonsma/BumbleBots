@@ -1097,8 +1097,6 @@ void Level::initEnemies() {
 }
 
 void Level::initBoxes() {
-  _numBoxesToDestroy = 0;
-
   // Create boxes
   for (uint8_t i = 0; i < _levelSpec->numBoxes; i++) {
     BoxSpec spec = _levelSpec->boxSpecs[i];
@@ -1107,10 +1105,6 @@ void Level::initBoxes() {
 
     _boxes[i].init(numMovers++, spec.type);
     movers[_boxes[i].index()] = &_boxes[i];
-
-    if (spec.type == BoxType::Box2) {
-      _numBoxesToDestroy++;
-    }
   }
 }
 
@@ -1197,6 +1191,21 @@ void Level::init(const LevelSpec *levelSpec) {
   initObjects();
 }
 
+void Level::resetBoxes() {
+  _numBoxesToDestroy = 0;
+  for (int8_t i = _levelSpec->numBoxes; --i >= 0; ) {
+    Box& box = _boxes[i];
+    BoxSpec spec = _levelSpec->boxSpecs[i];
+
+    box.reset();
+    tiles.putMoverOnTile(box.index(), spec.pos);
+
+    if (spec.type == BoxType::Box2) {
+      _numBoxesToDestroy++;
+    }
+  }
+}
+
 void Level::reset() {
   if (_levelSpec->timeLimitInCycles < 0) {
     // Restore pick-ups
@@ -1210,10 +1219,7 @@ void Level::reset() {
     objects[i]->reset();
   }
 
-  for (int8_t i = _levelSpec->numBoxes; --i >= 0; ) {
-    _boxes[i].reset();
-    tiles.putMoverOnTile(_boxes[i].index(), _levelSpec->boxSpecs[i].pos);
-  }
+  resetBoxes();
 
   _started = false;
   _frozen = false;

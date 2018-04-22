@@ -148,6 +148,8 @@ class Level {
   void initObstacles();
   void initObjects();
 
+  void resetBoxes();
+
 public:
   bool hasTimeLeft() { return _cyclesRemaining > 0; }
   void decreaseTimeLeft() { _cyclesRemaining -= 25; }
