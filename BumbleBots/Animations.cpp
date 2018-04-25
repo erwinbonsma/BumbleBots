@@ -87,7 +87,7 @@ Animation* GameOverAnimation::update() {
   Animation::update();
 
   if (gb.buttons.held(BUTTON_A, 0)) {
-    showLevelMenu();
+    showStatsScreen();
     return nullptr;
   }
 

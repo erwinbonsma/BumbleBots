@@ -14,7 +14,7 @@
 // ProgressTracker implementation
 
 const uint8_t VMAJOR = 1;
-const uint8_t VMINOR = 0;
+const uint8_t VMINOR = 1;
 
 const uint8_t SAVEINDEX_VMAJOR = 0;
 const uint8_t SAVEINDEX_VMINOR = 1;
@@ -26,19 +26,14 @@ const uint8_t SAVEINDEX_LAST = SAVEINDEX_LEVELHI_L0 + 15;
 void ProgressTracker::init() {
   if (
     gb.save.get(SAVEINDEX_VMAJOR) != VMAJOR ||
-    gb.save.get(SAVEINDEX_VMINOR) > VMINOR
+    gb.save.get(SAVEINDEX_VMINOR) != VMINOR
   ) {
-    // Data is stored in format that is not compatible.
+    // Data is stored in a different format, possibly not compatible.
 
     if (
       // v1.0 format stored incorrectly (as v0.1)
       gb.save.get(1) == 1 &&
-      gb.save.get(0) == 0 &&
-      // Safeguard. When format of progress data changes, this fix logic may
-      // not be valid anymore. It may require adaptation and eventually should
-      // be removed. Therefore, only activate it for current version.
-      VMAJOR == 1 &&
-      VMINOR == 0
+      gb.save.get(0) == 0
     ) {
       for (uint8_t level = 0; level < 16; level++) {
         if (gb.save.get(SAVEINDEX_LEVELHI_L0 + level) != 0) {
@@ -50,7 +45,16 @@ void ProgressTracker::init() {
         }
       }
     }
-    else {
+    else if (
+      gb.save.get(SAVEINDEX_VMAJOR) == 1 &&
+      gb.save.get(SAVEINDEX_VMINOR) == 0
+    ) {
+      gb.save.set(SAVEINDEX_MAXLEVELRUN, (int32_t)0);
+    }
+    else if (
+      gb.save.get(SAVEINDEX_VMAJOR) != VMAJOR ||
+      gb.save.get(SAVEINDEX_VMINOR) > VMINOR
+    ) {
       // Reset all (incompatible) data to default
       for (uint8_t i = 2; i <= SAVEINDEX_LAST; i++) {
         gb.save.set(i, (int32_t)0);
@@ -93,6 +97,18 @@ uint8_t ProgressTracker::maxStartLevel() {
   return level;
 }
 
+uint8_t ProgressTracker::numLevelsCompleted() {
+  uint8_t numCompleted = 0;
+
+  for (uint8_t level = 0; level < numLevels; level++) {
+    if (gb.save.get(SAVEINDEX_LEVELHI_L0 + level) > 0) {
+      numCompleted++;
+    }
+  }
+
+  return numCompleted;
+}
+
 uint16_t ProgressTracker::levelHiScore(uint8_t level) {
   return gb.save.get(SAVEINDEX_LEVELHI_L0 + level);
 }
@@ -109,6 +125,10 @@ uint16_t ProgressTracker::virtualHiScore() {
   }
 
   return vscore;
+}
+
+uint8_t ProgressTracker::maxLevelRun() {
+  return gb.save.get(SAVEINDEX_MAXLEVELRUN);
 }
 
 bool ProgressTracker::levelDone(uint8_t level, uint16_t levelScore) {

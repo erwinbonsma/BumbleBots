@@ -25,6 +25,12 @@ Animation* Game::init(uint8_t startLevel) {
   return restartLevel();
 }
 
+uint8_t Game::levelRun() {
+  // TODO: Update when supporting auto jump back to skipped level after
+  // completing last level.
+  return _levelNum - _startLevel;
+}
+
 Animation* Game::restartLevel() {
   _activeAnimation = _levelStartAnimation.init();
   return _activeAnimation;
@@ -41,7 +47,7 @@ Animation* Game::nextLevel() {
 }
 
 Animation* Game::gameOver() {
-  bool hiScore = progressTracker.gameDone(_levelNum - _startLevel, _score);
+  bool hiScore = progressTracker.gameDone(levelRun(), _score);
 
   _activeAnimation = _gameOverAnimation.init(hiScore);
   return _activeAnimation;

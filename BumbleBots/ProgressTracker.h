@@ -16,6 +16,9 @@ public:
   // The maximum starting level, given current progress
   uint8_t maxStartLevel();
 
+  // The number of levels completed
+  uint8_t numLevelsCompleted();
+
   uint16_t levelHiScore(uint8_t levelIndex);
   bool levelCompleted(uint8_t levelIndex) { return levelHiScore(levelIndex) > 0; }
   uint16_t hiScore();
