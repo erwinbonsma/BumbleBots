@@ -88,7 +88,6 @@ Animation* GameOverAnimation::update() {
 
   if (gb.buttons.held(BUTTON_A, 0)) {
     showStatsScreen();
-    return nullptr;
   }
 
   return this;
