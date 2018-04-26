@@ -12,6 +12,7 @@
 class StatsScreen : public LoopHandler {
   uint8_t _levelRun;
   uint16_t _score;
+  uint16_t _animCount;
 
 public:
   void init(uint8_t levelRun, uint16_t score);
