@@ -20,3 +20,4 @@ extern Image rock1Image;
 extern Image rock2Image;
 extern Image tree1Image;
 extern Image tree2Image;
+extern Image botMediumImage;

@@ -7,10 +7,11 @@
 #include "StatsScreen.h"
 
 #include "Globals.h"
+#include "Images.h"
 #include "ProgressTracker.h"
 
 void drawScreen(int8_t x0, int8_t y0, int8_t w, int8_t h) {
-  gb.display.setColor(INDEX_DARKGRAY);
+  gb.display.setColor(INDEX_BLACK);
   gb.display.drawRect(x0, y0, w, h);
 
   gb.display.setColor(INDEX_WHITE);
@@ -65,4 +66,9 @@ void StatsScreen::draw() {
   gb.display.printf("%2d", progressTracker.numLevelsCompleted());
 
   drawScreen(0, 0, 80, 45);
+
+  gb.display.setColor(INDEX_DARKGRAY);
+  gb.display.fillRect(0, 45, 80, 19);
+
+  gb.display.drawImage(54, 41, botMediumImage);
 }
