@@ -9,6 +9,7 @@
 #include "Game.h"
 #include "Globals.h"
 #include "Images.h"
+#include "ProgressTracker.h"
 
 extern Level level;
 extern uint8_t levelNum;
@@ -116,6 +117,10 @@ const Gamebuino_Meta::Sound_FX gameDoneSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-1,0,47,16},
 };
 
+const Gamebuino_Meta::Sound_FX liveScoreSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-64,0,50,1},
+};
+
 Animation* GameDoneAnimation::init() {
   gb.sound.fx(gameDoneSfx);
 
@@ -125,16 +130,42 @@ Animation* GameDoneAnimation::init() {
 Animation* GameDoneAnimation::update() {
   Animation::update();
 
-  // TODO: Score points for remaining lives
+  if (clock() == 50) {
+    if (game.numLives() > 0) {
+      game.removeLive();
+    }
+    else {
+      setClock(120);
+    }
+  }
 
-  if (gb.buttons.held(BUTTON_A, 0)) {
-    showStatsScreen();
+  if (clock() == 120) {
+    if (game.numLives() > 0) {
+      setClock(45);
+    }
+    else {
+      progressTracker.gameDone(game.score());
+    }
+  }
+
+  if (clock() > 120) {
+    rewindClock(); // Prevent overflow
+
+    if (gb.buttons.held(BUTTON_A, 0)) {
+      showStatsScreen();
+    }
   }
 
   return this;
 }
 
 void GameDoneAnimation::draw() {
+  if (clock() >= 50 && clock() < 120) {
+    gb.sound.fx(liveScoreSfx);
+    game.addToScore(1);
+    gb.display.drawImage(10 + clock() - 50, 1, liveIconImage);
+  }
+
   gb.display.drawImage(30, 22, gameDoneImage);
 }
 
@@ -154,9 +185,7 @@ const Gamebuino_Meta::Sound_FX levelDoneSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,64,-8,10,63,4},
 };
 
-const Gamebuino_Meta::Sound_FX timeScoreSfx[] = {
-  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-64,0,50,1},
-};
+const Gamebuino_Meta::Sound_FX* timeScoreSfx = liveScoreSfx;
 
 Animation* LevelDoneAnimation::init() {
   game.level().freeze();

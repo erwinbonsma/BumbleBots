@@ -32,6 +32,7 @@ class Game : public LoopHandler {
 
 public:
   int8_t numLives() { return _numLives; }
+  void removeLive() { _numLives--; }
   uint8_t levelNum() { return _levelNum + 1; }
   uint16_t score() { return _score; }
 

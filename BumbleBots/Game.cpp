@@ -57,8 +57,6 @@ Animation* Game::nextLevel() {
 }
 
 Animation* Game::gameOver() {
-  progressTracker.gameDone(_score);
-
   _activeAnimation = _gameOverAnimation.init(progressTracker.improvedHiScore());
   return _activeAnimation;
 }

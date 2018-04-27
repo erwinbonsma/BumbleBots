@@ -13,6 +13,7 @@ class Animation {
 protected:
   uint8_t clock() const { return _clock; }
   void rewindClock() { _clock--; }
+  void setClock(uint8_t value) { _clock = value; }
 
 public:
   virtual Animation* init();
