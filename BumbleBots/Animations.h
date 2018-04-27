@@ -62,6 +62,8 @@ public:
 class GameDoneAnimation : public Animation {
 
 public:
+  Animation* init();
+
   Animation* update();
 
   void draw();

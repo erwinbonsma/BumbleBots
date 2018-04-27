@@ -105,6 +105,23 @@ void GameOverAnimation::draw() {
 //-----------------------------------------------------------------------------
 // GameDoneAnimation declaration
 
+// Sounds as "End of the line"
+const Gamebuino_Meta::Sound_FX gameDoneSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,-1,0,50,8},
+  {Gamebuino_Meta::Sound_FX_Wave::NOISE,1,0,0,0,0,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,-1,0,50,4},
+  {Gamebuino_Meta::Sound_FX_Wave::NOISE,1,0,0,0,0,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,-1,0,50,4},
+  {Gamebuino_Meta::Sound_FX_Wave::NOISE,1,0,0,0,0,4},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-1,0,47,16},
+};
+
+Animation* GameDoneAnimation::init() {
+  gb.sound.fx(gameDoneSfx);
+
+  return Animation::init();
+}
+
 Animation* GameDoneAnimation::update() {
   Animation::update();
 
