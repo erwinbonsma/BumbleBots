@@ -32,19 +32,22 @@ Animation* Game::restartLevel() {
 Animation* Game::nextLevel() {
   progressTracker.levelDone(_levelNum, _score);
 
-  if (progressTracker.numLevelsCompleted() == numLevels) {
-    // All levels have been completed. Hurray!
-    _activeAnimation = _gameDoneAnimation.init();
-    return _activeAnimation;
-  }
-
   _levelNum++;
   if (_levelNum == numLevels) {
     _lastLevelCompleted = true;
   }
+
   if (_lastLevelCompleted) {
-    // The last level has been completed this game but not all levels were
-    // completed then. So revisit levels which have not yet been completed.
+    if (progressTracker.numLevelsCompleted() == numLevels) {
+      // The game has been completed! This happens when the last level has been
+      // completed as part of the current game AND all other levels have been
+      // completed at least once (possibly during earlier games).
+      _activeAnimation = _gameDoneAnimation.init();
+      return _activeAnimation;
+    }
+
+    // The last level has been completed this game but not all levels have
+    // been completed yet. So revisit levels which have never been completed.
     _levelNum = progressTracker.firstUncompletedLevel();
   }
 
