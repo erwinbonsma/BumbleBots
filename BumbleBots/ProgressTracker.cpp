@@ -100,6 +100,15 @@ uint8_t ProgressTracker::numLevelsCompleted() {
   return numCompleted;
 }
 
+uint8_t ProgressTracker::firstUncompletedLevel() {
+  uint8_t level = 0;
+  while (level < numLevels && didCompleteLevel(level)) {
+    level++;
+  }
+  return level;
+}
+
+
 uint16_t ProgressTracker::levelHiScore(uint8_t level) {
   return gb.save.get(SAVEINDEX_LEVELHI_L0 + level);
 }

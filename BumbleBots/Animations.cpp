@@ -103,6 +103,25 @@ void GameOverAnimation::draw() {
 }
 
 //-----------------------------------------------------------------------------
+// GameDoneAnimation declaration
+
+Animation* GameDoneAnimation::update() {
+  Animation::update();
+
+  // TODO: Score points for remaining lives
+
+  if (gb.buttons.held(BUTTON_A, 0)) {
+    showStatsScreen();
+  }
+
+  return this;
+}
+
+void GameDoneAnimation::draw() {
+  gb.display.drawImage(30, 22, gameDoneImage);
+}
+
+//-----------------------------------------------------------------------------
 // LevelDoneAnimation implementation
 
 const Gamebuino_Meta::Sound_FX levelDoneSfx[] = {

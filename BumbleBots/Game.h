@@ -15,6 +15,7 @@ class Game : public LoopHandler {
   uint16_t _displayScore;
 
   Level _level;
+  bool _lastLevelCompleted;
 
   const char *_causeOfDeath;
 
@@ -22,6 +23,7 @@ class Game : public LoopHandler {
   LevelDoneAnimation _levelDoneAnimation;
   LevelStartAnimation _levelStartAnimation;
   GameOverAnimation _gameOverAnimation;
+  GameDoneAnimation _gameDoneAnimation;
 
   // The active animation, if any
   Animation *_activeAnimation;

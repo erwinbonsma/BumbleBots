@@ -35,6 +35,8 @@ public:
   uint8_t numLevelsCompleted();
   bool didCompleteLevel(uint8_t levelIndex) { return levelHiScore(levelIndex) > 0; }
 
+  uint8_t firstUncompletedLevel();
+
   uint16_t score() { return _score; }
 
   uint16_t levelHiScore(uint8_t levelIndex);

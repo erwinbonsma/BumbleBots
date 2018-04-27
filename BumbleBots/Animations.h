@@ -57,6 +57,17 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+// GameDoneAnimation declaration
+
+class GameDoneAnimation : public Animation {
+
+public:
+  Animation* update();
+
+  void draw();
+};
+
+//-----------------------------------------------------------------------------
 // LevelDoneAnimation declaration
 
 class LevelDoneAnimation : public Animation {
