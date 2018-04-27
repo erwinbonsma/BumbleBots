@@ -10,12 +10,12 @@
 // StatsScreen declaration
 
 class StatsScreen : public LoopHandler {
-  uint8_t _levelRun;
-  uint16_t _score;
   uint16_t _animCount;
 
+  void drawValue(uint16_t value, bool improved);
+
 public:
-  void init(uint8_t levelRun, uint16_t score);
+  void reset();
 
   void update();
   void draw();

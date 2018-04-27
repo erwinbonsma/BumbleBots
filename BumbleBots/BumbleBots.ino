@@ -59,7 +59,7 @@ void showLevelMenu() {
 }
 
 void showStatsScreen() {
-  statsScreen.init(game.levelRun(), game.score());
+  statsScreen.reset();
   loopHandler = &statsScreen;
 }
 

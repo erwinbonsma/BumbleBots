@@ -7,8 +7,23 @@
 //-----------------------------------------------------------------------------
 // ProgressTracker declaration
 
+const int8_t IMPROVED_HISCORE = 0x01;
+const int8_t IMPROVED_MAXLEVELRUN = 0x02;
+const int8_t IMPROVED_VIRTUALHISCORE = 0x04;
+
 class ProgressTracker {
+  uint8_t _improvedFlags;
+  uint8_t _levelRun;
+  // Updated at the end of each level so that it can be used to determine the
+  // level score.
+  uint16_t _score;
+
   void dump();
+  void updateHiScore();
+
+  void clearStoredHiScore();
+  void clearStoredMaxLevelRun();
+  void clearStoredLevelScores(bool preserveCompletion);
 
 public:
   void init();
@@ -18,21 +33,27 @@ public:
 
   // The number of levels completed
   uint8_t numLevelsCompleted();
+  bool didCompleteLevel(uint8_t levelIndex) { return levelHiScore(levelIndex) > 0; }
+
+  uint16_t score() { return _score; }
 
   uint16_t levelHiScore(uint8_t levelIndex);
-  bool levelCompleted(uint8_t levelIndex) { return levelHiScore(levelIndex) > 0; }
   uint16_t hiScore();
+  bool improvedHiScore() { return _improvedFlags & IMPROVED_HISCORE; }
 
-  // The hiscore if the best score for each level was reached in the same game.
+  // The hiscore if the best score for each level would be reached in the same game.
   uint16_t virtualHiScore();
+  bool improvedVirtualHiScore() { return _improvedFlags & IMPROVED_VIRTUALHISCORE; }
 
+  uint8_t levelRun() { return _levelRun; }
   uint8_t maxLevelRun();
+  bool improvedMaxLevelRun() { return _improvedFlags & IMPROVED_MAXLEVELRUN; }
 
   // Returns true iff this is a new level hi
-  bool levelDone(uint8_t levelIndex, uint16_t levelScore);
+  bool levelDone(uint8_t levelIndex, uint16_t totalScore);
 
-  // Returns true iff this is a new hi-score
-  bool gameDone(uint8_t levelRun, uint16_t finalScore);
+  void startGame();
+  void gameDone(uint16_t finalScore);
 };
 
 extern ProgressTracker progressTracker;

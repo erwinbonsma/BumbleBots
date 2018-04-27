@@ -56,9 +56,7 @@ void drawLevelProgress() {
   }
 }
 
-void StatsScreen::init(uint8_t levelRun, uint16_t score) {
-  _levelRun = levelRun;
-  _score = score;
+void StatsScreen::reset() {
   _animCount = 0;
 }
 
@@ -70,33 +68,52 @@ void StatsScreen::update() {
   }
 }
 
+void StatsScreen::drawValue(uint16_t value, bool improved) {
+  gb.display.setCursorX(58);
+  if (improved && (_animCount / 16) % 2) {
+    gb.display.setColor(INDEX_LIGHTGREEN);
+  }
+  gb.display.printf("%5d", value);
+  gb.display.setColor(INDEX_GREEN);
+}
+
 void StatsScreen::draw() {
   gb.display.setColor(INDEX_GREEN);
 
   gb.display.setCursor(23 + 3*4, 3);
   gb.display.printf("score:");
-  gb.display.setCursorX(58);
-  gb.display.printf("%5d", _score);
+  drawValue(
+    progressTracker.score(),
+    progressTracker.score() == progressTracker.hiScore()
+  );
 
   gb.display.setCursor(23, 9);
   gb.display.printf("hi-score:");
-  gb.display.setCursorX(58);
-  gb.display.printf("%5d", progressTracker.hiScore());
+  drawValue(
+    progressTracker.hiScore(),
+    progressTracker.improvedHiScore()
+  );
 
   gb.display.setCursor(23, 15);
   gb.display.printf("vi-score:");
-  gb.display.setCursorX(58);
-  gb.display.printf("%5d", progressTracker.virtualHiScore());
+  drawValue(
+    progressTracker.virtualHiScore(),
+    progressTracker.improvedVirtualHiScore()
+  );
 
   gb.display.setCursor(3 + 4*4, 23);
   gb.display.printf("level run:");
-  gb.display.setCursorX(70);
-  gb.display.printf("%2d", _levelRun);
+  drawValue(
+    progressTracker.levelRun(),
+    progressTracker.levelRun() == progressTracker.maxLevelRun()
+  );
 
   gb.display.setCursor(3, 29);
   gb.display.printf("max level run:");
-  gb.display.setCursorX(70);
-  gb.display.printf("%2d", progressTracker.maxLevelRun());
+  drawValue(
+    progressTracker.maxLevelRun(),
+    progressTracker.improvedMaxLevelRun()
+  );
 
   gb.display.setColor(INDEX_DARKGRAY);
   gb.display.fillRect(0, 46, 80, 19);

@@ -23,43 +23,34 @@ const uint8_t SAVEINDEX_MAXLEVELRUN = 3;
 const uint8_t SAVEINDEX_LEVELHI_L0 = 4;
 const uint8_t SAVEINDEX_LAST = SAVEINDEX_LEVELHI_L0 + 15;
 
+void ProgressTracker::clearStoredHiScore() {
+  gb.save.set(SAVEINDEX_HISCORE, (int32_t)0);
+}
+
+void ProgressTracker::clearStoredMaxLevelRun() {
+  gb.save.set(SAVEINDEX_MAXLEVELRUN, (int32_t)0);
+}
+
+void ProgressTracker::clearStoredLevelScores(bool preserveCompletion) {
+  for (uint8_t level = 0; level < 16; level++) {
+    int32_t levelScore = (
+      preserveCompletion &&
+      gb.save.get(SAVEINDEX_LEVELHI_L0 + level) != 0
+    ) ? 1 : 0;
+    gb.save.set(SAVEINDEX_LEVELHI_L0 + level, levelScore);
+  }
+}
+
 void ProgressTracker::init() {
   if (
     gb.save.get(SAVEINDEX_VMAJOR) != VMAJOR ||
     gb.save.get(SAVEINDEX_VMINOR) != VMINOR
   ) {
-    // Data is stored in a different format, possibly not compatible.
-
-    if (
-      // v1.0 format stored incorrectly (as v0.1)
-      gb.save.get(1) == 1 &&
-      gb.save.get(0) == 0
-    ) {
-      for (uint8_t level = 0; level < 16; level++) {
-        if (gb.save.get(SAVEINDEX_LEVELHI_L0 + level) != 0) {
-          // Level score was incorrectly stored. No need to try to correct
-          // this, as it is not yet used anyway. Only remember that level was
-          // completed so that after upgrade, users will not notice a
-          // difference
-          gb.save.set(SAVEINDEX_LEVELHI_L0 + level, (int32_t)1);
-        }
-      }
-    }
-    else if (
-      gb.save.get(SAVEINDEX_VMAJOR) == 1 &&
-      gb.save.get(SAVEINDEX_VMINOR) == 0
-    ) {
-      gb.save.set(SAVEINDEX_MAXLEVELRUN, (int32_t)0);
-    }
-    else if (
-      gb.save.get(SAVEINDEX_VMAJOR) != VMAJOR ||
-      gb.save.get(SAVEINDEX_VMINOR) > VMINOR
-    ) {
-      // Reset all (incompatible) data to default
-      for (uint8_t i = 2; i <= SAVEINDEX_LAST; i++) {
-        gb.save.set(i, (int32_t)0);
-      }
-    }
+    // Reset all data. Although format itself has not changed, levels have been
+    // tweaked so that previous scores are not valid anymore.
+    clearStoredLevelScores(true);
+    clearStoredHiScore();
+    clearStoredMaxLevelRun();
   }
 
   dump();
@@ -101,7 +92,7 @@ uint8_t ProgressTracker::numLevelsCompleted() {
   uint8_t numCompleted = 0;
 
   for (uint8_t level = 0; level < numLevels; level++) {
-    if (gb.save.get(SAVEINDEX_LEVELHI_L0 + level) > 0) {
+    if (didCompleteLevel(level)) {
       numCompleted++;
     }
   }
@@ -117,44 +108,65 @@ uint16_t ProgressTracker::hiScore() {
   return gb.save.get(SAVEINDEX_HISCORE);
 }
 
+uint8_t ProgressTracker::maxLevelRun() {
+  return gb.save.get(SAVEINDEX_MAXLEVELRUN);
+}
+
 uint16_t ProgressTracker::virtualHiScore() {
   uint16_t vscore = 0;
 
   for (uint8_t level = 0; level < numLevels; level++) {
-    vscore += gb.save.get(SAVEINDEX_LEVELHI_L0 + level);
+    uint16_t levelScore = levelHiScore(level);
+    // Ignore 1-score levels which are only used to signal completion after
+    // format change of stored data
+    if (levelScore > 1) {
+      vscore += levelScore;
+    }
   }
 
   return vscore;
 }
 
-uint8_t ProgressTracker::maxLevelRun() {
-  return gb.save.get(SAVEINDEX_MAXLEVELRUN);
+void ProgressTracker::startGame() {
+  _score = 0;
+  _levelRun = 0;
+  _improvedFlags = 0;
 }
 
-bool ProgressTracker::levelDone(uint8_t level, uint16_t levelScore) {
-  uint16_t oldHi = gb.save.get(SAVEINDEX_LEVELHI_L0 + level);
+void ProgressTracker::updateHiScore() {
+  uint16_t oldHiScore = hiScore();
 
-  if (levelScore > oldHi) {
+  if (_score > oldHiScore) {
+    gb.save.set(SAVEINDEX_HISCORE, (int32_t)_score);
+    _improvedFlags |= IMPROVED_HISCORE;
+  }
+}
+
+bool ProgressTracker::levelDone(uint8_t level, uint16_t score) {
+  uint16_t oldLevelHi = levelHiScore(level);
+  uint16_t levelScore = score - _score;
+  _score = score;
+
+  if (levelScore > oldLevelHi) {
     gb.save.set(SAVEINDEX_LEVELHI_L0 + level, levelScore);
-    return true;
+    _improvedFlags |= IMPROVED_VIRTUALHISCORE;
   }
 
-  return false;
+  _levelRun++;
+  if (_levelRun > maxLevelRun()) {
+    gb.save.set(SAVEINDEX_MAXLEVELRUN, (int32_t)_levelRun);
+    _improvedFlags |= IMPROVED_MAXLEVELRUN;
+  }
+
+  updateHiScore();
+
+  return levelScore > oldLevelHi;
 }
 
-bool ProgressTracker::gameDone(uint8_t levelRun, uint16_t finalScore) {
-  uint8_t oldRun = gb.save.get(SAVEINDEX_MAXLEVELRUN);
-  if (levelRun > oldRun) {
-    gb.save.set(SAVEINDEX_MAXLEVELRUN, (int32_t)levelRun);
-  }
+void ProgressTracker::gameDone(uint16_t finalScore) {
+  _score = finalScore;
 
-  uint16_t oldHi = gb.save.get(SAVEINDEX_HISCORE);
-  if (finalScore > oldHi) {
-    gb.save.set(SAVEINDEX_HISCORE, (int32_t)finalScore);
-    return true;
-  }
-
-  return false;
+  updateHiScore();
 }
 
 ProgressTracker progressTracker;

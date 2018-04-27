@@ -12,23 +12,15 @@
 Game game;
 
 Animation* Game::init(uint8_t startLevel) {
-  _startLevel = startLevel;
   _levelNum = startLevel;
   _numLives = 3;
   _score = 0;
-  _levelStartScore = 0;
   _displayScore = 0;
-  _hiScore = progressTracker.hiScore();
 
   _level.init(&levelSpecs[_levelNum]);
+  progressTracker.startGame();
 
   return restartLevel();
-}
-
-uint8_t Game::levelRun() {
-  // TODO: Update when supporting auto jump back to skipped level after
-  // completing last level.
-  return _levelNum - _startLevel;
 }
 
 Animation* Game::restartLevel() {
@@ -37,19 +29,18 @@ Animation* Game::restartLevel() {
 }
 
 Animation* Game::nextLevel() {
-  progressTracker.levelDone(_levelNum, _score - _levelStartScore);
+  progressTracker.levelDone(_levelNum, _score);
 
   _levelNum = (_levelNum + 1 ) % numLevels;
   _level.init(&levelSpecs[_levelNum]);
-  _levelStartScore = _score;
 
   return restartLevel();
 }
 
 Animation* Game::gameOver() {
-  bool hiScore = progressTracker.gameDone(levelRun(), _score);
+  progressTracker.gameDone(_score);
 
-  _activeAnimation = _gameOverAnimation.init(hiScore);
+  _activeAnimation = _gameOverAnimation.init(progressTracker.improvedHiScore());
   return _activeAnimation;
 }
 
@@ -113,7 +104,7 @@ void Game::drawScore() {
     numDigits++;
   }
 
-  bool newHi = _displayScore > _hiScore;
+  bool newHi = _score > progressTracker.hiScore();
 
   gb.display.setColor(newHi ? INDEX_GREEN : INDEX_DARKBLUE);
   gb.display.fillRect(0, 0, numDigits * 4 + 1, 7);
