@@ -20,11 +20,12 @@ class ProgressTracker {
   uint16_t _score;
 
   void dump();
-  void updateHiScore();
 
   void clearStoredHiScore();
   void clearStoredMaxLevelRun();
   void clearStoredLevelScores(bool preserveCompletion);
+
+  bool updateHiScore();
 
 public:
   void init();
@@ -59,7 +60,9 @@ public:
   bool levelDone(uint8_t levelIndex, uint16_t totalScore);
 
   void startGame();
-  void gameDone(uint16_t finalScore);
+
+  // Returns true iff this is a new hi-score
+  bool gameDone(uint16_t finalScore);
 };
 
 extern ProgressTracker progressTracker;

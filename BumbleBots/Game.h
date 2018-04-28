@@ -38,7 +38,9 @@ public:
 
   Level& level() { return _level; }
   void addToScore(uint8_t inc) { _score += inc; }
+
   bool registerLevelScore();
+  bool registerGameScore();
 
   void signalDeath(const char* cause);
   void signalPickupCollected();

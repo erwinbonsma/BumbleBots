@@ -9,7 +9,6 @@
 #include "Game.h"
 #include "Globals.h"
 #include "Images.h"
-#include "ProgressTracker.h"
 
 extern Level level;
 extern uint8_t levelNum;
@@ -76,8 +75,8 @@ const Gamebuino_Meta::Sound_FX gameOverSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-2,0,113,20},
 };
 
-Animation* GameOverAnimation::init(bool hiScore) {
-  _hiScore = hiScore;
+Animation* GameOverAnimation::init() {
+  _hiScore = game.registerGameScore();
 
   gb.sound.fx(gameOverSfx);
 
@@ -144,7 +143,7 @@ Animation* GameDoneAnimation::update() {
       setClock(45);
     }
     else {
-      progressTracker.gameDone(game.score());
+      game.registerGameScore();
     }
   }
 

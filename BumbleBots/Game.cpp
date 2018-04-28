@@ -55,7 +55,7 @@ Animation* Game::nextLevel() {
 }
 
 Animation* Game::gameOver() {
-  _activeAnimation = _gameOverAnimation.init(progressTracker.improvedHiScore());
+  _activeAnimation = _gameOverAnimation.init();
   return _activeAnimation;
 }
 
@@ -100,6 +100,13 @@ void Game::signalBoxDestroyed(Box& box) {
  */
 bool Game::registerLevelScore() {
   return progressTracker.levelDone(_levelNum, _score);
+}
+
+/* Forwards final score to progress tracker.
+ * Returns "true" iff this is a new overall hi-score.
+ */
+bool Game::registerGameScore() {
+  return progressTracker.gameDone(_score);
 }
 
 void Game::update() {
