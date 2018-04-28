@@ -139,7 +139,7 @@ uint16_t ProgressTracker::virtualHiScore() {
 void ProgressTracker::startGame() {
   _score = 0;
   _levelRun = 0;
-  _improvedFlags = 0;
+  _flags = 0;
 }
 
 void ProgressTracker::updateHiScore() {
@@ -147,7 +147,7 @@ void ProgressTracker::updateHiScore() {
 
   if (_score > oldHiScore) {
     gb.save.set(SAVEINDEX_HISCORE, (int32_t)_score);
-    _improvedFlags |= IMPROVED_HISCORE;
+    _flags |= IMPROVED_HISCORE;
   }
 }
 
@@ -157,14 +157,23 @@ bool ProgressTracker::levelDone(uint8_t level, uint16_t score) {
   _score = score;
 
   if (levelScore > oldLevelHi) {
-    gb.save.set(SAVEINDEX_LEVELHI_L0 + level, levelScore);
-    _improvedFlags |= IMPROVED_VIRTUALHISCORE;
+    if (!playerDiedThisLevel()) {
+      // New level hi-score!
+      gb.save.set(SAVEINDEX_LEVELHI_L0 + level, levelScore);
+      _flags |= IMPROVED_VIRTUALHISCORE;
+    }
+    else if (oldLevelHi == 0) {
+      // Do not store score as a hi-score, as player died, which can allow a
+      // higher score than possible without dieing. However, do remember level
+      // completion
+      gb.save.set(SAVEINDEX_LEVELHI_L0 + level, 1);
+    }
   }
 
   _levelRun++;
   if (_levelRun > maxLevelRun()) {
     gb.save.set(SAVEINDEX_MAXLEVELRUN, (int32_t)_levelRun);
-    _improvedFlags |= IMPROVED_MAXLEVELRUN;
+    _flags |= IMPROVED_MAXLEVELRUN;
   }
 
   updateHiScore();

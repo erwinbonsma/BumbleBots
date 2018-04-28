@@ -63,6 +63,7 @@ Animation* Game::gameOver() {
 
 void Game::signalDeath(const char* cause) {
   _causeOfDeath = cause;
+  progressTracker.signalPlayerDeath();
 }
 
 const Gamebuino_Meta::Sound_FX pickupCollectedSfx[] = {
