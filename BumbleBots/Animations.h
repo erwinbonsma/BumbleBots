@@ -62,6 +62,8 @@ public:
 
 class GameDoneAnimation : public Animation {
 
+  void drawLights();
+
 public:
   Animation* init();
 

@@ -116,6 +116,33 @@ const Gamebuino_Meta::Sound_FX gameDoneSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-1,0,47,16},
 };
 
+/* Light color gradients.
+ *
+ * These vary from Red to Green to Blue to Red. The gradients have been created
+ * using http://www.perbang.dk/rgbgradient/ with 13 steps between each primary
+ * color.
+ *
+ * This resulted in the following RGB colors:
+ *   0xff0000, 0xff2a00, 0xff5500, 0xff7f00, 0xffaa00, 0xffd400,
+ *   0xffff00, 0xd4ff00, 0xa9ff00, 0x7fff00, 0x54ff00, 0x2aff00,
+ *   0x00ff00, 0x00ff2a, 0x00ff55, 0x00ff7f, 0x00ffa9, 0x00ffd4,
+ *   0x00ffff, 0x00d4ff, 0x00a9ff, 0x007fff, 0x0054ff, 0x002aff,
+ *   0x0000ff, 0x2a00ff, 0x5400ff, 0x7f00ff, 0xaa00ff, 0xd400ff,
+ *   0xff00ff, 0xff00d4, 0xff00aa, 0xff007f, 0xff0055, 0xff002a
+ *
+ * These have been programmatically converted using gb.createColor to the array
+ * with RGB565 values below.
+ */
+const uint8_t numGradientColors = 36;
+const uint16_t gradientColors[numGradientColors] = {
+  0xf800, 0xf940, 0xfaa0, 0xfbe0, 0xfd40, 0xfea0,
+  0xffe0, 0xd7e0, 0xafe0, 0x7fe0, 0x57e0, 0x2fe0,
+  0x07e0, 0x07e5, 0x07ea, 0x07ef, 0x07f5, 0x07fa,
+  0x07ff, 0x06bf, 0x055f, 0x03ff, 0x02bf, 0x015f,
+  0x001f, 0x281f, 0x501f, 0x781f, 0xa81f, 0xd01f,
+  0xf81f, 0xf81a, 0xf815, 0xf80f, 0xf80a, 0xf805,
+};
+
 const Gamebuino_Meta::Sound_FX liveScoreSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-64,0,50,1},
 };
@@ -158,6 +185,25 @@ Animation* GameDoneAnimation::update() {
   return this;
 }
 
+/* Lights animation.
+ *
+ * Two "chains" of 4-lights circle the console clockwise. The chains are both
+ * a single color which continuously changes. Both chain colors are always at
+ * opposite ends of the color gradient.
+ */
+void GameDoneAnimation::drawLights() {
+  // Vary color of chains over time
+  for (uint8_t i = 0; i < 8; i++) {
+    uint8_t x = (i < 4) ? 0 : 1;
+    uint8_t y = (i < 4) ? i : 7 - i;
+    // The "chain" that is currently occupying this light-pixel
+    uint8_t chain = ((i + gb.frameCount / 2) / 4) % 2;
+    uint8_t chainColorIndex =
+      (gb.frameCount / 4 + chain * (numGradientColors / 2)) % numGradientColors;
+    gb.lights.drawPixel(x, y, (Color)gradientColors[chainColorIndex]);
+  }
+}
+
 void GameDoneAnimation::draw() {
   if (clock() >= 50 && clock() < 120) {
     gb.sound.fx(liveScoreSfx);
@@ -166,6 +212,8 @@ void GameDoneAnimation::draw() {
   }
 
   gb.display.drawImage(30, 22, gameDoneImage);
+
+  drawLights();
 }
 
 //-----------------------------------------------------------------------------
