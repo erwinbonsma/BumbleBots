@@ -13,6 +13,7 @@ class Animation {
 protected:
   uint8_t clock() const { return _clock; }
   void rewindClock() { _clock--; }
+  void setClock(uint8_t value) { _clock = value; }
 
 public:
   virtual Animation* init();
@@ -49,7 +50,22 @@ class GameOverAnimation : public Animation {
   bool _hiScore;
 
 public:
-  Animation* init(bool hiScore);
+  Animation* init();
+
+  Animation* update();
+
+  void draw();
+};
+
+//-----------------------------------------------------------------------------
+// GameDoneAnimation declaration
+
+class GameDoneAnimation : public Animation {
+
+  void drawLights();
+
+public:
+  Animation* init();
 
   Animation* update();
 
@@ -60,10 +76,14 @@ public:
 // LevelDoneAnimation declaration
 
 class LevelDoneAnimation : public Animation {
+  bool _levelHi;
+
 public:
   Animation* init();
 
   Animation* update();
+
+  void draw();
 };
 
 //-----------------------------------------------------------------------------

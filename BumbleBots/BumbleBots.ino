@@ -8,6 +8,7 @@
 
 #include "Game.h"
 #include "LevelMenu.h"
+#include "StatsScreen.h"
 #include "ProgressTracker.h"
 
 bool _slowMotionEnabled = false;
@@ -49,11 +50,17 @@ void signalBoxDestroyed(Box& box) {
 }
 
 LevelMenu levelMenu;
+StatsScreen statsScreen;
 LoopHandler* loopHandler;
 
 void showLevelMenu() {
   levelMenu.init();
   loopHandler = &levelMenu;
+}
+
+void showStatsScreen() {
+  statsScreen.reset();
+  loopHandler = &statsScreen;
 }
 
 void startGameAtLevel(uint8_t levelNum) {

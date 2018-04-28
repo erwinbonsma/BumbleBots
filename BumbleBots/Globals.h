@@ -28,4 +28,5 @@ void signalDeath(const char* causeOfDeath);
 void signalPickupCollected();
 void signalBoxDestroyed(Box& box);
 void startGameAtLevel(uint8_t levelNum);
+void showStatsScreen();
 void showLevelMenu();

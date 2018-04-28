@@ -62,7 +62,7 @@ void LevelMenu::addDigits() {
     bool topPart = (rowOfPos(pos) % 2) == 0;
     int8_t digit = (colOfPos(pos) % 2) == 0 ? (level + 1) / 10 : (level + 1) % 10;
     ColorIndex digitColor =
-      !progressTracker.levelCompleted(level)
+      !progressTracker.didCompleteLevel(level)
       ? INDEX_DARKGRAY
       : (_tilesSpec.tileTypeIndexAt(pos) == TILETYPE_MENU1)
         ? INDEX_PINK

@@ -8,16 +8,14 @@
 #include "Animations.h"
 
 class Game : public LoopHandler {
-  uint8_t _startLevel;
   int8_t _numLives; // Signed to easily check game over
   uint8_t _levelNum;
 
   uint16_t _score;
-  uint16_t _hiScore; // Hi-score at start of game. Not updated during game
   uint16_t _displayScore;
-  uint16_t _levelStartScore;
 
   Level _level;
+  bool _lastLevelCompleted;
 
   const char *_causeOfDeath;
 
@@ -25,6 +23,7 @@ class Game : public LoopHandler {
   LevelDoneAnimation _levelDoneAnimation;
   LevelStartAnimation _levelStartAnimation;
   GameOverAnimation _gameOverAnimation;
+  GameDoneAnimation _gameDoneAnimation;
 
   // The active animation, if any
   Animation *_activeAnimation;
@@ -33,9 +32,15 @@ class Game : public LoopHandler {
 
 public:
   int8_t numLives() { return _numLives; }
+  void removeLive() { _numLives--; }
   uint8_t levelNum() { return _levelNum + 1; }
+  uint16_t score() { return _score; }
+
   Level& level() { return _level; }
   void addToScore(uint8_t inc) { _score += inc; }
+
+  bool registerLevelScore();
+  bool registerGameScore();
 
   void signalDeath(const char* cause);
   void signalPickupCollected();

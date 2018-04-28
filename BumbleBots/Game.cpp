@@ -12,15 +12,14 @@
 Game game;
 
 Animation* Game::init(uint8_t startLevel) {
-  _startLevel = startLevel;
   _levelNum = startLevel;
   _numLives = 3;
   _score = 0;
-  _levelStartScore = 0;
   _displayScore = 0;
-  _hiScore = progressTracker.hiScore();
+  _lastLevelCompleted = false;
 
   _level.init(&levelSpecs[_levelNum]);
+  progressTracker.startGame();
 
   return restartLevel();
 }
@@ -31,24 +30,38 @@ Animation* Game::restartLevel() {
 }
 
 Animation* Game::nextLevel() {
-  progressTracker.levelDone(_levelNum, _score - _levelStartScore);
+  _levelNum++;
+  if (_levelNum == numLevels) {
+    _lastLevelCompleted = true;
+  }
 
-  _levelNum = (_levelNum + 1 ) % numLevels;
+  if (_lastLevelCompleted) {
+    if (progressTracker.numLevelsCompleted() == numLevels) {
+      // The game has been completed! This happens when the last level has been
+      // completed as part of the current game AND all other levels have been
+      // completed at least once (possibly during earlier games).
+      _activeAnimation = _gameDoneAnimation.init();
+      return _activeAnimation;
+    }
+
+    // The last level has been completed this game but not all levels have
+    // been completed yet. So revisit levels which have never been completed.
+    _levelNum = progressTracker.firstUncompletedLevel();
+  }
+
   _level.init(&levelSpecs[_levelNum]);
-  _levelStartScore = _score;
 
   return restartLevel();
 }
 
 Animation* Game::gameOver() {
-  bool hiScore = progressTracker.gameDone(_levelNum - _startLevel, _score);
-
-  _activeAnimation = _gameOverAnimation.init(hiScore);
+  _activeAnimation = _gameOverAnimation.init();
   return _activeAnimation;
 }
 
 void Game::signalDeath(const char* cause) {
   _causeOfDeath = cause;
+  progressTracker.signalPlayerDeath();
 }
 
 const Gamebuino_Meta::Sound_FX pickupCollectedSfx[] = {
@@ -82,6 +95,20 @@ void Game::signalBoxDestroyed(Box& box) {
   }
 }
 
+/* Forwards final level score to progress tracker.
+ * Returns "true" iff this is a new level hi-score.
+ */
+bool Game::registerLevelScore() {
+  return progressTracker.levelDone(_levelNum, _score);
+}
+
+/* Forwards final score to progress tracker.
+ * Returns "true" iff this is a new overall hi-score.
+ */
+bool Game::registerGameScore() {
+  return progressTracker.gameDone(_score);
+}
+
 void Game::update() {
   if (_activeAnimation) {
     _activeAnimation = _activeAnimation->update();
@@ -107,7 +134,7 @@ void Game::drawScore() {
     numDigits++;
   }
 
-  bool newHi = _displayScore > _hiScore;
+  bool newHi = _score > progressTracker.hiScore();
 
   gb.display.setColor(newHi ? INDEX_GREEN : INDEX_DARKBLUE);
   gb.display.fillRect(0, 0, numDigits * 4 + 1, 7);
