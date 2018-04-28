@@ -190,6 +190,8 @@ const Gamebuino_Meta::Sound_FX* timeScoreSfx = liveScoreSfx;
 Animation* LevelDoneAnimation::init() {
   game.level().freeze();
 
+  _levelHi = false;
+
   gb.sound.fx(levelDoneSfx);
 
   return Animation::init();
@@ -205,12 +207,21 @@ Animation* LevelDoneAnimation::update() {
       game.addToScore(1);
       rewindClock();
     }
+    else {
+      _levelHi = game.registerLevelScore();
+    }
   }
-  else if (clock() == 60) {
+  else if (clock() == (_levelHi ? 200 : 60)) {
     return game.nextLevel();
   }
 
   return this;
+}
+
+void LevelDoneAnimation::draw() {
+  if (_levelHi) {
+    gb.display.drawImage(24, 18, levelHiImage);
+  }
 }
 
 //-----------------------------------------------------------------------------

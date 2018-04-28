@@ -30,8 +30,6 @@ Animation* Game::restartLevel() {
 }
 
 Animation* Game::nextLevel() {
-  progressTracker.levelDone(_levelNum, _score);
-
   _levelNum++;
   if (_levelNum == numLevels) {
     _lastLevelCompleted = true;
@@ -95,6 +93,13 @@ void Game::signalBoxDestroyed(Box& box) {
       _activeAnimation = _levelDoneAnimation.init();
     }
   }
+}
+
+/* Forwards final level score to progress tracker.
+ * Returns "true" iff this is a new level hi-score.
+ */
+bool Game::registerLevelScore() {
+  return progressTracker.levelDone(_levelNum, _score);
 }
 
 void Game::update() {

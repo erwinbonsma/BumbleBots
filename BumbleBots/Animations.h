@@ -74,10 +74,14 @@ public:
 // LevelDoneAnimation declaration
 
 class LevelDoneAnimation : public Animation {
+  bool _levelHi;
+
 public:
   Animation* init();
 
   Animation* update();
+
+  void draw();
 };
 
 //-----------------------------------------------------------------------------

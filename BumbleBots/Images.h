@@ -23,5 +23,6 @@ extern Image liveIconImage;
 extern Image gameOverImage;
 extern Image bestGameEverImage;
 extern Image gameDoneImage;
+extern Image levelHiImage;
 
 extern Image botMediumImage;
