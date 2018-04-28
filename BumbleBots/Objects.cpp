@@ -269,7 +269,7 @@ void MenuDigit::draw(int8_t x, int8_t y) {
 
     uint8_t drawLen = min(drawLenRemaining, lineLenRemaining);
     if (draw) {
-      gb.display.drawFastHLine(x + dx, y + lineIndex, drawLen);
+      safeDrawFastHLine(x + dx, y + lineIndex, drawLen);
     }
     dx += drawLen;
     lineLenRemaining -= drawLen;

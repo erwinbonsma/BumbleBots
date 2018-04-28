@@ -105,6 +105,8 @@ bool isFxPlaying();
 
 void drawDroppingImage(Gamebuino_Meta::Graphics& g, int16_t x, int16_t y, Image& img, int8_t drop);
 
+void safeDrawFastHLine(int16_t x, int16_t y, int16_t w);
+
 void assertFailed(const char *function, const char *file, int lineNo, const char *expression);
 
 #define assertTrue(condition) \

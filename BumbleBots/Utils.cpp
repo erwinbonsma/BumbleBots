@@ -255,6 +255,26 @@ void drawDroppingImage(Gamebuino_Meta::Graphics& g, int16_t x, int16_t y, Image&
   img.transparentColor = transparent_backup;
 }
 
+//-----------------------------------------------------------------------------
+/* Wrapper around Gamebuino's gb.display.drawFastHLine.
+ *
+ * Arguments are adapted to ensure that the entire line fits on the screen. If
+ * this is not done, it can cause rendering artifacts. This happens when x < 0
+ * and x + w == 0. This wrapper function does not take any chances and also
+ * handles the other cases where (part of) the line is invisible.
+ */
+void safeDrawFastHLine(int16_t x, int16_t y, int16_t w) {
+  if (x < 0) {
+    w += x;
+    x = 0;
+  }
+  if (x + w > 80) {
+    w = 80 - x;
+  }
+  if (w > 0 && y >= 0 && y < 64) {
+    gb.display.drawFastHLine(x, y, w);
+  }
+}
 
 void assertFailed(const char *function, const char *file, int lineNo, const char *expression) {
   if (SerialUSB) {
