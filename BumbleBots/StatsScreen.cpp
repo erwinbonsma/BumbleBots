@@ -10,6 +10,9 @@
 #include "Images.h"
 #include "ProgressTracker.h"
 
+//-----------------------------------------------------------------------------
+// Helper functions
+
 void drawScreen() {
   int8_t x0 = 0;
   int8_t y0 = 0;
@@ -41,6 +44,9 @@ void drawLevelProgress() {
     uint16_t score = level < 16 ? progressTracker.levelHiScore(level) : 0;
     int8_t x = 6 + level * 4;
 
+    gb.display.setColor(level < maxStartLevel ? INDEX_GREEN : INDEX_PURPLE);
+    gb.display.drawFastVLine(x + 3, y, 3);
+
     for (uint8_t bit = 0; bit < 9; bit++) {
       bool isHi = (bit + score) % 2;
       if (level < maxStartLevel) {
@@ -49,12 +55,26 @@ void drawLevelProgress() {
         gb.display.setColor(isHi ? INDEX_RED : INDEX_PURPLE);
       }
       gb.display.drawPixel(x + bit % 3, y + bit / 3);
-      score = score / 2;
+      score /= 2;
     }
-    gb.display.setColor(level < maxStartLevel ? INDEX_GREEN : INDEX_PURPLE);
-    gb.display.drawFastVLine(x + 3, y, 3);
+
+    // Handle overflow situation in-case score does not fit in 9 bits.
+    if (score > 0) {
+      // These extra bits are drawn on top of a dark boundary, so all one-bits
+      // must be drawn with a light color
+      gb.display.setColor(level < maxStartLevel ? INDEX_LIGHTGREEN : INDEX_RED);
+      for (uint8_t bit = 0; bit < 3; bit++) {
+        if (score % 2) {
+          gb.display.drawPixel(x + 3, y + bit);
+        }
+        score /= 2;
+      }
+    }
   }
 }
+
+//-----------------------------------------------------------------------------
+// StatsScreen implementation
 
 void StatsScreen::reset() {
   _animCount = 0;
