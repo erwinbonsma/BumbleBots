@@ -25,7 +25,7 @@ class ProgressTracker {
   void clearStoredMaxLevelRun();
   void clearStoredLevelScores(bool preserveCompletion);
 
-  bool updateHiScore();
+  void updateHiScore();
 
 public:
   void init();

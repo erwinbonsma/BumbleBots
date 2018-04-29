@@ -134,7 +134,10 @@ void Game::drawScore() {
     numDigits++;
   }
 
-  bool newHi = _score > progressTracker.hiScore();
+  bool newHi = (
+    progressTracker.improvedHiScore() ||
+    _score > progressTracker.hiScore()
+  );
 
   gb.display.setColor(newHi ? INDEX_GREEN : INDEX_DARKBLUE);
   gb.display.fillRect(0, 0, numDigits * 4 + 1, 7);
