@@ -38,15 +38,5 @@ public:
   int16_t eval(TilePos pos, uint8_t t) const;
 };
 
-//class ShockWave : public Wave {
-//  TilePos _origin;
-//  uint16_t _startTime;
-//
-//public:
-//  ShockWave(TilePos origin);
-//
-//  float const eval(TilePos pos);
-//};
-
 #endif
 

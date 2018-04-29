@@ -146,8 +146,6 @@ void Mover::moveStep() {
   _movement += _movementInc;
   int8_t relMov = (_movement * _movementInc + 16) % 16;
 
-  //gb.display.printf("rm=%d,",relMov);
-  //gb.display.printf("relMov=%d, hd=%d\n", relMov, moveHeading());
   if (relMov == 3) {
     // About to enter next tile
     int8_t destTile = tiles.neighbour(_tileIndex, moveHeading());

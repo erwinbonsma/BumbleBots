@@ -39,8 +39,6 @@ public:
   Animation* init(const char *cause);
 
   Animation* update();
-
-  void draw();
 };
 
 //-----------------------------------------------------------------------------
