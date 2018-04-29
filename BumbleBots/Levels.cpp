@@ -45,9 +45,11 @@ const TilePos enemyStartPosLevel12[2] = {
 const TilePos enemyStartPosLevel13[2] = {
   makeTilePos(2, 0), makeTilePos(5, 0)
 };
-#ifdef DEVELOPMENT
-const TilePos enemyStartPosTestLevel0[1] = { makeTilePos(7, 1) };
-#endif
+const TilePos enemyStartPosLevel15[6] = {
+  makeTilePos(0, 0), makeTilePos(1, 0),
+  makeTilePos(7, 0), makeTilePos(7, 1),
+  makeTilePos(7, 7), makeTilePos(6, 7)
+};
 
 const TilePos pickupStartPosLevel0[13] = {
   makeTilePos(0, 0), makeTilePos(0, 2), makeTilePos(0, 3), makeTilePos(0, 5), makeTilePos(0, 7),
@@ -95,6 +97,9 @@ const TilePos pickupStartPosLevel12[4] = {
   makeTilePos(2, 1), makeTilePos(6, 2), makeTilePos(1, 5), makeTilePos(5, 6)
 };
 const TilePos* pickupStartPosLevel13 = pickupStartPosLevel1;
+const TilePos pickupStartPosLevel14[1] = {
+  makeTilePos(0, 6)
+};
 
 const TeleportPairSpec teleportSpecsLevel4[4] = {
   TeleportPairSpec {
@@ -201,6 +206,18 @@ const TeleportPairSpec teleportSpecsLevel13[4] = {
     .paletteIndex = PALETTE_TELEPORT4
   }
 };
+const TeleportPairSpec teleportSpecsLevel14[2] = {
+  TeleportPairSpec {
+    .tile1 = makeTilePos(2, 7),
+    .tile2 = makeTilePos(5, 7),
+    .paletteIndex = PALETTE_TELEPORT1
+  },
+  TeleportPairSpec {
+    .tile1 = makeTilePos(3, 7),
+    .tile2 = makeTilePos(7, 7),
+    .paletteIndex = PALETTE_TELEPORT2
+  }
+};
 
 const GapSpec gapSpecsLevel6[4] = {
   GapSpec {
@@ -276,26 +293,46 @@ const GapSpec gapSpecsLevel11[5] = {
     .paletteIndex = PALETTE_GAP_DEFAULT
   }
 };
-#ifdef DEVELOPMENT
-const GapSpec gapSpecsTestLevel0[4] = {
+const GapSpec gapSpecsLevel14[6] = {
   GapSpec {
-    .pos = makeTilePos(4, 1),
+    .pos = makeTilePos(7, 3),
+    .paletteIndex = PALETTE_GAP_EARTH
+  },
+  GapSpec {
+    .pos = makeTilePos(7, 4),
+    .paletteIndex = PALETTE_GAP_EARTH
+  },
+  GapSpec {
+    .pos = makeTilePos(7, 5),
+    .paletteIndex = PALETTE_GAP_EARTH
+  },
+  GapSpec {
+    .pos = makeTilePos(0, 7),
+    .paletteIndex = PALETTE_GAP_EARTH
+  },
+  GapSpec {
+    .pos = makeTilePos(1, 7),
+    .paletteIndex = PALETTE_GAP_EARTH
+  },
+  GapSpec {
+    .pos = makeTilePos(0, 5),
+    .paletteIndex = PALETTE_GAP_BLUE
+  }
+};
+const GapSpec gapSpecsLevel15[3] = {
+  GapSpec {
+    .pos = makeTilePos(4, 0),
     .paletteIndex = PALETTE_GAP_DEFAULT
   },
   GapSpec {
-    .pos = makeTilePos(4, 2),
+    .pos = makeTilePos(7, 4),
     .paletteIndex = PALETTE_GAP_DEFAULT
   },
   GapSpec {
-    .pos = makeTilePos(5, 1),
-    .paletteIndex = PALETTE_GAP_DEFAULT
-  },
-  GapSpec {
-    .pos = makeTilePos(5, 2),
+    .pos = makeTilePos(2, 7),
     .paletteIndex = PALETTE_GAP_DEFAULT
   }
 };
-#endif
 
 const ObstacleSpec obstacleSpecsLevel8[4] = {
   ObstacleSpec {
@@ -391,6 +428,12 @@ const ObstacleSpec obstacleSpecsLevel11[4] = {
   ObstacleSpec {
     .pos = makeTilePos(5, 5),
     .typeIndex = OBSTACLE_TREE2
+  }
+};
+const ObstacleSpec obstacleSpecsLevel14[1] = {
+  ObstacleSpec {
+    .pos = makeTilePos(6, 3),
+    .typeIndex = OBSTACLE_TREE1
   }
 };
 
@@ -594,38 +637,13 @@ const BoxSpec boxSpecsLevel13[8] = {
     .type = BoxType::Box2
   }
 };
-#ifdef DEVELOPMENT
-const BoxSpec boxSpecsTestLevel0[17] = {
+const BoxSpec boxSpecsLevel14[10] = {
   BoxSpec {
-    .pos = makeTilePos(1, 0),
-    .type = BoxType::Box1
+    .pos = makeTilePos(0, 1),
+    .type = BoxType::Box2
   },
   BoxSpec {
     .pos = makeTilePos(1, 1),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(1, 2),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(1, 3),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(1, 4),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(1, 5),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(1, 6),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(2, 0),
     .type = BoxType::Box1
   },
   BoxSpec {
@@ -633,39 +651,108 @@ const BoxSpec boxSpecsTestLevel0[17] = {
     .type = BoxType::Box1
   },
   BoxSpec {
-    .pos = makeTilePos(2, 2),
+    .pos = makeTilePos(3, 1),
     .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(4, 1),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(4, 0),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 3),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 5),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 7),
+    .type = BoxType::Box1
+  },
+  BoxSpec {
+    .pos = makeTilePos(7, 7),
+    .type = BoxType::Box1
+  }
+};
+const BoxSpec boxSpecsLevel15[18] = {
+  BoxSpec {
+    .pos = makeTilePos(0, 1),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(1, 1),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(2, 1),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(3, 1),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 0),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 1),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 2),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 3),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(3, 6),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(4, 6),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(5, 6),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(6, 6),
+    .type = BoxType::Box2
+  },
+  BoxSpec {
+    .pos = makeTilePos(7, 6),
+    .type = BoxType::Box2
   },
   BoxSpec {
     .pos = makeTilePos(2, 3),
     .type = BoxType::Box1
   },
   BoxSpec {
-    .pos = makeTilePos(2, 4),
+    .pos = makeTilePos(3, 3),
     .type = BoxType::Box1
   },
   BoxSpec {
-    .pos = makeTilePos(6, 0),
+    .pos = makeTilePos(4, 3),
     .type = BoxType::Box1
   },
   BoxSpec {
-    .pos = makeTilePos(6, 1),
+    .pos = makeTilePos(3, 4),
     .type = BoxType::Box1
   },
   BoxSpec {
-    .pos = makeTilePos(6, 2),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(6, 5),
-    .type = BoxType::Box1
-  },
-  BoxSpec {
-    .pos = makeTilePos(7, 5),
+    .pos = makeTilePos(3, 5),
     .type = BoxType::Box1
   }
 };
-#endif
 
 const uint8_t tilesLevel0[maxTiles] = {
   0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7,
@@ -798,18 +885,26 @@ const uint8_t tilesLevel13[maxTiles] = {
   0x01|H0, 0x02|H2, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x02|H2, 0x01|H0,
   0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0, 0x01|H0
 };
-#ifdef DEVELOPMENT
-const uint8_t tilesTestLevel0[maxTiles] = {
-  0x00|H7, 0x00|H7, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4, 0x00|H4,
-  0x00|H7, 0x00|H7, 0x00|H3, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-  0x00|H7, 0x00|H7, 0x00|H2, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-  0x00|H7, 0x00|H7, 0x00|H1, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-  0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-  0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-  0x00|H7, 0x00|H7, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0, 0x00|H0,
-  0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x00|H7, 0x07|H0
+const uint8_t tilesLevel14[maxTiles] = {
+  0x1e|H1, 0x1e|H1, 0x1e|H1, 0x1e|H1, 0x1d|H1, 0x10|H1, 0x10|H1, 0x10|H1,
+  0x1e|H1, 0x1d|H1, 0x1e|H1, 0x1d|H1, 0x1e|H1, 0x10|H1, 0x10|H1, 0x10|H1,
+  0x10|H1, 0x10|H1, 0x10|H1, 0x10|H1, 0x10|H1, 0x10|H1, 0x10|H1, 0x10|H1,
+  0x10|H1, 0x10|H1, 0x10|H1, 0x0b|H0, 0x0b|H0, 0x10|H1, 0x11|H1, 0x10|H1,
+  0x10|H1, 0x10|H1, 0x10|H1, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x10|H1,
+  0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x10|H1,
+  0x10|H1, 0x0b|H0, 0x0b|H0, 0x0b|H0, 0x10|H1, 0x10|H1, 0x10|H1, 0x10|H1,
+  0x10|H1, 0x10|H1, 0x0e|H0, 0x0e|H0, 0x10|H1, 0x10|H1, 0x10|H1, 0x10|H1
 };
-#endif
+const uint8_t tilesLevel15[maxTiles] = {
+  0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1,
+  0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1,
+  0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1,
+  0x1f|H0, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1,
+  0x1f|H0, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1,
+  0x1f|H0, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1,
+  0x1f|H0, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1,
+  0x1f|H0, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1, 0x1f|H1,
+};
 
 const LevelSpec levelSpecs[numLevels] = {
   LevelSpec {
@@ -1074,31 +1169,47 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = nullptr,
     .numObstacles = 0,
     .obstacleSpecs = nullptr,
-    .timeLimitInCycles = 3000,
+    .timeLimitInCycles = -3000,
     .tilesSpec = LevelTilesSpec(tilesLevel13)
   },
 
-#ifdef TEST_LEVELS
-  // Testing level: falling & boxes
   LevelSpec {
-    .title = "Test Boxes",
-    .playerStartPos = makeTilePos(2, 5),
+    .title = "Spring Cleaning",
+    .playerStartPos = makeTilePos(0, 0),
     .numEnemies = 0,
-    .enemyStartPos = enemyStartPosTestLevel0,
-    .numPickups = 4,
-    .pickupStartPos = pickupStartPosLevel1,
+    .enemyStartPos = nullptr,
+    .numPickups = 1,
+    .pickupStartPos = pickupStartPosLevel14,
+    .numTeleportPairs = 2,
+    .teleportSpecs = teleportSpecsLevel14,
+    .numBoxes = 10,
+    .boxSpecs = boxSpecsLevel14,
+    .numGaps = 6,
+    .gapSpecs = gapSpecsLevel14,
+    .numObstacles = 1,
+    .obstacleSpecs = obstacleSpecsLevel14,
+    .timeLimitInCycles = -6000,
+    .tilesSpec = LevelTilesSpec(tilesLevel14)
+  },
+
+  LevelSpec {
+    .title = "The Final Bit",
+    .playerStartPos = makeTilePos(4, 4),
+    .numEnemies = 6,
+    .enemyStartPos = enemyStartPosLevel15,
+    .numPickups = 0,
+    .pickupStartPos = nullptr,
     .numTeleportPairs = 0,
     .teleportSpecs = nullptr,
-    .numBoxes = 17,
-    .boxSpecs = boxSpecsTestLevel0,
-    .numGaps = 4,
-    .gapSpecs = gapSpecsTestLevel0,
+    .numBoxes = 18,
+    .boxSpecs = boxSpecsLevel15,
+    .numGaps = 3,
+    .gapSpecs = gapSpecsLevel15,
     .numObstacles = 0,
     .obstacleSpecs = nullptr,
-    .timeLimitInCycles = 3000,
-    .tilesSpec = LevelTilesSpec(tilesTestLevel0)
+    .timeLimitInCycles = -6000,
+    .tilesSpec = LevelTilesSpec(tilesLevel15)
   }
-#endif
 };
 
 //-----------------------------------------------------------------------------

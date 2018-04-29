@@ -6,8 +6,7 @@
 
 #include <Gamebuino-Meta.h>
 
-const uint8_t TILEFLAG_SPRITE_REPEAT = 0x01;
-const uint8_t TILEFLAG_CHECKERED = 0x02;
+const uint8_t TILEFLAG_CHECKERED = 0x01;
 
 const ColorIndex NO_TRANSPARANCY = INDEX_BLACK;
 
@@ -39,10 +38,10 @@ struct ImageInfo {
   const int8_t dy;
 };
 
-const uint8_t numTileTypes = 32;
+const uint8_t numTileTypes = 34;
 const uint8_t TILETYPE_MENU1 = numTileTypes - 2;
 const uint8_t TILETYPE_MENU2 = numTileTypes - 1;
 extern TileType tileTypes[numTileTypes];
 
-const uint8_t numTileImages = 20;
+const uint8_t numTileImages = 23;
 extern Image tileImages[numTileImages];
