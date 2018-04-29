@@ -157,6 +157,7 @@ bool ProgressTracker::updateHiScore() {
 bool ProgressTracker::levelDone(uint8_t level, uint16_t score) {
   uint16_t oldLevelHi = levelHiScore(level);
   uint16_t levelScore = score - _score;
+  bool improvedLevelHi = false;
   _score = score;
 
   if (levelScore > oldLevelHi) {
@@ -164,6 +165,7 @@ bool ProgressTracker::levelDone(uint8_t level, uint16_t score) {
       // New level hi-score!
       gb.save.set(SAVEINDEX_LEVELHI_L0 + level, levelScore);
       _flags |= IMPROVED_VIRTUALHISCORE;
+      improvedLevelHi = true;
     }
     else if (oldLevelHi == 0) {
       // Do not store score as a hi-score, as player died, which can allow a
@@ -172,6 +174,7 @@ bool ProgressTracker::levelDone(uint8_t level, uint16_t score) {
       gb.save.set(SAVEINDEX_LEVELHI_L0 + level, 1);
     }
   }
+  _flags &= ~PLAYER_DIED_THIS_LEVEL;
 
   _levelRun++;
   if (_levelRun > maxLevelRun()) {
@@ -181,7 +184,7 @@ bool ProgressTracker::levelDone(uint8_t level, uint16_t score) {
 
   updateHiScore();
 
-  return levelScore > oldLevelHi;
+  return improvedLevelHi;
 }
 
 bool ProgressTracker::gameDone(uint16_t finalScore) {
