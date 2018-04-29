@@ -78,13 +78,42 @@ void drawLevelProgress() {
 
 void StatsScreen::reset() {
   _animCount = 0;
+
+  for (uint8_t i = 0; i < numLights; i++) {
+    _lightState[i] = (i % 2) ? 64 : -64;
+  }
+}
+
+void StatsScreen::updateLights() {
+  for (uint8_t i = 0; i < numLights; i++) {
+    if (rand() % 25 == 0) {
+      _lightState[i] = -_lightState[i];
+    }
+
+    if (_lightState[i] >= 124) {
+      _lightState[i] = -124;
+    }
+    else {
+      _lightState[i] += 4;
+    }
+  }
 }
 
 void StatsScreen::update() {
   _animCount++;
 
+  updateLights();
+
   if (gb.buttons.held(BUTTON_A, 0)) {
     showLevelMenu();
+  }
+}
+
+void StatsScreen::drawLights() {
+  for (uint8_t i = 0; i < numLights; i++) {
+    int16_t intensity = abs((int16_t)_lightState[i]) * 2;
+    Color color = gb.createColor(0, intensity, 0);
+    gb.lights.drawPixel(i % 2, i / 2, color);
   }
 }
 
@@ -95,6 +124,8 @@ void StatsScreen::drawValue(uint16_t value, bool improved) {
   }
   gb.display.printf("%5d", value);
   gb.display.setColor(INDEX_GREEN);
+
+  drawLights();
 }
 
 void StatsScreen::draw() {
