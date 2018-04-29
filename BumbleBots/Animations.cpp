@@ -211,7 +211,7 @@ void GameDoneAnimation::draw() {
     gb.display.drawImage(10 + clock() - 50, 1, liveIconImage);
   }
 
-  gb.display.drawImage(30, 22, gameDoneImage);
+  gb.display.drawImage(18, 22, gameDoneImage);
 
   drawLights();
 }

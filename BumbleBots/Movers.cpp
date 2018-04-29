@@ -552,7 +552,7 @@ const Color* Enemy::getBotPalette(bool flipped) {
 
 void Enemy::bump() {
   Bot::bump();
-  _dazed += floor(rand() % 20) - 10;
+  _dazed += rand() % 20 - 10;
   _bumpCount += 1;
 }
 
