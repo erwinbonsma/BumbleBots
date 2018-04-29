@@ -101,9 +101,9 @@ struct LevelSpec {
 };
 
 #ifdef TEST_LEVELS
-  const uint8_t numLevels = 15;
+  const uint8_t numLevels = 16;
 #else
-  const uint8_t numLevels = 14;
+  const uint8_t numLevels = 15;
 #endif
 extern const LevelSpec levelSpecs[numLevels];
 
@@ -111,7 +111,7 @@ const uint8_t maxNumEnemies = 7;
 const uint8_t maxNumPickups = 13;
 const uint8_t maxNumTeleports = 8;
 const uint8_t maxNumBoxes = 17;
-const uint8_t maxNumGaps = 4;
+const uint8_t maxNumGaps = 6;
 const uint8_t maxNumObstacles = 8;
 
 //-----------------------------------------------------------------------------

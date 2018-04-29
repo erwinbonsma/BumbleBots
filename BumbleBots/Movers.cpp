@@ -732,6 +732,12 @@ void Box::reset() {
   _heading = NORTH_EAST;
 }
 
+void Box::destroy() {
+  signalBoxDestroyed(*this);
+
+  Mover::destroy();
+}
+
 bool Box::canEnterTile(int8_t tileIndex) {
   if (isMoving()) {
     // Move check is done at the start of the move. Once moving, assume it's
@@ -785,7 +791,6 @@ void Box::updateHeight() {
   Mover::updateHeight();
 
   if (_height < -50) {
-    signalBoxDestroyed(*this);
     destroy();
   }
 

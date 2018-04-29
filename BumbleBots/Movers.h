@@ -275,6 +275,8 @@ public:
   void init(int8_t moverIndex, BoxType boxType);
   void reset();
 
+  void destroy();
+
   bool mustBeDestroyed() { return _boxType == BoxType::Box2; }
   MoverType moverType() { return TYPE_BOX; }
 
