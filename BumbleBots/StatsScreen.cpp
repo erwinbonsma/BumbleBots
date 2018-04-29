@@ -153,5 +153,5 @@ void StatsScreen::draw() {
     dx = 40 - _animCount / 2;
     dy = 20 - (int16_t)_animCount / 4;
   }
-  gb.display.drawImage(54 + dx, 41 + dy, botMediumImage);
+  gb.display.drawImage(6 - dx, 41 + dy, botMediumImage);
 }
