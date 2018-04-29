@@ -100,7 +100,10 @@ void StatsScreen::drawValue(uint16_t value, bool improved) {
 void StatsScreen::draw() {
   gb.display.setColor(INDEX_GREEN);
 
-  gb.display.setCursor(23 + 3*4, 3);
+  gb.display.setCursor(3, 6);
+  gb.display.printf("GAME");
+
+  gb.display.setCursor(39, 3);
   gb.display.printf("score:");
   drawValue(
     progressTracker.score(),
@@ -108,31 +111,34 @@ void StatsScreen::draw() {
   );
 
   gb.display.setCursor(23, 9);
-  gb.display.printf("hi-score:");
-  drawValue(
-    progressTracker.hiScore(),
-    progressTracker.improvedHiScore()
-  );
-
-  gb.display.setCursor(23, 15);
-  gb.display.printf("vi-score:");
-  drawValue(
-    progressTracker.virtualHiScore(),
-    progressTracker.improvedVirtualHiScore()
-  );
-
-  gb.display.setCursor(3 + 4*4, 23);
   gb.display.printf("level run:");
   drawValue(
     progressTracker.levelRun(),
     progressTracker.levelRun() == progressTracker.maxLevelRun()
   );
 
-  gb.display.setCursor(3, 29);
-  gb.display.printf("max level run:");
+  gb.display.setCursor(3, 23);
+  gb.display.printf("BEST");
+
+  gb.display.setCursor(39, 17);
+  gb.display.printf("score:");
+  drawValue(
+    progressTracker.hiScore(),
+    progressTracker.improvedHiScore()
+  );
+
+  gb.display.setCursor(23, 23);
+  gb.display.printf("level run:");
   drawValue(
     progressTracker.maxLevelRun(),
     progressTracker.improvedMaxLevelRun()
+  );
+
+  gb.display.setCursor(23, 29);
+  gb.display.printf("level sum:");
+  drawValue(
+    progressTracker.virtualHiScore(),
+    progressTracker.improvedVirtualHiScore()
   );
 
   gb.display.setColor(INDEX_DARKGRAY);
