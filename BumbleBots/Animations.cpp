@@ -60,12 +60,6 @@ Animation* DieAnimation::update() {
   return this;
 }
 
-void DieAnimation::draw() {
-//  gb.display.setColor(INDEX_RED);
-//  gb.display.setCursor(0, 56);
-//  gb.display.print(_cause);
-}
-
 //-----------------------------------------------------------------------------
 // GameOverAnimation implementation
 

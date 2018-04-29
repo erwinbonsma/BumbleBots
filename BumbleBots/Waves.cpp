@@ -22,16 +22,3 @@ int16_t DirectionalWave::eval(TilePos pos, uint8_t t) const {
   int16_t d = colOfPos(pos) * _dcol + rowOfPos(pos) * _drow;
   return fastCos(d/_waveLength - t) * _amplitude;
 }
-
-//ShockWave::ShockWave(TilePos origin) : Wave() {
-//  _origin = origin;
-//  _startTime = gb.frameCount;
-//}
-//
-//float const ShockWave::eval(TilePos pos) {
-//  int8_t dcol = colOfPos(pos) - colOfPos(_origin);
-//  int8_t drow = rowOfPos(pos) - rowOfPos(_origin);
-//  float sqrDist = dcol*dcol + drow*drow;
-//  float t = (gb.frameCount - _startTime) / _period - sqrDist / (_waveLength * _waveLength);
-//  return fastCos(max(0, min(1, t)) - 0.25f) * _amplitude;
-//}

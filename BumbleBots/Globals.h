@@ -4,7 +4,7 @@
  * Copyright 2018, Erwin Bonsma
  */
 
-const uint8_t maxNumMovers = 20;
+const uint8_t maxNumMovers = 25;
 const uint8_t maxNumObjects = 64;
 
 // Implemented in Movers.cpp

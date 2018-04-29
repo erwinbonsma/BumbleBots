@@ -264,9 +264,6 @@ void MenuDigit::draw(int8_t x, int8_t y) {
 
   gb.display.setColor(_color);
   while (1) {
-    //assertTrue(drawLenRemaining > 0);
-    //assertTrue(lineLenRemaining > 0);
-
     uint8_t drawLen = min(drawLenRemaining, lineLenRemaining);
     if (draw) {
       safeDrawFastHLine(x + dx, y + lineIndex, drawLen);
