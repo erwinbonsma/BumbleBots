@@ -130,7 +130,8 @@ void StatsScreen::update() {
 
 void StatsScreen::drawLights() {
   for (uint8_t i = 0; i < numLights; i++) {
-    int16_t intensity = abs((int16_t)_lightState[i]) * 2;
+    // Note: Intentionally limiting intensity to half the max
+    int16_t intensity = abs((int16_t)_lightState[i]);
     Color color = gb.createColor(0, intensity, 0);
     gb.lights.drawPixel(i % 2, i / 2, color);
   }
