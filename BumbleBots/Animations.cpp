@@ -50,7 +50,7 @@ Animation* DieAnimation::update() {
 
   if (clock() == 50) {
     if (game.numLives() >= 0) {
-      return game.restartLevel();
+      return game.startLevel(true);
     }
     else {
       return game.gameOver();

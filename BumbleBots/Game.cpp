@@ -11,8 +11,8 @@
 
 Game game;
 
-Animation* Game::init(uint8_t startLevel) {
-  _levelNum = startLevel;
+Animation* Game::init(uint8_t initialLevel) {
+  _levelNum = initialLevel;
   _numLives = 3;
   _score = 0;
   _displayScore = 0;
@@ -21,10 +21,19 @@ Animation* Game::init(uint8_t startLevel) {
   _level.init(&levelSpecs[_levelNum]);
   progressTracker.startGame();
 
-  return restartLevel();
+  return startLevel(false);
 }
 
-Animation* Game::restartLevel() {
+Animation* Game::startLevel(bool restart) {
+  if (!restart || _level.resetsFully()) {
+    // Consider attempt for level hi-score
+    progressTracker.startLevel(_score);
+  }
+  else {
+    // This attempt cannot improve the level hi-score
+    progressTracker.resumeLevel();
+  }
+
   _activeAnimation = _levelStartAnimation.init();
   return _activeAnimation;
 }
@@ -51,7 +60,7 @@ Animation* Game::nextLevel() {
 
   _level.init(&levelSpecs[_levelNum]);
 
-  return restartLevel();
+  return startLevel(false);
 }
 
 Animation* Game::gameOver() {
@@ -61,7 +70,6 @@ Animation* Game::gameOver() {
 
 void Game::signalDeath(const char* cause) {
   _causeOfDeath = cause;
-  progressTracker.signalPlayerDeath();
 }
 
 const Gamebuino_Meta::Sound_FX pickupCollectedSfx[] = {

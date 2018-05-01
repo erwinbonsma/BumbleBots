@@ -1131,7 +1131,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = gapSpecsLevel11,
     .numObstacles = 4,
     .obstacleSpecs = obstacleSpecsLevel11,
-    .timeLimitInCycles = -3000,
+    .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel11)
   },
 
@@ -1207,7 +1207,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = gapSpecsLevel15,
     .numObstacles = 0,
     .obstacleSpecs = nullptr,
-    .timeLimitInCycles = -6000,
+    .timeLimitInCycles = 6000,
     .tilesSpec = LevelTilesSpec(tilesLevel15)
   }
 };
@@ -1406,8 +1406,12 @@ void Level::resetBoxes() {
   }
 }
 
+bool Level::resetsFully() {
+  return _levelSpec->timeLimitInCycles < 0;
+}
+
 void Level::reset() {
-  if (_levelSpec->timeLimitInCycles < 0) {
+  if (resetsFully()) {
     // Restore pick-ups
     initObjects();
   }

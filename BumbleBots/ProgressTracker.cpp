@@ -151,14 +151,22 @@ void ProgressTracker::updateHiScore() {
   }
 }
 
+void ProgressTracker::startLevel(uint16_t score) {
+  _score = score;
+  clearLevelResumed();
+}
+
+void ProgressTracker::resumeLevel() {
+  setLevelResumed();
+}
+
 bool ProgressTracker::levelDone(uint8_t level, uint16_t score) {
   uint16_t oldLevelHi = levelHiScore(level);
   uint16_t levelScore = score - _score;
   bool improvedLevelHi = false;
-  _score = score;
 
   if (levelScore > oldLevelHi) {
-    if (!playerDiedThisLevel()) {
+    if (!levelResumed()) {
       // New level hi-score!
       gb.save.set(SAVEINDEX_LEVELHI_L0 + level, levelScore);
       _flags |= IMPROVED_VIRTUALHISCORE;
@@ -171,7 +179,6 @@ bool ProgressTracker::levelDone(uint8_t level, uint16_t score) {
       gb.save.set(SAVEINDEX_LEVELHI_L0 + level, 1);
     }
   }
-  _flags &= ~PLAYER_DIED_THIS_LEVEL;
 
   _levelRun++;
   if (_levelRun > maxLevelRun()) {
