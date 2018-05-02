@@ -140,16 +140,16 @@ void StatsScreen::drawLights() {
 void StatsScreen::drawValue(uint16_t value, bool improved) {
   gb.display.setCursorX(58);
   if (improved && (_animCount / 16) % 2) {
-    gb.display.setColor(INDEX_LIGHTGREEN);
+    gb.display.setColor(INDEX_GREEN);
   }
   gb.display.printf("%5d", value);
-  gb.display.setColor(INDEX_GREEN);
+  gb.display.setColor(INDEX_LIGHTGREEN);
 
   drawLights();
 }
 
 void StatsScreen::draw() {
-  gb.display.setColor(INDEX_GREEN);
+  gb.display.setColor(INDEX_LIGHTGREEN);
 
   // GAME stats
   gb.display.fillRect(3, 4, 18, 10);
