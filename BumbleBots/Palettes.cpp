@@ -54,8 +54,4 @@ const Color palettes[numPalettes][16] = {
   { BLACK,  BLACK,  PURPLE, GREEN,  BROWN,  BLACK,  DGRAY,  WHITE,  RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,   BEIGE },
   // Blue tile
   { BLACK,  DBLUE,  PURPLE, GREEN,  BROWN,  DBLUE,  BLUE,   LBLUE,  RED,    ORANGE, YELLOW, LGREEN, LBLUE,  BLUE,   PINK,   BEIGE },
-#ifdef DEVELOPMENT
-  // Test
-  { RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED,    RED   },
-#endif
 };

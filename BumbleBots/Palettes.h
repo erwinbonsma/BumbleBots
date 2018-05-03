@@ -8,11 +8,7 @@
 
 #include "Utils.h"
 
-#ifdef DEVELOPMENT
-const uint8_t numPalettes = 19;
-#else
 const uint8_t numPalettes = 18;
-#endif
 
 const uint8_t PALETTE_DEFAULT = 0;
 const uint8_t PALETTE_BOT = 1;
@@ -33,7 +29,6 @@ const uint8_t PALETTE_GAP_BLUE = 14;
 const uint8_t PALETTE_GAP_EARTH = 15;
 const uint8_t PALETTE_GAP_DARK = 16;
 const uint8_t PALETTE_BLUE_TILE = 17;
-#ifdef DEVELOPMENT
-const uint8_t PALETTE_TEST = numPalettes - 1;
-#endif
-extern const Color palettes[numPalettes][16];
+
+const uint8_t numPaletteColors = 16;
+extern const Color palettes[numPalettes][numPaletteColors];
