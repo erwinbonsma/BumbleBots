@@ -11,10 +11,6 @@
 #include "Movers.h"
 #include "Objects.h"
 
-#ifdef DEVELOPMENT
-  #define TEST_LEVELS
-#endif
-
 //-----------------------------------------------------------------------------
 // LevelTilesSpec declaration
 
@@ -57,7 +53,7 @@ struct GapSpec {
 
 struct ObstacleSpec {
   const TilePos pos;
-  const uint8_t typeIndex;
+  const ObstacleType type;
 };
 
 //-----------------------------------------------------------------------------
@@ -156,14 +152,18 @@ public:
    */
   void init(const LevelSpec *levelSpec);
 
+  /* Indicates if a reset restores the level back to its original state.
+   *
+   * When true, all pick-ups are restored. If false, collected pick-ups are
+   * not respawned.
+   */
+  bool resetsFully();
+
   /* Resets the level.
    *
    * It should be called after the player died. It will, for example, put all
-   * movers back to their starting position. However, objects remain in the
-   * state they were (collected pick-ups are gone, pushed boxes are moved, etc)
-   *
-   * Note: Some levels are configured to have a hard reset. This can be
-   * realized by simply invoking init again.
+   * movers back to their starting position. Depending on how the level is
+   * configured pick-ups may also respawn.
    */
   void reset();
 

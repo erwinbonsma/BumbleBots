@@ -48,7 +48,7 @@ public:
 
   /* Starts a new game.
    */
-  Animation* init(uint8_t startLevel);
+  Animation* init(uint8_t initialLevel);
 
   /* Initiates Game Over animation
    */
@@ -56,7 +56,7 @@ public:
 
   /* Starts or re-starts the current level.
    */
-  Animation* restartLevel();
+  Animation* startLevel(bool restart);
 
   /* Starts next level.
    */

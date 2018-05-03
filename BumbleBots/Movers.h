@@ -22,10 +22,6 @@ enum class MoverType : int8_t {
   Box
 };
 
-const MoverType TYPE_PLAYER = MoverType::Player;
-const MoverType TYPE_ENEMY = MoverType::Enemy;
-const MoverType TYPE_BOX = MoverType::Box;
-
 //-----------------------------------------------------------------------------
 // Mover declaration
 
@@ -204,7 +200,7 @@ public:
   Player();
 
   bool canEnterTile(int8_t tileIndex);
-  MoverType moverType() { return TYPE_PLAYER; }
+  MoverType moverType() { return MoverType::Player; }
 
   void reset();
   void update();
@@ -239,7 +235,7 @@ public:
   void reset();
   void destroy();
 
-  MoverType moverType() { return TYPE_ENEMY; }
+  MoverType moverType() { return MoverType::Enemy; }
 
   void update();
 };
@@ -278,7 +274,7 @@ public:
   void destroy();
 
   bool mustBeDestroyed() { return _boxType == BoxType::Box2; }
-  MoverType moverType() { return TYPE_BOX; }
+  MoverType moverType() { return MoverType::Box; }
 
   void push(Heading heading);
 

@@ -31,29 +31,48 @@ void drawScreen() {
   gb.display.fillRect(x0 + 1, h - bottomH, w - 2, bottomH - 1);
 }
 
+struct ProgressBarSpecs {
+  ColorIndex dark;
+  ColorIndex light;
+};
+const ProgressBarSpecs completedColor = ProgressBarSpecs {
+  .dark = INDEX_GREEN,
+  .light = INDEX_LIGHTGREEN
+};
+const ProgressBarSpecs pendingColor = ProgressBarSpecs {
+  .dark = INDEX_BROWN,
+  .light = INDEX_ORANGE
+};
+const ProgressBarSpecs lockedColor = ProgressBarSpecs {
+  .dark = INDEX_PURPLE,
+  .light = INDEX_RED
+};
+
 void drawLevelProgress() {
   gb.display.setColor(INDEX_GRAY);
-  gb.display.drawRect(5, 37, 70, 5);
+  gb.display.drawRect(7, 37, 66, 5);
 
   gb.display.setColor(INDEX_BLACK);
-  gb.display.drawRect(5, 37, 69, 4);
+  gb.display.drawRect(7, 37, 65, 4);
 
   int8_t maxStartLevel = progressTracker.maxStartLevel();
   int8_t y = 38;
-  for (uint8_t level = 0; level <= 16; level++) {
-    uint16_t score = level < 16 ? progressTracker.levelHiScore(level) : 0;
-    int8_t x = 6 + level * 4;
+  for (uint8_t level = 0; level < 16; level++) {
+    uint16_t score = progressTracker.levelHiScore(level);
+    bool completed = progressTracker.didCompleteLevel(level);
+    int8_t x = 8 + level * 4;
 
-    gb.display.setColor(level < maxStartLevel ? INDEX_GREEN : INDEX_PURPLE);
+    const ProgressBarSpecs& cellColor = (
+      completed
+      ? completedColor
+      : (level <= maxStartLevel ? pendingColor : lockedColor)
+    );
+    gb.display.setColor(cellColor.dark);
     gb.display.drawFastVLine(x + 3, y, 3);
 
     for (uint8_t bit = 0; bit < 9; bit++) {
       bool isHi = (bit + score) % 2;
-      if (level < maxStartLevel) {
-        gb.display.setColor(isHi ? INDEX_LIGHTGREEN : INDEX_GREEN);
-      } else {
-        gb.display.setColor(isHi ? INDEX_RED : INDEX_PURPLE);
-      }
+      gb.display.setColor(isHi ? cellColor.light : cellColor.dark);
       gb.display.drawPixel(x + bit % 3, y + bit / 3);
       score /= 2;
     }
@@ -62,7 +81,7 @@ void drawLevelProgress() {
     if (score > 0) {
       // These extra bits are drawn on top of a dark boundary, so all one-bits
       // must be drawn with a light color
-      gb.display.setColor(level < maxStartLevel ? INDEX_LIGHTGREEN : INDEX_RED);
+      gb.display.setColor(cellColor.light);
       for (uint8_t bit = 0; bit < 3; bit++) {
         if (score % 2) {
           gb.display.drawPixel(x + 3, y + bit);
@@ -111,7 +130,8 @@ void StatsScreen::update() {
 
 void StatsScreen::drawLights() {
   for (uint8_t i = 0; i < numLights; i++) {
-    int16_t intensity = abs((int16_t)_lightState[i]) * 2;
+    // Note: Intentionally limiting intensity to half the max
+    int16_t intensity = abs((int16_t)_lightState[i]);
     Color color = gb.createColor(0, intensity, 0);
     gb.lights.drawPixel(i % 2, i / 2, color);
   }
@@ -120,19 +140,19 @@ void StatsScreen::drawLights() {
 void StatsScreen::drawValue(uint16_t value, bool improved) {
   gb.display.setCursorX(58);
   if (improved && (_animCount / 16) % 2) {
-    gb.display.setColor(INDEX_LIGHTGREEN);
+    gb.display.setColor(INDEX_GREEN);
   }
   gb.display.printf("%5d", value);
-  gb.display.setColor(INDEX_GREEN);
+  gb.display.setColor(INDEX_LIGHTGREEN);
 
   drawLights();
 }
 
 void StatsScreen::draw() {
-  gb.display.setColor(INDEX_GREEN);
+  gb.display.setColor(INDEX_LIGHTGREEN);
 
-  gb.display.setCursor(3, 6);
-  gb.display.printf("GAME");
+  // GAME stats
+  gb.display.fillRect(3, 4, 18, 10);
 
   gb.display.setCursor(39, 3);
   gb.display.printf("score:");
@@ -148,29 +168,35 @@ void StatsScreen::draw() {
     progressTracker.levelRun() == progressTracker.maxLevelRun()
   );
 
-  gb.display.setCursor(3, 23);
-  gb.display.printf("BEST");
+  // BEST stats
+  gb.display.fillRect(3, 17, 18, 16);
 
-  gb.display.setCursor(39, 17);
+  gb.display.setCursor(39, 16);
   gb.display.printf("score:");
   drawValue(
     progressTracker.hiScore(),
     progressTracker.improvedHiScore()
   );
 
-  gb.display.setCursor(23, 23);
+  gb.display.setCursor(23, 22);
   gb.display.printf("level run:");
   drawValue(
     progressTracker.maxLevelRun(),
     progressTracker.improvedMaxLevelRun()
   );
 
-  gb.display.setCursor(23, 29);
+  gb.display.setCursor(23, 28);
   gb.display.printf("level sum:");
   drawValue(
     progressTracker.virtualHiScore(),
     progressTracker.improvedVirtualHiScore()
   );
+
+  gb.display.setColor(INDEX_BLACK);
+  gb.display.setCursor(4, 6);
+  gb.display.printf("GAME");
+  gb.display.setCursor(4, 22);
+  gb.display.printf("BEST");
 
   gb.display.setColor(INDEX_DARKGRAY);
   gb.display.fillRect(0, 46, 80, 19);

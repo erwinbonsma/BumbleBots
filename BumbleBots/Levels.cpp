@@ -337,103 +337,103 @@ const GapSpec gapSpecsLevel15[3] = {
 const ObstacleSpec obstacleSpecsLevel8[4] = {
   ObstacleSpec {
     .pos = makeTilePos(6, 0),
-    .typeIndex = OBSTACLE_ROCK1
+    .type = ObstacleType::Rock1
   },
   ObstacleSpec {
     .pos = makeTilePos(6, 1),
-    .typeIndex = OBSTACLE_ROCK2
+    .type = ObstacleType::Rock2
   },
   ObstacleSpec {
     .pos = makeTilePos(6, 4),
-    .typeIndex = OBSTACLE_ROCK1
+    .type = ObstacleType::Rock1
   },
   ObstacleSpec {
     .pos = makeTilePos(7, 4),
-    .typeIndex = OBSTACLE_ROCK2
+    .type = ObstacleType::Rock2
   }
 };
 const ObstacleSpec obstacleSpecsLevel9[6] = {
   ObstacleSpec {
     .pos = makeTilePos(0, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(1, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(2, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(3, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(4, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(5, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   }
 };
 const ObstacleSpec obstacleSpecsLevel10[8] = {
   ObstacleSpec {
     .pos = makeTilePos(1, 4),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(3, 4),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(5, 4),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(7, 4),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(1, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(3, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(5, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   },
   ObstacleSpec {
     .pos = makeTilePos(7, 6),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   }
 };
 const ObstacleSpec obstacleSpecsLevel11[4] = {
   ObstacleSpec {
     .pos = makeTilePos(1, 2),
-    .typeIndex = OBSTACLE_TREE2
+    .type = ObstacleType::Tree2
   },
   ObstacleSpec {
     .pos = makeTilePos(1, 3),
-    .typeIndex = OBSTACLE_TREE2
+    .type = ObstacleType::Tree2
   },
   ObstacleSpec {
     .pos = makeTilePos(5, 4),
-    .typeIndex = OBSTACLE_TREE2
+    .type = ObstacleType::Tree2
   },
   ObstacleSpec {
     .pos = makeTilePos(5, 5),
-    .typeIndex = OBSTACLE_TREE2
+    .type = ObstacleType::Tree2
   }
 };
 const ObstacleSpec obstacleSpecsLevel14[1] = {
   ObstacleSpec {
     .pos = makeTilePos(6, 3),
-    .typeIndex = OBSTACLE_TREE1
+    .type = ObstacleType::Tree1
   }
 };
 
@@ -1131,7 +1131,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = gapSpecsLevel11,
     .numObstacles = 4,
     .obstacleSpecs = obstacleSpecsLevel11,
-    .timeLimitInCycles = -3000,
+    .timeLimitInCycles = 3000,
     .tilesSpec = LevelTilesSpec(tilesLevel11)
   },
 
@@ -1207,7 +1207,7 @@ const LevelSpec levelSpecs[numLevels] = {
     .gapSpecs = gapSpecsLevel15,
     .numObstacles = 0,
     .obstacleSpecs = nullptr,
-    .timeLimitInCycles = -6000,
+    .timeLimitInCycles = 6000,
     .tilesSpec = LevelTilesSpec(tilesLevel15)
   }
 };
@@ -1366,7 +1366,7 @@ void Level::initObstacles() {
 
     assertTrue(numObjects < maxNumObjects);
 
-    _obstacles[i].init(numObjects++, spec.typeIndex);
+    _obstacles[i].init(numObjects++, spec.type);
     objects[_obstacles[i].index()] = &_obstacles[i];
 
     tiles.putObjectOnTile(_obstacles[i].index(), spec.pos);
@@ -1406,8 +1406,12 @@ void Level::resetBoxes() {
   }
 }
 
+bool Level::resetsFully() {
+  return _levelSpec->timeLimitInCycles < 0;
+}
+
 void Level::reset() {
-  if (_levelSpec->timeLimitInCycles < 0) {
+  if (resetsFully()) {
     // Restore pick-ups
     initObjects();
   }

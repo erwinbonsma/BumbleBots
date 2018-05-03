@@ -10,7 +10,7 @@
 const int8_t IMPROVED_HISCORE = 0x01;
 const int8_t IMPROVED_MAXLEVELRUN = 0x02;
 const int8_t IMPROVED_VIRTUALHISCORE = 0x04;
-const int8_t PLAYER_DIED_THIS_LEVEL = 0x08;
+const int8_t LEVEL_RESUMED = 0x08;
 
 class ProgressTracker {
   uint8_t _flags;
@@ -24,6 +24,10 @@ class ProgressTracker {
   void clearStoredHiScore();
   void clearStoredMaxLevelRun();
   void clearStoredLevelScores(bool preserveCompletion);
+
+  void clearLevelResumed() { _flags &= ~LEVEL_RESUMED; }
+  void setLevelResumed() { _flags |= LEVEL_RESUMED; }
+  bool levelResumed() { return _flags & LEVEL_RESUMED; }
 
   void updateHiScore();
 
@@ -53,15 +57,32 @@ public:
   uint8_t maxLevelRun();
   bool improvedMaxLevelRun() { return _flags & IMPROVED_MAXLEVELRUN; }
 
-  void signalPlayerDeath() { _flags |= PLAYER_DIED_THIS_LEVEL; }
-  bool playerDiedThisLevel() { return _flags & PLAYER_DIED_THIS_LEVEL; }
-
-  // Returns true iff this is a new level hi
-  bool levelDone(uint8_t levelIndex, uint16_t totalScore);
-
   void startGame();
 
-  // Returns true iff this is a new hi-score
+  /* Invoke to signal when player starts level and this attempt should be
+   * considered for hi-score. This is the case when the level is started in its
+   * initial state.
+   */
+  void startLevel(uint16_t totalScore);
+
+  /* Invoke when a player died and resumes the level and the level is not
+   * restored to its original state. If the level is completed, it will not be
+   * considered for a level hi-score.
+   */
+  void resumeLevel();
+
+  /* Invoke to signal that a level has been completed. This will update stored
+   * progress if needed.
+   *
+   * Returns true iff this is a new level hi.
+   */
+  bool levelDone(uint8_t levelIndex, uint16_t totalScore);
+
+  /* Invoke to signal that the game is done. This will update stored progress
+   * if needed.
+   *
+   * Returns true iff this is a new hi-score
+   */
   bool gameDone(uint16_t finalScore);
 };
 

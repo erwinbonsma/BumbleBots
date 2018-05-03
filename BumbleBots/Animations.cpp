@@ -50,7 +50,7 @@ Animation* DieAnimation::update() {
 
   if (clock() == 50) {
     if (game.numLives() >= 0) {
-      return game.restartLevel();
+      return game.startLevel(true);
     }
     else {
       return game.gameOver();
@@ -226,6 +226,16 @@ const Gamebuino_Meta::Sound_FX levelDoneSfx[] = {
   {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,64,-8,10,63,4},
 };
 
+const Gamebuino_Meta::Sound_FX levelHiSfx[] = {
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,0,0,0,50,8},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,-4,0,53,5},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,0,0,0,50,5},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,-4,8,53,5},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,128,-2,0,53,9},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,1,0,0,0,50,1},
+  {Gamebuino_Meta::Sound_FX_Wave::SQUARE,0,128,-3,0,45,15},
+};
+
 const Gamebuino_Meta::Sound_FX* timeScoreSfx = liveScoreSfx;
 
 Animation* LevelDoneAnimation::init() {
@@ -250,9 +260,12 @@ Animation* LevelDoneAnimation::update() {
     }
     else {
       _levelHi = game.registerLevelScore();
+      if (_levelHi) {
+        gb.sound.fx(levelHiSfx);
+      }
     }
   }
-  else if (clock() == (_levelHi ? 200 : 60)) {
+  else if (clock() == (_levelHi ? 140 : 60)) {
     return game.nextLevel();
   }
 

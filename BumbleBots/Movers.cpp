@@ -187,7 +187,7 @@ bool Mover::canEnterTile(int8_t tileIndex) {
   int8_t objectIndex = destTile.object();
   if (
     objectIndex >= 0 &&
-    objects[objectIndex]->objectType() == TYPE_OBSTACLE
+    objects[objectIndex]->objectType() == ObjectType::Obstacle
   ) {
     // Obstacles always block
     return false;
@@ -243,10 +243,10 @@ void Mover::destroy() {
 }
 
 int8_t Mover::destroyableAtTile(Tile& tile) {
-  int8_t destroyableIndex = tile.moverOfType(TYPE_BOX, _moverIndex);
+  int8_t destroyableIndex = tile.moverOfType(MoverType::Box, _moverIndex);
 
   if (destroyableIndex == -1) {
-    destroyableIndex = tile.moverOfType(TYPE_ENEMY, _moverIndex);
+    destroyableIndex = tile.moverOfType(MoverType::Enemy, _moverIndex);
   }
 
   if (destroyableIndex == -1 && tile.isEnemyEntering()) {
@@ -258,7 +258,7 @@ int8_t Mover::destroyableAtTile(Tile& tile) {
     while (--moverIndex >= 0) {
       Mover* mover = movers[moverIndex];
       if (
-        mover->moverType() == TYPE_ENEMY && (
+        mover->moverType() == MoverType::Enemy && (
           mover->_tileIndex == _tileIndex ||
           mover->_tileIndex2 == _tileIndex
         )
@@ -408,7 +408,7 @@ void Player::reset() {
 }
 
 bool Player::canEnterTile(int8_t tileIndex) {
-  int8_t boxIndex = tiles.tileAtIndex(tileIndex).moverOfType(TYPE_BOX, _moverIndex);
+  int8_t boxIndex = tiles.tileAtIndex(tileIndex).moverOfType(MoverType::Box, _moverIndex);
 
   return (
     // Check box interactions
@@ -427,7 +427,7 @@ bool Player::canEnterTile(int8_t tileIndex) {
 void Player::enteringTile(int8_t tileIndex) {
   Mover::enteringTile(tileIndex);
 
-  int8_t boxIndex = tiles.tileAtIndex(tileIndex).moverOfType(TYPE_BOX, _moverIndex);
+  int8_t boxIndex = tiles.tileAtIndex(tileIndex).moverOfType(MoverType::Box, _moverIndex);
   if (boxIndex != -1) {
     if (!isFall(_tileIndex, tileIndex)) {
       // Entering from similar height, so push box
@@ -567,7 +567,7 @@ bool Enemy::canEnterTile(int8_t tileIndex) {
     // Another enemy is entering
     tile.isEnemyEntering() ||
     // or already there
-    tile.moverOfType(TYPE_ENEMY, _moverIndex) != -1
+    tile.moverOfType(MoverType::Enemy, _moverIndex) != -1
   ) {
     return false;
   }
@@ -603,18 +603,18 @@ bool Enemy::isBlocked(int8_t tileIndex) {
     Object* object = objects[objectIndex];
     if (
       // except teleports
-      object->objectType() != TYPE_TELEPORT &&
+      object->objectType() != ObjectType::Teleport &&
       // and filled gaps
       !(
-        object->objectType() == TYPE_GAP &&
-        ((Gap *)object)->state() == GAP_FILLED
+        object->objectType() == ObjectType::Gap &&
+        ((Gap *)object)->state() == GapState::Filled
       )
     ) {
       return true;
     }
   }
 
-  int8_t boxIndex = destTile.moverOfType(TYPE_BOX, _moverIndex);
+  int8_t boxIndex = destTile.moverOfType(MoverType::Box, _moverIndex);
   if (
     boxIndex >= 0 &&
     !movers[boxIndex]->isFalling()
@@ -750,7 +750,7 @@ bool Box::canEnterTile(int8_t tileIndex) {
 
   Tile& destTile = tiles.tileAtIndex(tileIndex);
   int8_t objectIndex = destTile.object();
-  if (objectIndex >= 0 && objects[objectIndex]->objectType() == TYPE_PICKUP) {
+  if (objectIndex >= 0 && objects[objectIndex]->objectType() == ObjectType::Pickup) {
     // Cannot move over pickup
     return false;
   }
