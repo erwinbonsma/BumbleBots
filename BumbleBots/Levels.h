@@ -57,7 +57,7 @@ struct GapSpec {
 
 struct ObstacleSpec {
   const TilePos pos;
-  const uint8_t typeIndex;
+  const ObstacleType type;
 };
 
 //-----------------------------------------------------------------------------

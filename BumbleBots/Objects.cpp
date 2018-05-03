@@ -101,7 +101,7 @@ void Gap::init(int8_t objectIndex, uint8_t paletteIndex) {
 void Gap::reset() {
   Object::reset();
 
-  _state = GAP_EMPTY;
+  _state = GapState::Empty;
 }
 
 const Gamebuino_Meta::Sound_FX dropSfx[] = {
@@ -111,11 +111,11 @@ const Gamebuino_Meta::Sound_FX dropSfx[] = {
 
 void Gap::visit(int8_t moverIndex) {
   if (
-    _state == GAP_EMPTY &&
+    _state == GapState::Empty &&
     !movers[moverIndex]->isMoving()
   ) {
     // Initiate drop
-    _state = GAP_FILLING;
+    _state = GapState::Filling;
     movers[moverIndex]->startDrop();
     movers[moverIndex]->freeze();
 
@@ -124,7 +124,9 @@ void Gap::visit(int8_t moverIndex) {
 }
 
 void Gap::draw(int8_t x, int8_t y) {
-  gb.display.colorIndex = (Color *)palettes[(_state == GAP_FILLED) ? PALETTE_GAP_FILLED : _paletteIndex];
+  gb.display.colorIndex = (Color *)palettes[
+    _state == GapState::Filled ? PALETTE_GAP_FILLED : _paletteIndex
+  ];
 
   gb.display.drawImage(x, y + 4, gapImage);
 
@@ -134,6 +136,7 @@ void Gap::draw(int8_t x, int8_t y) {
 //-----------------------------------------------------------------------------
 // Obstacle implementation
 
+// Note: Indexes should match int-values of ObstacleType enum elements
 const ObstacleTypeSpec obstacleTypes[numObstacleTypes] = {
   // 0: Rock 1
   ObstacleTypeSpec {
@@ -161,14 +164,14 @@ const ObstacleTypeSpec obstacleTypes[numObstacleTypes] = {
   },
 };
 
-void Obstacle::init(int8_t objectIndex, uint8_t obstacleTypeIndex) {
+void Obstacle::init(int8_t objectIndex, ObstacleType obstacleType) {
   Object::init(objectIndex);
 
-  _obstacleTypeIndex = obstacleTypeIndex;
+  _obstacleType = obstacleType;
 }
 
 void Obstacle::draw(int8_t x, int8_t y) {
-  const ObstacleTypeSpec& spec = obstacleTypes[_obstacleTypeIndex];
+  const ObstacleTypeSpec& spec = obstacleTypes[(uint8_t)_obstacleType];
   gb.display.drawImage(x + spec.dx, y + spec.dy, spec.image);
 }
 

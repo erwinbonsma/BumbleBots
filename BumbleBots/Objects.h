@@ -22,12 +22,6 @@ enum class ObjectType : int8_t {
   MenuDigit
 };
 
-const ObjectType TYPE_PICKUP = ObjectType::Pickup;
-const ObjectType TYPE_TELEPORT = ObjectType::Teleport;
-const ObjectType TYPE_GAP = ObjectType::Gap;
-const ObjectType TYPE_OBSTACLE = ObjectType::Obstacle;
-const ObjectType TYPE_MENUDIGIT = ObjectType::MenuDigit;
-
 //-----------------------------------------------------------------------------
 // Object declaration
 
@@ -61,7 +55,7 @@ public:
 
 class Pickup : public Object {
 public:
-  ObjectType objectType() { return TYPE_PICKUP; }
+  ObjectType objectType() { return ObjectType::Pickup; }
   bool isElevated() { return true; }
 
   void visit(int8_t moverIndex);
@@ -80,7 +74,7 @@ class Teleport : public Object {
 public:
   void init(int8_t objectIndex, int8_t destTileIndex, uint8_t paletteIndex);
 
-  ObjectType objectType() { return TYPE_TELEPORT; }
+  ObjectType objectType() { return ObjectType::Teleport; }
 
   void reset();
   void visit(int8_t moverIndex);
@@ -90,10 +84,10 @@ public:
 //-----------------------------------------------------------------------------
 // Gap declaration
 
-enum GapState {
-  GAP_EMPTY,
-  GAP_FILLING,
-  GAP_FILLED
+enum class GapState : int8_t {
+  Empty,
+  Filling,
+  Filled
 };
 
 class Gap : public Object {
@@ -103,9 +97,9 @@ class Gap : public Object {
 public:
   void init(int8_t objectIndex, uint8_t paletteIndex);
 
-  ObjectType objectType() { return TYPE_GAP; }
+  ObjectType objectType() { return ObjectType::Gap; }
 
-  void fill() { _state = GAP_FILLED; }
+  void fill() { _state = GapState::Filled; }
   GapState state() { return _state; }
 
   void reset();
@@ -123,18 +117,20 @@ struct ObstacleTypeSpec {
 };
 
 const uint8_t numObstacleTypes = 4;
-const uint8_t OBSTACLE_ROCK1 = 0;
-const uint8_t OBSTACLE_ROCK2 = 1;
-const uint8_t OBSTACLE_TREE1 = 2;
-const uint8_t OBSTACLE_TREE2 = 3;
+enum class ObstacleType : uint8_t {
+  Rock1,
+  Rock2,
+  Tree1,
+  Tree2
+};
 extern const ObstacleTypeSpec obstacleTypes[numObstacleTypes];
 
 class Obstacle : public Object {
-  uint8_t _obstacleTypeIndex;
+  ObstacleType _obstacleType;
 public:
-  void init(int8_t objectIndex, uint8_t obstacleTypeIndex);
+  void init(int8_t objectIndex, ObstacleType _obstacleType);
 
-  ObjectType objectType() { return TYPE_OBSTACLE; }
+  ObjectType objectType() { return ObjectType::Obstacle; }
   void draw(int8_t x, int8_t y);
 };
 
@@ -149,7 +145,7 @@ class MenuDigit : public Object {
 public:
   void init(int8_t objectIndex, uint8_t digit, bool topPart, ColorIndex color);
 
-  ObjectType objectType() { return TYPE_MENUDIGIT; }
+  ObjectType objectType() { return ObjectType::MenuDigit; }
 
   void draw(int8_t x, int8_t y);
 };
